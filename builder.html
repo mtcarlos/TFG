@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Block Builder</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- A-Frame 1.6.0 -->
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <!-- Look-at component (for VR labels) -->
+    <script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"></script>
+    <!-- Custom builder components -->
+    <script src="js/builder-components.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            overflow: hidden;
+            background: #000;
+        }
+
+        /* =====================================================
+           CLICK-TO-PLAY OVERLAY
+           ===================================================== */
+        #click-overlay {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(10, 10, 30, 0.92) 0%, rgba(0, 0, 0, 0.97) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            cursor: pointer;
+            transition: opacity 0.5s ease;
+        }
+
+        #click-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .overlay-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            user-select: none;
+        }
+
+        /* Outer pulse ring */
+        .pulse-ring {
+            position: absolute;
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            border: 2px solid rgba(99, 102, 241, 0.5);
+            animation: pulseRing 2s ease-out infinite;
+        }
+
+        @keyframes pulseRing {
+            0% {
+                transform: scale(0.85);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        .overlay-icon-wrap {
+            position: relative;
+            width: 110px;
+            height: 110px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, rgba(99, 102, 241, 0.05) 100%);
+            border: 1.5px solid rgba(99, 102, 241, 0.6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: iconGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes iconGlow {
+            from {
+                box-shadow: 0 0 20px rgba(99, 102, 241, 0.2), 0 0 60px rgba(99, 102, 241, 0.05);
+            }
+
+            to {
+                box-shadow: 0 0 35px rgba(99, 102, 241, 0.5), 0 0 80px rgba(99, 102, 241, 0.15);
+            }
+        }
+
+        .overlay-icon-wrap svg {
+            width: 48px;
+            height: 48px;
+            color: #818cf8;
+            filter: drop-shadow(0 0 12px rgba(99, 102, 241, 0.8));
+        }
+
+        .overlay-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #f1f5f9;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        .overlay-subtitle {
+            font-size: 0.95rem;
+            font-weight: 300;
+            color: #94a3b8;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            animation: blink 2s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.4;
+            }
+        }
+
+        .overlay-controls {
+            display: flex;
+            gap: 24px;
+            margin-top: 10px;
+        }
+
+        .ctrl-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            color: #64748b;
+            font-size: 0.78rem;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        .ctrl-key {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 6px;
+            padding: 4px 10px;
+            font-size: 0.72rem;
+            color: #94a3b8;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        /* =====================================================
+           CROSSHAIR
+           ===================================================== */
+        #crosshair {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 24px;
+            height: 24px;
+            pointer-events: none;
+            z-index: 20;
+            display: none;
+            /* shown when pointer locked */
+            align-items: center;
+            justify-content: center;
+            transition: filter 0.15s ease;
+        }
+
+        #crosshair svg {
+            width: 24px;
+            height: 24px;
+            transition: all 0.15s ease;
+        }
+
+        #crosshair .ch-stroke {
+            stroke: rgba(255, 255, 255, 0.85);
+            transition: stroke 0.15s ease;
+        }
+
+        #crosshair.valid .ch-stroke {
+            stroke: #4ade80;
+        }
+
+        #crosshair.invalid .ch-stroke {
+            stroke: #f87171;
+        }
+
+        #crosshair.flash {
+            animation: crosshairFlash 0.25s ease-out;
+        }
+
+        @keyframes crosshairFlash {
+            0% {
+                transform: translate(-50%, -50%) scale(1.6);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        /* =====================================================
+           BLOCK COUNTER (top right)
+           ===================================================== */
+        #block-counter {
+            position: fixed;
+            top: 20px;
+            right: 24px;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 6px 14px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #94a3b8;
+            letter-spacing: 0.5px;
+            z-index: 20;
+            pointer-events: none;
+            /* Let clicks pass through */
+            display: none;
+            /* shown in desktop mode */
+            transition: all 0.3s ease;
+        }
+
+        #block-counter.bump {
+            animation: counterBump 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes counterBump {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* =====================================================
+           DESKTOP HUD — QUICKBAR
+           ===================================================== */
+        #desktop-hud {
+            position: fixed;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: none;
+            /* shown in desktop mode */
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            z-index: 20;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        #block-list {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+        }
+
+        .slot {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            padding: 10px 10px 8px;
+            border-radius: 12px;
+            border: 1.5px solid rgba(255, 255, 255, 0.08);
+            background: rgba(15, 23, 42, 0.70);
+            backdrop-filter: blur(10px);
+            opacity: 0.55;
+            transform: translateY(4px) scale(0.93);
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            min-width: 70px;
+        }
+
+        .slot.active {
+            opacity: 1;
+            transform: translateY(0) scale(1.06);
+            border-color: rgba(99, 102, 241, 0.7);
+            background: rgba(30, 27, 75, 0.85);
+            box-shadow:
+                0 0 0 1px rgba(99, 102, 241, 0.3),
+                0 4px 20px rgba(99, 102, 241, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            animation: slotGlow 2.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes slotGlow {
+            from {
+                box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.3), 0 4px 20px rgba(99, 102, 241, 0.2);
+            }
+
+            to {
+                box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.5), 0 4px 28px rgba(99, 102, 241, 0.4);
+            }
+        }
+
+        .slot-key {
+            font-size: 0.6rem;
+            font-weight: 700;
+            color: #475569;
+            letter-spacing: 1px;
+        }
+
+        .slot.active .slot-key {
+            color: #818cf8;
+        }
+
+        .slot-swatch {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            box-shadow:
+                inset 0 2px 4px rgba(255, 255, 255, 0.2),
+                inset 0 -2px 4px rgba(0, 0, 0, 0.35),
+                0 2px 8px rgba(0, 0, 0, 0.4);
+            transition: transform 0.2s ease;
+        }
+
+        .slot.active .slot-swatch {
+            transform: scale(1.08);
+            box-shadow:
+                inset 0 2px 4px rgba(255, 255, 255, 0.25),
+                inset 0 -2px 4px rgba(0, 0, 0, 0.35),
+                0 0 16px rgba(99, 102, 241, 0.3);
+        }
+
+        .slot-name {
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .slot.active .slot-name {
+            color: #c7d2fe;
+        }
+
+        /* Controls bar */
+        .controls-bar {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .ctrl-badge {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.68rem;
+            color: #475569;
+            letter-spacing: 0.4px;
+        }
+
+        .ctrl-badge .k {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 4px;
+            padding: 1px 6px;
+            font-size: 0.62rem;
+            font-weight: 700;
+            color: #64748b;
+        }
+
+        /* =====================================================
+           NOTIFICATION TOAST
+           ===================================================== */
+        #toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-60px);
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-size: 0.82rem;
+            color: #c7d2fe;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            z-index: 50;
+            pointer-events: none;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+            opacity: 0;
+        }
+
+        #toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ======================================================
+         CLICK-TO-PLAY OVERLAY
+         ====================================================== -->
+    <div id="click-overlay">
+        <div class="overlay-content">
+            <div class="pulse-ring"></div>
+            <div class="overlay-icon-wrap">
+                <!-- Cube / block icon -->
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path
+                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                    <line x1="12" y1="22.08" x2="12" y2="12" />
+                </svg>
+            </div>
+            <div class="overlay-title">Block Builder</div>
+            <div class="overlay-subtitle">Click para empezar</div>
+            <div class="overlay-controls">
+                <div class="ctrl-item">
+                    <span class="ctrl-key">WASD</span>
+                    <span>Mover</span>
+                </div>
+                <div class="ctrl-item">
+                    <span class="ctrl-key">Ratón</span>
+                    <span>Mirar</span>
+                </div>
+                <div class="ctrl-item">
+                    <span class="ctrl-key">M</span>
+                    <span>Colocar</span>
+                </div>
+                <div class="ctrl-item">
+                    <span class="ctrl-key">N</span>
+                    <span>Borrar</span>
+                </div>
+                <div class="ctrl-item">
+                    <span class="ctrl-key">Q / E</span>
+                    <span>Cambiar</span>
+                </div>
+                <div class="ctrl-item">
+                    <span class="ctrl-key">ESC</span>
+                    <span>Salir</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================================================
+         CROSSHAIR (visible only when pointer locked)
+         ====================================================== -->
+    <div id="crosshair">
+        <svg viewBox="0 0 24 24" fill="none">
+            <!-- Horizontal lines -->
+            <line x1="1" y1="12" x2="8" y2="12" class="ch-stroke" stroke-width="1.5" stroke-linecap="round" />
+            <line x1="16" y1="12" x2="23" y2="12" class="ch-stroke" stroke-width="1.5" stroke-linecap="round" />
+            <!-- Vertical lines -->
+            <line x1="12" y1="1" x2="12" y2="8" class="ch-stroke" stroke-width="1.5" stroke-linecap="round" />
+            <line x1="12" y1="16" x2="12" y2="23" class="ch-stroke" stroke-width="1.5" stroke-linecap="round" />
+            <!-- Center dot -->
+            <circle cx="12" cy="12" r="1.2" class="ch-stroke" fill="rgba(255,255,255,0.5)" stroke-width="0" />
+        </svg>
+    </div>
+
+    <!-- ======================================================
+         BLOCK COUNTER (top right)
+         ====================================================== -->
+    <div id="block-counter">🧱 0 bloques</div>
+
+    <!-- ======================================================
+         DESKTOP HUD — QUICKBAR
+         ====================================================== -->
+    <div id="desktop-hud">
+        <div id="block-list">
+            <!-- Populated by JS -->
+        </div>
+        <div class="controls-bar">
+            <div class="ctrl-badge"><span class="k">Q</span><span class="k">E</span> Cambiar bloque</div>
+            <div class="ctrl-badge"><span class="k">Click</span> Colocar</div>
+            <div class="ctrl-badge"><span class="k">R.Click</span> Borrar</div>
+            <div class="ctrl-badge"><span class="k">ESC</span> Salir</div>
+        </div>
+    </div>
+
+    <!-- Toast notification -->
+    <div id="toast"></div>
+
+    <!-- ======================================================
+         A-FRAME SCENE
+         ====================================================== -->
+    <a-scene>
+        <!-- Managers -->
+        <a-entity id="block-registry" block-registry></a-entity>
+        <a-entity id="block-world" block-world></a-entity>
+
+        <!-- Ghost block (visual indicator) - fully defined here to avoid A-Frame init delays -->
+        <a-entity id="ghost-block" geometry="primitive: box; width: 1.01; height: 1.01; depth: 1.01"
+            material="color: #4CAF50; opacity: 0.4; transparent: true; depthTest: false" visible="false"
+            ghost-block="worldId: #block-world"></a-entity>
+
+        <!-- Player Rig -->
+        <a-entity id="rig" position="0 0 0">
+
+            <!-- Camera — pointer lock enabled; desktop-builder uses manual THREE.js raycasting -->
+            <!-- rotation: -20 tilt so player immediately sees the ground and ghost block -->
+            <a-entity id="camera" camera position="0 1.6 0" rotation="-20 0 0" look-controls="pointerLockEnabled: true"
+                wasd-controls desktop-builder="worldId: #block-world; registryId: #block-registry">
+            </a-entity>
+
+            <!-- VR Controllers (untouched) -->
+            <a-entity id="right-hand" oculus-touch-controls="hand: right"
+                vr-builder="worldId: #block-world; registryId: #block-registry">
+            </a-entity>
+            <a-entity id="left-hand" oculus-touch-controls="hand: left" vr-inventory="registryId: #block-registry">
+            </a-entity>
+        </a-entity>
+
+        <!-- Ground — position 0 -1 0 means its top face is at y=-0.5, ensuring snapping Y rounds perfectly to 0 -->
+        <a-box id="ground" class="builder-raycastable" color="#2c3e50" width="50" height="1" depth="50"
+            position="0 -1 0"></a-box>
+
+        <a-sky color="#87CEEB"></a-sky>
+
+        <!-- Lights -->
+        <a-light type="ambient" color="#ccc"></a-light>
+        <a-light type="directional" color="#fff" intensity="0.6" position="-1 2 1"></a-light>
+    </a-scene>
+
+    <script>
+        (function () {
+            // ---------------------------------------------------
+            // POINTER LOCK — handle BEFORE scene loaded so overlay
+            // click works immediately
+            // ---------------------------------------------------
+            const overlay = document.getElementById('click-overlay');
+            const crosshair = document.getElementById('crosshair');
+            const desktopHud = document.getElementById('desktop-hud');
+            const blockCounter = document.getElementById('block-counter');
+            const toast = document.getElementById('toast');
+
+            // The overlay sits above the canvas (z-index 100), so look-controls
+            // never sees the click. We manually request pointer lock here.
+            overlay.addEventListener('click', function () {
+                const canvas = document.querySelector('canvas');
+                if (canvas) {
+                    canvas.requestPointerLock();
+                } else {
+                    // Canvas not ready yet — wait for A-Frame to render it
+                    document.querySelector('a-scene').addEventListener('renderstart', function once() {
+                        document.querySelector('canvas').requestPointerLock();
+                        document.querySelector('a-scene').removeEventListener('renderstart', once);
+                    });
+                }
+            });
+
+            // Listen globally for pointer-lock-changed events (fired by desktop-builder)
+            document.addEventListener('pointer-lock-changed', (e) => {
+                if (e.detail.locked) {
+                    overlay.classList.add('hidden');
+                    crosshair.style.display = 'flex';
+                    desktopHud.style.display = 'flex';
+                    blockCounter.style.display = 'flex';
+                } else {
+                    overlay.classList.remove('hidden');
+                    crosshair.style.display = 'none';
+                    desktopHud.style.display = 'none';
+                    showToast('Ratón liberado — haz clic para volver a jugar');
+                }
+            });
+
+            let toastTimer = null;
+            function showToast(msg) {
+                toast.textContent = msg;
+                toast.classList.add('show');
+                clearTimeout(toastTimer);
+                toastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
+            }
+
+            const scene = document.querySelector('a-scene');
+            scene.addEventListener('loaded', function () {
+
+                const registryEl = document.querySelector('#block-registry');
+                const registry = registryEl.components['block-registry'];
+                const worldEl = document.querySelector('#block-world');
+
+                const blockList = document.getElementById('block-list');
+                const ghostEl = document.querySelector('[ghost-block]');
+
+                // ---------------------------------------------------
+                // LOOK-CONTROLS INITIAL PITCH
+                // look-controls resets object3D rotation on init, so html rotation
+                // attribute has no effect. We set it via the internal pitchObject.
+                // ---------------------------------------------------
+                const lookControls = document.querySelector('#camera').components['look-controls'];
+                if (lookControls && lookControls.pitchObject) {
+                    lookControls.pitchObject.rotation.x = -0.38; // ~-22° down
+                }
+
+                // ---------------------------------------------------
+                // QUICKBAR RENDER
+                // ---------------------------------------------------
+                function renderQuickbar() {
+                    blockList.innerHTML = '';
+                    const activeId = registry.getActiveBlock().id;
+
+                    Object.values(registry.blocks).forEach((block, idx) => {
+                        const item = document.createElement('div');
+                        item.className = `slot ${block.id === activeId ? 'active' : ''}`;
+                        item.id = `slot-${block.id}`;
+
+                        const colorMatch = block.material.match(/color:\s*(#[0-9a-fA-F]+|[a-zA-Z]+)/);
+                        const uiColor = colorMatch ? colorMatch[1] : '#888';
+
+                        item.innerHTML = `
+                            <div class="slot-key">${idx + 1}</div>
+                            <div class="slot-swatch" style="background: ${uiColor};"></div>
+                            <div class="slot-name">${block.name}</div>
+                        `;
+                        blockList.appendChild(item);
+                    });
+                }
+
+                registryEl.addEventListener('blockchanged', renderQuickbar);
+                setTimeout(renderQuickbar, 100);
+
+                // ---------------------------------------------------
+                // BLOCK COUNTER
+                // ---------------------------------------------------
+                function updateCounter() {
+                    const world = worldEl.components['block-world'];
+                    if (!world) return;
+                    const count = world.blocks.size;
+                    blockCounter.textContent = `🧱 ${count} bloque${count !== 1 ? 's' : ''}`;
+                    blockCounter.classList.remove('bump');
+                    void blockCounter.offsetWidth;
+                    blockCounter.classList.add('bump');
+                }
+
+                worldEl.addEventListener('blockplaced', updateCounter);
+                worldEl.addEventListener('blockremoved', updateCounter);
+
+                // ---------------------------------------------------
+                // CROSSHAIR COLOR — poll ghost state each frame
+                // ---------------------------------------------------
+                function updateCrosshair() {
+                    if (ghostEl && ghostEl.components['ghost-block']) {
+                        const ghost = ghostEl.components['ghost-block'];
+                        const visible = ghostEl.getAttribute('visible');
+                        if (visible) {
+                            crosshair.className = ghost.isValid ? 'valid' : 'invalid';
+                        } else {
+                            crosshair.className = '';
+                        }
+                    }
+                    requestAnimationFrame(updateCrosshair);
+                }
+                updateCrosshair();
+
+                // ---------------------------------------------------
+                // PLACEMENT / REMOVAL FLASH
+                // ---------------------------------------------------
+                document.addEventListener('desktop-block-placed', () => {
+                    crosshair.classList.remove('flash');
+                    void crosshair.offsetWidth;
+                    crosshair.classList.add('flash');
+                    updateCounter();
+                });
+
+                document.addEventListener('desktop-block-removed', () => {
+                    updateCounter();
+                });
+
+                // ---------------------------------------------------
+                // VR — hide desktop UI when entering VR
+                // ---------------------------------------------------
+                scene.addEventListener('enter-vr', () => {
+                    overlay.style.display = 'none';
+                    crosshair.style.display = 'none';
+                    desktopHud.style.display = 'none';
+                    blockCounter.style.display = 'none';
+                    toast.classList.remove('show');
+                });
+
+                scene.addEventListener('exit-vr', () => {
+                    overlay.style.display = 'flex';
+                    overlay.classList.remove('hidden');
+                });
+
+            }); // end scene loaded
+        })();
+    </script>
+
+</body>
+
+</html>

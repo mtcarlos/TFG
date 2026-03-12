@@ -1,0 +1,12 @@
+{
+  "name": "naf-tutorial",
+  "version": "1.0.0",
+  "description": "My first multi-user virtual reality",
+  "scripts": {
+    "start": "node ./server/easyrtc-server.js"
+  },
+  "author": "Carlos Malagón Tenorio",
+  "dependencies": {
+    "networked-aframe": "^0.14.0"
+  }
+}

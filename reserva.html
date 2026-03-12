@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Multiuser Experience — Networked-Aframe</title>
+    <meta name="description" content="Multiuser Experience">
+    <link rel="icon" type="image/png" href="assets/images/MiLogoVR.png">
+
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.min.js"></script>
+    <script src="/easyrtc/easyrtc.js"></script>
+    <script src="/js/networked-aframe.js"></script>
+    <script src="/js/easyrtc-patch.js"></script>
+    <script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"></script>
+    <script src="js/builder-components.js"></script>
+
+    <style>
+        /* Desktop UI - Quickbar Style */
+        #desktop-hud {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
+            color: #e2e8f0;
+            padding: 10px 20px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+            user-select: none;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        #block-list {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+
+        .block-item {
+            padding: 8px 16px;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            opacity: 0.6;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: scale(0.95);
+        }
+
+        .block-item.active {
+            border-color: rgba(99, 102, 241, 0.8);
+            background: rgba(99, 102, 241, 0.15);
+            opacity: 1;
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+        }
+
+        .color-swatch {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: inline-block;
+            box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.2), inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .block-name {
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .controls-info {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-top: 5px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 8px;
+        }
+
+        /* Desktop Crosshair */
+        #crosshair {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 10px;
+            height: 10px;
+            transform: translate(-50%, -50%);
+            border: 1px solid white;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- UI Overlay for Desktop -->
+    <div id="desktop-hud">
+        <div id="block-list">
+            <!-- Populated by JS -->
+        </div>
+        <div class="controls-info">
+            [1/Q] [2/E] Swap &bull; [P] Place &bull; [VR B/Y] Menu
+        </div>
+    </div>
+    <div id="crosshair"></div>
+
+    <a-scene networked-scene="
+      room: basic-room;
+      debug: true;
+      adapter: easyrtc;
+      audio: true;
+      serverURL: /;
+    ">
+
+        <a-assets>
+            <!-- Templates -->
+            <template id="avatar-template">
+                <a-entity class="avatar" networked-audio-source>
+                    <!-- Contenedor animado para dar el efecto de flotación sutil -->
+                    <a-entity class="visual-model"
+                        animation="property: position; dir: alternate; dur: 2000; easing: easeInOutSine; loop: true; to: 0 0.1 0">
+                        <a-sphere class="head" scale="0.3 0.3 0.3"></a-sphere>
+                        <a-entity class="face" position="0 0.05 0">
+                            <a-sphere class="eye" color="#efefef" position="0.1 0.1 -0.2" scale="0.08 0.08 0.08">
+                                <a-sphere class="pupil" color="#000" position="0 0 -1" scale="0.2 0.2 0.2"></a-sphere>
+                            </a-sphere>
+                            <a-sphere class="eye" color="#efefef" position="-0.1 0.1 -0.2" scale="0.08 0.08 0.08">
+                                <a-sphere class="pupil" color="#000" position="0 0 -1" scale="0.2 0.2 0.2"></a-sphere>
+                            </a-sphere>
+                        </a-entity>
+                    </a-entity>
+                    <a-entity class="nametag-container" position="0 0.6 0" face-camera="" rotation="0 180 0">
+                        <a-text class="nametag" value="Anonymous" color="white" align="center" position=""
+                            scale="1.5 1.5 1.5" rotation="0 180 0" side="double" text="value: Bob"></a-text>
+                    </a-entity>
+                </a-entity>
+            </template>
+
+            <template id="cube-template">
+                <a-entity class="cube">
+                    <a-box class="clickable" color="red" scale="1 1 1"></a-box>
+                </a-entity>
+            </template>
+            <!-- /Templates -->
+        </a-assets>
+
+        <!-- The building managers -->
+        <a-entity id="block-registry" block-registry></a-entity>
+        <a-entity id="block-world" block-world></a-entity>
+
+        <!-- The visual ghost block -->
+        <a-entity id="ghost-block" ghost-block="worldId: #block-world"></a-entity>
+
+        <a-entity id="rig" networked="template:#avatar-template;attachTemplateToLocal:false;" position="0 0 0"
+            spawn-in-circle="radius:3" thumbstick-movement player-info>
+            <a-entity id="player" camera position="0 1.6 0" wasd-controls="fly: true" look-controls
+                desktop-builder="worldId: #block-world; registryId: #block-registry">
+                <a-cursor raycaster="objects: .clickable" color="yellow"></a-cursor>
+                <a-sphere class="head" visible="false" simple-random-color></a-sphere>
+                <a-text class="nametag" visible="false"></a-text>
+            </a-entity>
+
+            <!-- VR Controllers for Locomotion and Building -->
+            <a-entity id="left-hand" oculus-touch-controls="hand: left"
+                vr-inventory="registryId: #block-registry"></a-entity>
+            <a-entity id="right-hand" oculus-touch-controls="hand: right"
+                vr-builder="worldId: #block-world; registryId: #block-registry"></a-entity>
+        </a-entity>
+
+        <a-entity id="interactive-cube" networked="template:#cube-template;networkId:cube1" position="0 1 -3"
+            color-changer class="clickable">
+        </a-entity>
+
+        <!-- Invisible ground for building -->
+        <a-box id="ground" class="builder-raycastable" material="transparent: true; opacity: 0.0" width="50" height="1"
+            depth="50" position="0 -0.5 0"></a-box>
+
+        <a-entity environment="preset: tron" position="0 -1.93 0"></a-entity>
+
+        <!-- Lighting -->
+        <a-entity light="type: ambient; intensity: 0.5"></a-entity>
+        <a-entity light="type: directional; intensity: 1; castShadow: true; position: 1 1 0"></a-entity>
+
+    </a-scene>
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/aframe-randomizer-components@3.0.2/dist/aframe-randomizer-components.min.js"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/aframe-environment-component@1.3.7/dist/aframe-environment-component.min.js"></script>
+
+    <script src="/js/scene-logic.js"></script>
+
+    <script>
+        // Update Desktop HUD when active block changes
+        document.querySelector('a-scene').addEventListener('loaded', function () {
+            const registryEl = document.querySelector('#block-registry');
+            if (registryEl && registryEl.components['block-registry']) {
+                const registry = registryEl.components['block-registry'];
+                const blockList = document.getElementById('block-list');
+
+                function renderUI() {
+                    blockList.innerHTML = '';
+                    const activeId = registry.getActiveBlock().id;
+
+                    Object.values(registry.blocks).forEach((block, idx) => {
+                        const item = document.createElement('div');
+                        item.className = `block-item ${block.id === activeId ? 'active' : ''}`;
+                        const colorMatch = block.material.match(/color:\s*(#[0-9a-fA-F]+|[a-zA-Z]+)/);
+                        const uiColor = colorMatch ? colorMatch[1] : '#fff';
+
+                        item.innerHTML = `
+                            <span class="color-swatch" style="background-color: ${uiColor};"></span>
+                            <span class="block-name">${block.name}</span>
+                            <span style="font-size: 0.6rem; color: #64748b;">${idx + 1}</span>
+                        `;
+                        blockList.appendChild(item);
+                    });
+                }
+
+                registryEl.addEventListener('blockchanged', renderUI);
+                setTimeout(renderUI, 100);
+            }
+
+            // Hide crosshair and HUD if entering VR
+            document.querySelector('a-scene').addEventListener('enter-vr', function () {
+                document.getElementById('desktop-hud').style.display = 'none';
+                document.getElementById('crosshair').style.display = 'none';
+            });
+            document.querySelector('a-scene').addEventListener('exit-vr', function () {
+                document.getElementById('desktop-hud').style.display = 'block';
+                document.getElementById('crosshair').style.display = 'block';
+            });
+        });
+    </script>
+
+    <div id="audio-debug"
+        style="position: fixed; bottom: 10px; left: 10px; color: white; background: rgba(0,0,0,0.5); padding: 10px; font-family: sans-serif; pointer-events: none; z-index: 100;">
+        Audio Status: Initializing...
+    </div>
+
+</body>
+
+</html>

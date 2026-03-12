@@ -1,0 +1,467 @@
+:root {
+    --primary: #6366f1;
+    --primary-hover: #4f46e5;
+    --bg: #0f172a;
+    --text: #f8fafc;
+    --surface: rgba(30, 41, 59, 0.7);
+    --mac-bar: rgba(15, 23, 42, 0.85);
+    --mac-close: #ff5f56;
+    --mac-minimize: #ffbd2e;
+    --mac-maximize: #27c93f;
+    --term-text: #4ade80;
+    /* a slightly softer green */
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    background-image: url('assets/images/fondodiablillos.png');
+    /* Custom background image */
+    background-size: cover;
+    background-position: center bottom;
+    background-repeat: no-repeat;
+    color: var(--text);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+
+.bg-gradient {
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    top: -50%;
+    left: -50%;
+    z-index: -1;
+    background: radial-gradient(circle at 60% 40%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 40% 60%, rgba(192, 132, 252, 0.15) 0%, transparent 40%);
+    opacity: 0.8;
+    animation: rotate 60s linear infinite;
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* MacOS Window Style */
+.mac-window {
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border-radius: 12px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.15) inset;
+    width: 90%;
+    max-width: 580px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.mac-titlebar {
+    background: var(--mac-bar);
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 14px;
+    position: relative;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+}
+
+.mac-controls {
+    display: flex;
+    gap: 8px;
+    z-index: 2;
+    flex: 1;
+}
+
+.mac-titlebar-right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex: 1;
+    z-index: 2;
+}
+
+.mac-btn {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    cursor: pointer;
+    box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+.mac-btn.close {
+    background-color: var(--mac-close);
+}
+
+.mac-btn.minimize {
+    background-color: var(--mac-minimize);
+}
+
+.mac-btn.maximize {
+    background-color: var(--mac-maximize);
+}
+
+.mac-title {
+    position: absolute;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #94a3b8;
+    pointer-events: none;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+    letter-spacing: 0.3px;
+}
+
+.mac-content {
+    padding: 3rem 4rem;
+    text-align: center;
+}
+
+h1 {
+    font-size: 2.2rem;
+    margin-top: 0;
+    margin-bottom: 0.8rem;
+    background: linear-gradient(to right, #ffffff, #a5b4fc);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+p {
+    color: #cbd5e1;
+    margin-bottom: 2.2rem;
+    font-size: 1.05rem;
+    line-height: 1.5;
+}
+
+/* Terminal Input Style */
+.terminal-container {
+    display: flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.55);
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 2rem;
+    font-family: "Fira Code", "Menlo", "Monaco", "Courier New", monospace;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.terminal-container:focus-within {
+    border-color: rgba(99, 102, 241, 0.5);
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.4), 0 0 0 2px rgba(99, 102, 241, 0.3);
+}
+
+.terminal-prompt {
+    color: var(--term-text);
+    margin-right: 0.8rem;
+    font-weight: 500;
+    font-size: 1.05rem;
+    user-select: none;
+}
+
+.terminal-input {
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-size: 1.05rem;
+    font-family: inherit;
+    flex-grow: 1;
+    outline: none;
+    width: 100%;
+    caret-color: var(--term-text);
+}
+
+.terminal-input::placeholder {
+    color: rgba(255, 255, 255, 0.25);
+}
+
+.action-container {
+    margin-top: 1rem;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: white;
+    text-decoration: none;
+    border-radius: 30px;
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-icon {
+    width: 50px;
+    height: 50px;
+    padding: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.icon-svg {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.btn-text {
+    max-width: 0;
+    opacity: 0;
+    white-space: nowrap;
+    transition: all 0.9s cubic-bezier(0.25, 1, 0.5, 1);
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.btn-icon:hover {
+    width: 220px;
+    /* Expand to fit text */
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+}
+
+.btn-icon:hover .btn-text {
+    max-width: 160px;
+    /* Reveal text */
+    opacity: 1;
+    margin-left: 12px;
+}
+
+.btn-icon:hover .icon-svg {
+    transform: translateX(-4px);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+/* Menu Bar Styles */
+.mac-menubar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 28px;
+    background: rgba(25, 25, 25, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    box-sizing: border-box;
+    z-index: 1000;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+    font-size: 13px;
+    font-weight: 500;
+    color: #e5e5e5;
+    user-select: none;
+}
+
+.mac-menu-item {
+    padding: 0 10px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    cursor: default;
+    border-radius: 4px;
+    margin: 0 2px;
+}
+
+.mac-menu-item.logo {
+    font-size: 16px;
+    padding: 0 12px;
+}
+
+.mac-menu-item.active {
+    font-weight: 700;
+}
+
+.mac-menu-item:not(.clock):hover,
+.mac-menu-item.hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.mac-menu-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+
+/* Dropdown Styles */
+.mac-dropdown {
+    display: none;
+    position: fixed;
+    background: rgba(35, 35, 35, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    border-radius: 6px;
+    padding: 4px;
+    min-width: 200px;
+    z-index: 1001;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.mac-dropdown-item {
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: default;
+    color: #e5e5e5;
+    font-size: 13px;
+}
+
+.mac-dropdown-item:not(.disabled):hover {
+    background: #0063e1;
+    color: white;
+}
+
+.mac-dropdown-item.disabled {
+    color: #777;
+}
+
+.mac-dropdown-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 4px 0;
+}
+
+/* Instructions Window Specific */
+.instructions-window {
+    position: absolute;
+    /* Needs to be absolute for dragging */
+    top: 50px;
+    left: 50px;
+    width: 400px;
+    background: rgba(22, 27, 34, 0.95);
+}
+
+.instructions-window .mac-content {
+    padding: 2rem;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-left h2 {
+    margin-top: 0;
+    font-size: 1.5rem;
+    color: var(--text);
+}
+
+.text-left h3 {
+    color: #a5b4fc;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.instructions-list {
+    margin: 0;
+    padding-left: 20px;
+    color: #cbd5e1;
+    line-height: 1.6;
+}
+
+/* Update main window to position absolute for z-index stacking */
+.main-window {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Avatar Card Styles */
+.avatar-card {
+    flex: 0 0 auto;
+    width: 100px;
+    max-height: 100px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 200px;
+    padding: 0px;
+    text-align: center;
+}
+
+.avatar-card-img {
+    width: 100%;
+    height: auto;
+    border-radius: 200px;
+    mix-blend-mode: screen;
+    object-fit: contain;
+    max-height: 250px;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    transition: all 0.5s ease;
+
+}
+
+.avatar-card-img:hover {
+    border-radius: 0px;
+    cursor: pointer;
+    /* Al cambiar object-fit a "contain" la imagen deja de estar recortada y se muestra entera */
+    object-fit: contain;
+    /* La hace un poco más grande y la centra elevándola para dar el efecto 3D */
+    transform: scale(1.7) translateY(-10px);
+    z-index: 10;
+    position: relative;
+    mix-blend-mode: normal;
+    width: 100%;
+    height: 100%;
+}
+
+.avatar-card-title {
+    margin: 10px 0 5px 0;
+    color: #f8fafc;
+    font-size: 1.1rem;
+}
+
+.avatar-card-subtitle {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+@media (max-width: 480px) {
+    .mac-content {
+        padding: 2.5rem 2rem;
+    }
+
+    .terminal-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .terminal-prompt {
+        margin-bottom: 0.2rem;
+    }
+}

@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Multiuser Experience — Networked-Aframe</title>
+    <meta name="description" content="Multiuser Experience">
+    <link rel="icon" type="image/png" href="assets/images/MiLogoVR.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Outfit:wght@400;500;600&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.min.js"></script>
+    <script src="/easyrtc/easyrtc.js"></script>
+    <script src="/js/networked-aframe.js"></script>
+    <script src="/js/easyrtc-patch.js"></script>
+    <script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"></script>
+    <script src="js/builder-components.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            /* Combine friendly Fredoka for headings/UI and clean Outfit for small details */
+            font-family: 'Fredoka', sans-serif;
+            overflow: hidden;
+            background: #1a1a1a;
+        }
+
+        /* =====================================================
+           CLICK-TO-PLAY OVERLAY (Indie Game Start Menu)
+           ===================================================== */
+        #click-overlay {
+            position: fixed;
+            inset: 0;
+            /* Cozy warm-dark vignette */
+            background: radial-gradient(circle, rgba(40, 35, 30, 0.7) 0%, rgba(20, 18, 15, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            cursor: pointer;
+            transition: opacity 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+
+        #click-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .game-menu-panel {
+            background: rgba(45, 42, 38, 0.9);
+            box-shadow:
+                0 0 0 4px rgba(255, 255, 255, 0.1),
+                0 20px 40px rgba(0, 0, 0, 0.6),
+                inset 0 2px 0 rgba(255, 255, 255, 0.15);
+            border-radius: 24px;
+            padding: 40px 50px;
+            width: 90%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transform: translateY(0);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Subtle grid pattern background inside the menu for that "blueprint" geeky feel */
+        .game-menu-panel::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        #click-overlay:hover .game-menu-panel {
+            transform: translateY(-4px);
+            box-shadow:
+                0 0 0 4px rgba(255, 255, 255, 0.2),
+                0 25px 50px rgba(0, 0, 0, 0.7),
+                inset 0 2px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .menu-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .logo-icon-wrap {
+            width: 80px;
+            height: 80px;
+            background: #d97706;
+            /* Warm cozy amber */
+            border: 4px solid #fcd34d;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 16px rgba(217, 119, 6, 0.4), inset 0 -4px 0 rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            animation: bounceSoft 2s infinite ease-in-out;
+        }
+
+        @keyframes bounceSoft {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        .logo-icon-wrap svg {
+            width: 44px;
+            height: 44px;
+            color: #fff;
+            filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.3));
+        }
+
+        .overlay-title {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #f8fafc;
+            letter-spacing: 0.5px;
+            margin: 0 0 5px 0;
+            text-shadow: 0 3px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .overlay-subtitle {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: #a8a29e;
+            margin-bottom: 30px;
+        }
+
+        /* Controls styling akin to game settings */
+        .controls-grid {
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 16px;
+            padding: 20px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px 20px;
+            margin-bottom: 30px;
+            border: 2px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .ctrl-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #e5e7eb;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .ctrl-key {
+            background: #f8fafc;
+            color: #334155;
+            border-radius: 6px;
+            padding: 4px 10px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            font-family: 'Fredoka', sans-serif;
+            box-shadow: 0 3px 0 #cbd5e1, 0 4px 4px rgba(0, 0, 0, 0.2);
+            text-transform: uppercase;
+        }
+
+        .start-button {
+            background: #10b981;
+            /* Friendly emerald green */
+            color: #fff;
+            font-size: 1.2rem;
+            font-weight: 700;
+            padding: 12px 32px;
+            border-radius: 30px;
+            box-shadow: 0 4px 0 #059669, 0 8px 16px rgba(16, 185, 129, 0.3);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            transition: all 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #click-overlay:active .start-button {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 #059669, 0 2px 4px rgba(16, 185, 129, 0.3);
+        }
+
+        /* =====================================================
+           CROSSHAIR (Precise Reticle)
+           ===================================================== */
+        #crosshair {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            pointer-events: none;
+            z-index: 20;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            transition: filter 0.15s ease;
+            mix-blend-mode: exclusion;
+        }
+
+        #crosshair svg {
+            width: 20px;
+            height: 20px;
+            transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        #crosshair .ch-stroke {
+            stroke: rgba(255, 255, 255, 0.9);
+            stroke-width: 1.5;
+            transition: stroke 0.15s ease;
+        }
+
+        #crosshair.valid .ch-stroke {
+            stroke: #4ade80;
+        }
+
+        #crosshair.invalid .ch-stroke {
+            stroke: #fb7185;
+        }
+
+        #crosshair.flash svg {
+            transform: scale(1.5);
+        }
+
+        /* =====================================================
+           BLOCK COUNTER (Resource Indicator)
+           ===================================================== */
+        #block-counter {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            background: rgba(30, 28, 26, 0.85);
+            border: 3px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 8px 18px 8px 14px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #f8fafc;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), inset 0 2px 0 rgba(255, 255, 255, 0.1);
+            z-index: 20;
+            pointer-events: none;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        #block-counter.bump {
+            transform: scale(1.15) rotate(2deg);
+        }
+
+        /* =====================================================
+           DESKTOP HUD — QUICKBAR (Glassmorphism & Voxel 3D)
+           ===================================================== */
+        #desktop-hud {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            z-index: 20;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        .controls-hint-bar {
+            display: flex;
+            gap: 20px;
+            background: rgba(30, 28, 26, 0.4);
+            backdrop-filter: blur(8px);
+            padding: 8px 24px;
+            border-radius: 30px;
+            font-family: 'Outfit', sans-serif;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .ctrl-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            color: #d6d3d1;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .ctrl-badge .k {
+            background: rgba(255, 255, 255, 0.15);
+            color: #f8fafc;
+            border-radius: 6px;
+            padding: 2px 8px;
+            font-size: 0.75rem;
+            font-family: 'Fira Code', monospace;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        #block-list {
+            display: flex;
+            gap: 12px;
+            background: rgba(20, 18, 15, 0.6);
+            backdrop-filter: blur(16px);
+            padding: 12px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .slot {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            border-radius: 140px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid transparent;
+            opacity: 0.6;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            width: 64px;
+            height: 64px;
+            position: relative;
+            transform: translateY(0) scale(1);
+        }
+
+        .slot.active {
+            opacity: 1;
+            transform: translateY(-12px) scale(1.15);
+
+            border: 2px solid var(--border-color, #fcd34d00);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4), inset 0 0 20px var(--glow-color, transparent);
+            z-index: 10;
+        }
+
+
+
+        /* -----------------------
+           HIDDEN TOOLTIP
+           ----------------------- */
+        .tooltip-name {
+            position: absolute;
+            top: -35px;
+            background: rgba(15, 23, 42, 0.9);
+            color: #f8fafc;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 8px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none;
+            white-space: nowrap;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .slot.active .tooltip-name {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* -----------------------
+           CSS 3D ISOMETRIC CUBE
+           ----------------------- */
+        .iso-cube {
+            position: relative;
+            width: 32px;
+            height: 32px;
+            transform-style: preserve-3d;
+            transform: rotateX(-30deg) rotateY(45deg);
+        }
+
+        .iso-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            /* Border helps define the cube edges slightly */
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+        }
+
+        .iso-face.top {
+            transform: rotateX(90deg) translateZ(16px);
+        }
+
+        .iso-face.left {
+            transform: rotateY(-90deg) translateZ(16px);
+        }
+
+        .iso-face.right {
+            transform: translateZ(16px);
+        }
+
+        /* =====================================================
+           EVENT LOG (Game Style Notifications)
+           ===================================================== */
+        #event-log {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 50;
+            pointer-events: none;
+            width: 300px;
+        }
+
+        .log-entry {
+            background: rgba(20, 18, 15, 0.65);
+            backdrop-filter: blur(8px);
+            border-left: 3px solid #10b981;
+            /* Default to emerald accent */
+            padding: 8px 12px;
+            border-radius: 4px 8px 8px 4px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            color: #f8fafc;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+
+            /* Animation properties */
+            transform: translateX(-20px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .log-entry.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .log-entry.fade-out {
+            transform: translateY(-10px);
+            opacity: 0;
+            transition: all 0.5s ease-out;
+        }
+
+        /* Distinct styles for different types of alerts */
+        .log-entry.alert-warning {
+            border-left-color: #fcd34d;
+            color: #fef3c7;
+        }
+
+        .log-entry.alert-system {
+            border-left-color: #60a5fa;
+            color: #eff6ff;
+        }
+
+        #audio-debug {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.75rem;
+            font-family: 'Outfit', sans-serif;
+            pointer-events: none;
+            z-index: 100;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ======================================================
+         CLICK-TO-PLAY OVERLAY (Indie Menu)
+         ====================================================== -->
+    <div id="click-overlay">
+        <div class="game-menu-panel">
+            <div class="menu-content">
+                <div class="logo-icon-wrap">
+                    <!-- Chunky block icon -->
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path
+                            d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                        <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                        <line x1="12" y1="22.08" x2="12" y2="12" />
+                    </svg>
+                </div>
+
+                <h2 class="overlay-title">PxlBuilder</h2>
+                <p class="overlay-subtitle">A cozy space to create.</p>
+
+                <div class="controls-grid">
+                    <div class="ctrl-item">
+                        <span>Movement</span>
+                        <span class="ctrl-key">WASD</span>
+                    </div>
+                    <div class="ctrl-item">
+                        <span>Place</span>
+                        <span class="ctrl-key">R-Click</span>
+                    </div>
+                    <div class="ctrl-item">
+                        <span>Rotate</span>
+                        <span class="ctrl-key">Q / E</span>
+                    </div>
+                    <div class="ctrl-item">
+                        <span>Look</span>
+                        <span class="ctrl-key">Mouse</span>
+                    </div>
+                    <div class="ctrl-item">
+                        <span>Remove</span>
+                        <span class="ctrl-key">N</span>
+                    </div>
+                    <div class="ctrl-item">
+                        <span>Inventory</span>
+                        <span class="ctrl-key">Scroll</span>
+                    </div>
+                    <div class="ctrl-item">
+                        <span>Pause</span>
+                        <span class="ctrl-key">ESC</span>
+                    </div>
+                </div>
+
+                <div class="start-button">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                    Start Playing
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ======================================================
+         CROSSHAIR (Precise Reticle)
+         ====================================================== -->
+    <div id="crosshair">
+        <svg viewBox="0 0 24 24" fill="none">
+            <!-- Precise crosshair lines -->
+            <line x1="4" y1="12" x2="9" y2="12" class="ch-stroke" stroke-width="1.2" stroke-linecap="round" />
+            <line x1="15" y1="12" x2="20" y2="12" class="ch-stroke" stroke-width="1.2" stroke-linecap="round" />
+            <line x1="12" y1="4" x2="12" y2="9" class="ch-stroke" stroke-width="1.2" stroke-linecap="round" />
+            <line x1="12" y1="15" x2="12" y2="20" class="ch-stroke" stroke-width="1.2" stroke-linecap="round" />
+            <circle cx="12" cy="12" r="1" class="ch-stroke" fill="rgba(255,255,255,0.8)" stroke-width="0" />
+        </svg>
+    </div>
+
+    <!-- ======================================================
+         BLOCK COUNTER
+         ====================================================== -->
+    <div id="block-counter">
+        <span style="font-size: 1.3rem;">🧱</span>
+        <span id="counter-val">0</span>
+    </div>
+
+    <!-- ======================================================
+         DESKTOP HUD — QUICKBAR
+         ====================================================== -->
+    <div id="desktop-hud">
+        <div id="block-list">
+            <!-- Populated by JS -->
+        </div>
+        <div class="controls-hint-bar">
+            <div class="ctrl-badge"><span class="k">⮃ Scroll</span> Switch</div>
+            <div class="ctrl-badge"><span class="k">Q</span> <span class="k">E</span> Rotate</div>
+            <div class="ctrl-badge"><span class="k">R-Click</span> Place</div>
+            <div class="ctrl-badge"><span class="k">L-Click</span> Destroy</div>
+        </div>
+    </div>
+
+    <!-- Event Log -->
+    <div id="event-log"></div>
+
+    <a-scene networked-scene="
+      room: basic-room;
+      debug: true;
+      adapter: easyrtc;
+      audio: true;
+      serverURL: /;
+    ">
+
+        <a-assets>
+            <!-- Templates -->
+            <template id="avatar-template">
+                <a-entity class="avatar">
+                    <a-entity class="player-cam" networked-audio-source>
+                        <a-entity class="visual-model"
+                            animation="property: position; dir: alternate; dur: 2000; easing: easeInOutSine; loop: true; to: 0 0.1 0">
+                            <a-sphere class="head" scale="0.3 0.3 0.3"></a-sphere>
+                            <a-entity class="face" position="0 0.05 0">
+                                <a-sphere class="eye" color="#efefef" position="0.1 0.1 -0.2" scale="0.08 0.08 0.08">
+                                    <a-sphere class="pupil" color="#000" position="0 0 -1"
+                                        scale="0.2 0.2 0.2"></a-sphere>
+                                </a-sphere>
+                                <a-sphere class="eye" color="#efefef" position="-0.1 0.1 -0.2" scale="0.08 0.08 0.08">
+                                    <a-sphere class="pupil" color="#000" position="0 0 -1"
+                                        scale="0.2 0.2 0.2"></a-sphere>
+                                </a-sphere>
+                            </a-entity>
+                        </a-entity>
+                        <a-entity class="nametag-container" position="0 0.6 0" face-camera="" rotation="0 180 0">
+                            <a-text class="nametag" value="Anonymous" color="white" align="center" position=""
+                                scale="1.5 1.5 1.5" rotation="0 180 0" side="double" text="value: Bob"></a-text>
+                        </a-entity>
+                    </a-entity>
+                </a-entity>
+            </template>
+
+            <template id="cube-template">
+                <a-entity class="cube">
+                    <a-box class="clickable" color="red" scale="1 1 1"></a-box>
+                </a-entity>
+            </template>
+            <!-- /Templates -->
+
+            <!-- GLB Models -->
+            <a-asset-item id="tree-model" src="assets/models/Tree.glb"></a-asset-item>
+        </a-assets>
+
+        <!-- The building managers -->
+        <a-entity id="block-registry" block-registry></a-entity>
+        <a-entity id="block-world" block-world></a-entity>
+
+        <!-- Ghost block (visual indicator) -->
+        <a-entity id="ghost-block" geometry="primitive: box; width: 1.01; height: 1.01; depth: 1.01"
+            material="color: #4CAF50; opacity: 0.4; transparent: true; depthTest: false" visible="false"
+            ghost-block="worldId: #block-world"></a-entity>
+
+        <a-entity id="rig" networked="template:#avatar-template;attachTemplateToLocal:false;" position="0 0 0"
+            spawn-in-circle="radius:3" thumbstick-movement player-info>
+
+            <a-entity id="player" class="player-cam" camera position="0 1.6 0" wasd-controls="fly: true"
+                look-controls="pointerLockEnabled: true"
+                desktop-builder="worldId: #block-world; registryId: #block-registry">
+                <a-cursor raycaster="objects: .clickable" color="yellow" visible="false"></a-cursor>
+                <a-sphere class="head" visible="false" simple-random-color></a-sphere>
+                <a-text class="nametag" visible="false"></a-text>
+            </a-entity>
+
+            <!-- VR Controllers -->
+            <a-entity id="left-hand" oculus-touch-controls="hand: left"
+                vr-inventory="registryId: #block-registry"></a-entity>
+            <a-entity id="right-hand" oculus-touch-controls="hand: right"
+                vr-builder="worldId: #block-world; registryId: #block-registry"></a-entity>
+        </a-entity>
+
+        <a-entity id="interactive-cube" networked="template:#cube-template;networkId:cube1" position="0 1 -3"
+            color-changer class="clickable">
+        </a-entity>
+
+        <!-- Invisible ground for building -->
+        <a-box id="ground" class="builder-raycastable" material="transparent: true; opacity: 0.0" width="50" height="1"
+            depth="50" position="0 -0.5 0"></a-box>
+
+        <a-entity environment="preset: tron" position="0 -1.93 0"></a-entity>
+
+        <!-- Lighting -->
+        <a-entity light="type: ambient; intensity: 0.5"></a-entity>
+        <a-entity light="type: directional; intensity: 1; castShadow: true; position: 1 1 0"></a-entity>
+
+    </a-scene>
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/aframe-randomizer-components@3.0.2/dist/aframe-randomizer-components.min.js"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/aframe-environment-component@1.3.7/dist/aframe-environment-component.min.js"></script>
+
+    <script src="/js/scene-logic.js"></script>
+
+    <script>
+        (function () {
+            // ---------------------------------------------------
+            // POINTER LOCK — handle BEFORE scene loaded so overlay
+            // click works immediately
+            // ---------------------------------------------------
+            const overlay = document.getElementById('click-overlay');
+            const crosshair = document.getElementById('crosshair');
+            const desktopHud = document.getElementById('desktop-hud');
+            const blockCounter = document.getElementById('block-counter');
+            const counterVal = document.getElementById('counter-val');
+            const eventLog = document.getElementById('event-log');
+
+            overlay.addEventListener('click', function () {
+                const canvas = document.querySelector('canvas');
+                if (canvas) {
+                    canvas.requestPointerLock();
+                } else {
+                    document.querySelector('a-scene').addEventListener('renderstart', function once() {
+                        document.querySelector('canvas').requestPointerLock();
+                        document.querySelector('a-scene').removeEventListener('renderstart', once);
+                    });
+                }
+            });
+
+            document.addEventListener('pointer-lock-changed', (e) => {
+                if (e.detail.locked) {
+                    overlay.classList.add('hidden');
+                    crosshair.style.display = 'flex';
+                    desktopHud.style.display = 'flex';
+                    blockCounter.style.display = 'flex';
+                } else {
+                    crosshair.style.display = 'none';
+                    desktopHud.style.display = 'none';
+                    logEvent('Game Paused - Click to resume', 'warning');
+                }
+            });
+
+            // ---------------------------------------------------
+            // EVENT LOG SYSTEM
+            // ---------------------------------------------------
+            function logEvent(msg, type = 'system') {
+                const entry = document.createElement('div');
+                entry.className = `log-entry alert-${type}`;
+                entry.textContent = `> ${msg}`;
+
+                eventLog.appendChild(entry);
+
+                // Keep max 5 messages in log
+                while (eventLog.children.length > 5) {
+                    eventLog.removeChild(eventLog.firstChild);
+                }
+
+                // Trigger reflow for animation
+                void entry.offsetWidth;
+                entry.classList.add('show');
+
+                // Remove after delay
+                setTimeout(() => {
+                    entry.classList.remove('show');
+                    entry.classList.add('fade-out');
+                    setTimeout(() => {
+                        if (entry.parentNode) {
+                            entry.parentNode.removeChild(entry);
+                        }
+                    }, 500); // Wait for fade-out animation
+                }, 4000);
+            }
+
+            const scene = document.querySelector('a-scene');
+            scene.addEventListener('loaded', function () {
+
+                const registryEl = document.querySelector('#block-registry');
+                const registry = registryEl.components['block-registry'];
+                const worldEl = document.querySelector('#block-world');
+
+                const blockList = document.getElementById('block-list');
+                const ghostEl = document.querySelector('[ghost-block]');
+
+                // ---------------------------------------------------
+                // AUDIO: UI SOUNDS
+                // ---------------------------------------------------
+                // Create a simple procedural pop sound for UI feedback
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+                function playTickSound() {
+                    if (audioCtx.state === 'suspended') return;
+
+                    const osc = audioCtx.createOscillator();
+                    const gainNode = audioCtx.createGain();
+
+                    osc.type = 'sine';
+                    // Quick pitch drop for a "pop" or "tick"
+                    osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.05);
+
+                    // Very short percussive envelope
+                    gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+                    gainNode.gain.linearRampToValueAtTime(0.15, audioCtx.currentTime + 0.01);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+
+                    osc.connect(gainNode);
+                    gainNode.connect(audioCtx.destination);
+
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.06);
+                }
+
+                // ---------------------------------------------------
+                // QUICKBAR RENDER (3D Voxel style + Glassmorphism)
+                // ---------------------------------------------------
+                let lastActiveId = null;
+
+                function renderQuickbar() {
+                    blockList.innerHTML = '';
+                    const activeId = registry.getActiveBlock().id;
+
+                    // Play sound if selection changed (and not first render)
+                    if (lastActiveId !== null && lastActiveId !== activeId) {
+                        playTickSound();
+                    }
+                    lastActiveId = activeId;
+
+                    Object.values(registry.blocks).forEach((block, idx) => {
+                        const item = document.createElement('div');
+                        item.className = `slot ${block.id === activeId ? 'active' : ''}`;
+                        item.id = `slot-${block.id}`;
+
+                        // Render Voxel 3D cube OR Prop icon based on type
+                        let visualHTML = '';
+                        if (block.type === 'voxel') {
+                            const colorMatch = block.material.match(/color:\s*(#[0-9a-fA-F]+|[a-zA-Z]+)/);
+                            const uiColor = colorMatch ? colorMatch[1] : '#888';
+
+                            // Parse hex to RGB for shaded faces
+                            let r = 136, g = 136, b = 136;
+                            if (uiColor.startsWith('#') && uiColor.length === 7) {
+                                r = parseInt(uiColor.slice(1, 3), 16);
+                                g = parseInt(uiColor.slice(3, 5), 16);
+                                b = parseInt(uiColor.slice(5, 7), 16);
+                            }
+
+                            // Create slightly darker/lighter shades for the 3D cube illusion
+                            const topColor = `rgb(${Math.min(255, r + 30)}, ${Math.min(255, g + 30)}, ${Math.min(255, b + 30)})`;
+                            const leftColor = uiColor;
+                            const rightColor = `rgb(${Math.max(0, r - 40)}, ${Math.max(0, g - 40)}, ${Math.max(0, b - 40)})`;
+
+                            // Dynamic glow color based on the actual block color
+                            if (block.id === activeId) {
+                                item.style.setProperty('--glow-color', `rgba(${r}, ${g}, ${b}, 0.5)`);
+                                item.style.setProperty('--border-color', `rgb(${Math.min(255, r + 80)}, ${Math.min(255, g + 80)}, ${Math.min(255, b + 80)})`);
+                            }
+
+                            visualHTML = `
+                                <div class="iso-cube">
+                                    <div class="iso-face top" style="background: ${topColor};"></div>
+                                    <div class="iso-face left" style="background: ${leftColor};"></div>
+                                    <div class="iso-face right" style="background: ${rightColor};"></div>
+                                </div>
+                            `;
+                        } else if (block.type === 'prop') {
+                            // Render a simple icon or emoji for props
+                            let icon = '📦';
+                            if (block.id === 'tree') icon = '🌲';
+
+                            if (block.id === activeId) {
+                                item.style.setProperty('--glow-color', `rgba(16, 185, 129, 0.4)`); // Emerald glow for props
+                                item.style.setProperty('--border-color', `#4ade80`);
+                            }
+
+                            visualHTML = `<div style="font-size: 2rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));">${icon}</div>`;
+                        }
+
+                        item.innerHTML = `
+                            <div class="tooltip-name">${block.name}</div>
+                            ${visualHTML}
+                        `;
+                        blockList.appendChild(item);
+                    });
+                }
+
+                registryEl.addEventListener('blockchanged', renderQuickbar);
+                setTimeout(renderQuickbar, 100);
+
+                // ---------------------------------------------------
+                // BLOCK COUNTER
+                // ---------------------------------------------------
+                function updateCounter() {
+                    const world = worldEl.components['block-world'];
+                    if (!world) return;
+                    counterVal.textContent = world.blocks.size;
+                    blockCounter.classList.remove('bump');
+                    void blockCounter.offsetWidth;
+                    blockCounter.classList.add('bump');
+                }
+
+                worldEl.addEventListener('blockplaced', updateCounter);
+                worldEl.addEventListener('blockremoved', updateCounter);
+
+                // ---------------------------------------------------
+                // CROSSHAIR COLOR
+                // ---------------------------------------------------
+                function updateCrosshair() {
+                    if (ghostEl && ghostEl.components['ghost-block']) {
+                        const ghost = ghostEl.components['ghost-block'];
+                        const visible = ghostEl.getAttribute('visible');
+                        if (visible) {
+                            crosshair.className = ghost.isValid ? 'valid' : 'invalid';
+                        } else {
+                            crosshair.className = '';
+                        }
+                    }
+                    requestAnimationFrame(updateCrosshair);
+                }
+                updateCrosshair();
+
+                // ---------------------------------------------------
+                // PLACEMENT / REMOVAL FLASH
+                // ---------------------------------------------------
+                document.addEventListener('desktop-block-placed', () => {
+                    crosshair.classList.remove('flash');
+                    void crosshair.offsetWidth;
+                    crosshair.classList.add('flash');
+                    updateCounter();
+                });
+
+                document.addEventListener('desktop-block-removed', () => {
+                    updateCounter();
+                });
+
+                // ---------------------------------------------------
+                // VR HIDE
+                // ---------------------------------------------------
+                scene.addEventListener('enter-vr', () => {
+                    overlay.style.display = 'none';
+                    crosshair.style.display = 'none';
+                    desktopHud.style.display = 'none';
+                    blockCounter.style.display = 'none';
+                    eventLog.style.display = 'none';
+                });
+
+                scene.addEventListener('exit-vr', () => {
+                    // Keeps the mouse free and hides the overlay when exiting VR
+                });
+
+                // ---------------------------------------------------
+                // NAF EVENT LOGGING
+                // ---------------------------------------------------
+                document.body.addEventListener('clientConnected', function (evt) {
+                    // Slight delay to ensure logEvent is ready and not spammed on boot
+                    setTimeout(() => {
+                        logEvent(`User Connect: ${evt.detail.clientId.substring(0, 4)}`, 'system');
+                    }, 1000);
+                });
+
+                document.body.addEventListener('clientDisconnected', function (evt) {
+                    logEvent(`User Disconnect: ${evt.detail.clientId.substring(0, 4)}`, 'warning');
+                });
+
+            }); // end scene loaded
+        })();
+    </script>
+
+    <div id="audio-debug"></div>
+
+</body>
+
+</html>
