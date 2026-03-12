@@ -1,6 +1,4 @@
-# Logic Lobby 🎮
-
-## 📝 Descripción
+# README 📝
 
  Es un espacio de realidad virtual compartido y multijugador desarrollado en la web (WebVR/WebXR). En este entorno, los usuarios pueden conectarse, explorar y construir en tiempo real utilizando un sistema de bloques estilo voxel. El proyecto actúa tanto como un punto de encuentro social, como una herramienta creativa de construcción inmersiva.
 
