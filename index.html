@@ -5,197 +5,335 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Collaborative VR Spaces</title>
-    <meta name="description"
-        content="Immersive multiuser VR platform for collaboration, building and data visualization.">
+    <meta name="description" content="Multiuser VR platform for collaboration, building and data visualization.">
     <link rel="icon" type="image/png" href="assets/images/MiLogoVR.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="index.css">
 </head>
 
 <body>
 
-    <!-- Instructions Modal -->
-    <div class="modal-overlay" id="instructionsModal" style="display: none;">
-        <div class="modal-card">
-            <button class="modal-close" id="closeInstructionsBtn">&times;</button>
-            <h2>How It Works</h2>
-            <div class="modal-body">
-                <div class="instruction-block">
-                    <h3>🏗️ Construction World</h3>
-                    <p>Build structures using blocks in a shared virtual environment. Place, rotate and remove blocks
-                        with other users in real-time.</p>
-                    <ul>
-                        <li><strong>WASD</strong> — Move</li>
-                        <li><strong>Mouse</strong> — Look around</li>
-                        <li><strong>R-Click</strong> — Place block</li>
-                        <li><strong>N</strong> — Remove block</li>
-                    </ul>
-                </div>
-                <div class="instruction-block">
-                    <h3>📊 Data Visualization</h3>
-                    <p>Explore interactive 3D charts in a professional meeting room. Analyze data collaboratively with
-                        colleagues in VR.</p>
-                    <ul>
-                        <li><strong>WASD</strong> — Navigate</li>
-                        <li><strong>Mouse</strong> — Look around</li>
-                        <li><strong>Hover</strong> — View data details</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- ═══════════════════════════════
+         CANVAS: Wireframe background
+    ═══════════════════════════════ -->
+    <canvas id="bgCanvas" aria-hidden="true"></canvas>
 
-    <!-- Animated background -->
-    <div class="bg-mesh"></div>
-    <div class="bg-glow bg-glow-1"></div>
-    <div class="bg-glow bg-glow-2"></div>
-
-    <!-- Main container -->
-    <div class="hub-container">
-        <!-- Header -->
-        <header class="hub-header">
-            <div class="logo-mark">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                    stroke-linejoin="round">
-                    <path
-                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+    <!-- ═══════════════════════════════
+         ABOUT MODAL
+    ═══════════════════════════════ -->
+    <div class="modal-overlay" id="aboutModal" role="dialog" aria-modal="true" aria-label="About this project">
+        <div class="modal-box" id="modalBox">
+            <button class="modal-close" id="closeAbout" aria-label="Close">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+            </button>
+            <div class="modal-logo-wrap">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
                     <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
                     <line x1="12" y1="22.08" x2="12" y2="12" />
                 </svg>
             </div>
-            <div class="header-text">
-                <h1>Collaborative VR Spaces</h1>
-                <p class="subtitle">Immersive multiuser environments for teams</p>
+            <h2 class="modal-title">Collaborative VR Spaces</h2>
+            <p class="modal-sub">A multiuser WebXR platform for real-time collaboration in virtual reality.</p>
+            <div class="modal-sections">
+                <div class="modal-sec">
+                    <h3>🏗️ Construction World</h3>
+                    <p>Build voxel structures in real-time with other users. Place, rotate and remove blocks collaboratively.</p>
+                    <div class="kbd-row">
+                        <span class="kbd-item"><kbd>WASD</kbd> Move</span>
+                        <span class="kbd-item"><kbd>R-Click</kbd> Place</span>
+                        <span class="kbd-item"><kbd>N</kbd> Remove</span>
+                        <span class="kbd-item"><kbd>Scroll</kbd> Switch</span>
+                    </div>
+                </div>
+                <div class="modal-sec">
+                    <h3>📊 Data Room</h3>
+                    <p>Explore 3D charts and analytics collaboratively in a professional VR meeting room powered by BabiaXR.</p>
+                    <div class="kbd-row">
+                        <span class="kbd-item"><kbd>WASD</kbd> Navigate</span>
+                        <span class="kbd-item"><kbd>Mouse</kbd> Look</span>
+                        <span class="kbd-item"><kbd>Hover</kbd> Inspect</span>
+                    </div>
+                </div>
             </div>
-            <button class="help-btn" id="helpBtn" title="How it works">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            <div class="modal-foot">
+                Powered by <a href="https://aframe.io" target="_blank" rel="noopener">A-Frame</a>,
+                <a href="https://github.com/networked-aframe/networked-aframe" target="_blank" rel="noopener">Networked-Aframe</a>
+                &amp; <a href="https://babiaxr.gitlab.io/babiaxr/" target="_blank" rel="noopener">BabiaXR</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════
+         SCREEN 1 — HERO
+    ═══════════════════════════════ -->
+    <div class="screen" id="screenHero">
+        <nav class="nav">
+            <div class="brand">
+                <svg class="brand-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                    <line x1="12" y1="22.08" x2="12" y2="12" />
                 </svg>
-            </button>
-        </header>
+                <span>VR Spaces</span>
+            </div>
+            <button class="ghost-btn" id="aboutBtn">About</button>
+        </nav>
 
-        <!-- Username input -->
-        <div class="username-section">
-            <div class="terminal-row">
-                <span class="terminal-prompt">user@vr-spaces ~$</span>
-                <input type="text" id="usernameInput" placeholder="enter username" class="terminal-input"
-                    autocomplete="off" spellcheck="false">
+        <main class="hero">
+            <p class="eyebrow">Collaborative VR Platform</p>
+            <h1 class="hero-h1">Enter the<br><em>virtual</em> world.</h1>
+            <p class="hero-sub">Shared immersive environments to build, explore<br class="br-desk"> and analyze — together, in real time.</p>
+
+            <div class="terminal-card">
+                <div class="tc-titlebar">
+                    <div class="tc-dots">
+                        <span class="dot dot-red"></span>
+                        <span class="dot dot-yellow"></span>
+                        <span class="dot dot-green"></span>
+                    </div>
+                    <span class="tc-name">vr-spaces — terminal</span>
+                    <div class="tc-dots tc-dots-fake" aria-hidden="true">
+                        <span class="dot" style="opacity:0"></span>
+                        <span class="dot" style="opacity:0"></span>
+                        <span class="dot" style="opacity:0"></span>
+                    </div>
+                </div>
+                <div class="tc-body">
+                    <span class="tc-prompt">user@vr-spaces ~$</span>
+                    <input type="text" id="usernameInput" class="tc-input"
+                        placeholder="enter your name" autocomplete="off" spellcheck="false" maxlength="30">
+                </div>
+            </div>
+
+            <div class="enter-hint">
+                <kbd class="hint-key">Enter ↵</kbd>
+                <span>to choose your space</span>
+            </div>
+        </main>
+
+        <footer class="hero-foot">A-Frame &middot; Networked-Aframe &middot; BabiaXR &middot; EasyRTC</footer>
+    </div>
+
+    <!-- ═══════════════════════════════
+         SCREEN 2 — WORLD SELECTOR
+    ═══════════════════════════════ -->
+    <div class="screen screen--hidden" id="screenWorlds">
+        <nav class="nav">
+            <button class="back-btn" id="backBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12" />
+                    <polyline points="12 19 5 12 12 5" />
+                </svg>
+                Back
+            </button>
+            <span class="greeting">Hello, <strong id="displayName">Explorer</strong></span>
+        </nav>
+
+        <div class="worlds-main">
+            <div class="worlds-intro">
+                <h2 class="worlds-h2">Choose your<br><em>space.</em></h2>
+                <p class="worlds-sub">Select the environment you want to enter.</p>
+            </div>
+
+            <div class="cards-grid">
+                <!-- PxlBuilder -->
+                <a href="#" class="wcard" id="buildCard">
+                    <div class="wcard-top">
+                        <span class="wcard-tag">Creative</span>
+                        <div class="wcard-icon amber-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                                <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                                <line x1="12" y1="22.08" x2="12" y2="12" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="wcard-body">
+                        <h3 class="wcard-name">PxlBuilder</h3>
+                        <p class="wcard-desc">Build voxel structures and gather resources collaboratively in a shared 3D world.</p>
+                    </div>
+                    <div class="wcard-cta">
+                        Enter
+                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="3" y1="8" x2="13" y2="8" />
+                            <polyline points="9 4 13 8 9 12" />
+                        </svg>
+                    </div>
+                </a>
+
+                <!-- Data Room -->
+                <a href="#" class="wcard" id="dataCard">
+                    <div class="wcard-top">
+                        <span class="wcard-tag">Analytics</span>
+                        <div class="wcard-icon indigo-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <line x1="18" y1="20" x2="18" y2="10" />
+                                <line x1="12" y1="20" x2="12" y2="4" />
+                                <line x1="6" y1="20" x2="6" y2="14" />
+                                <line x1="3" y1="20" x2="21" y2="20" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="wcard-body">
+                        <h3 class="wcard-name">Data Room</h3>
+                        <p class="wcard-desc">Analyze 3D charts and KPIs collaboratively in an immersive VR meeting room.</p>
+                    </div>
+                    <div class="wcard-cta">
+                        Enter
+                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="3" y1="8" x2="13" y2="8" />
+                            <polyline points="9 4 13 8 9 12" />
+                        </svg>
+                    </div>
+                </a>
             </div>
         </div>
 
-        <!-- World selector -->
-        <h2 class="section-title">Choose your environment</h2>
-        <div class="worlds-grid">
-            <!-- Construction World -->
-            <a href="#" class="world-card" id="buildWorldCard">
-                <div class="world-icon world-icon-build">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <path
-                            d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-                        <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-                        <line x1="12" y1="22.08" x2="12" y2="12" />
-                    </svg>
-                </div>
-                <div class="world-info">
-                    <h3>Construction World</h3>
-                    <p>Build and create together in a shared voxel environment</p>
-                </div>
-                <div class="world-arrow">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                        <polyline points="12 5 19 12 12 19"></polyline>
-                    </svg>
-                </div>
-            </a>
-
-            <!-- Data Visualization World -->
-            <a href="#" class="world-card" id="dataWorldCard">
-                <div class="world-icon world-icon-data">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <line x1="18" y1="20" x2="18" y2="10"></line>
-                        <line x1="12" y1="20" x2="12" y2="4"></line>
-                        <line x1="6" y1="20" x2="6" y2="14"></line>
-                        <line x1="3" y1="20" x2="21" y2="20"></line>
-                    </svg>
-                </div>
-                <div class="world-info">
-                    <h3>Data Visualization</h3>
-                    <p>Explore interactive 3D charts in a professional VR meeting room</p>
-                </div>
-                <div class="world-arrow">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                        <polyline points="12 5 19 12 12 19"></polyline>
-                    </svg>
-                </div>
-            </a>
-        </div>
-
-        <!-- Footer -->
-        <footer class="hub-footer">
-            <span>Powered by A-Frame &middot; Networked-Aframe &middot; BabiaXR</span>
-        </footer>
+        <footer class="hero-foot">A-Frame &middot; Networked-Aframe &middot; BabiaXR &middot; EasyRTC</footer>
     </div>
 
     <script>
-        const input = document.getElementById('usernameInput');
-        const buildCard = document.getElementById('buildWorldCard');
-        const dataCard = document.getElementById('dataWorldCard');
-        const helpBtn = document.getElementById('helpBtn');
-        const instructionsModal = document.getElementById('instructionsModal');
-        const closeInstructionsBtn = document.getElementById('closeInstructionsBtn');
+        // ─── Canvas: slow-rotating wireframe cube ───────────────────────
+        (function () {
+            const canvas = document.getElementById('bgCanvas');
+            const ctx = canvas.getContext('2d');
+            let W, H, angle = 0;
+
+            const verts = [
+                [-1, -1, -1], [1, -1, -1], [1, 1, -1], [-1, 1, -1],
+                [-1, -1, 1], [1, -1, 1], [1, 1, 1], [-1, 1, 1]
+            ];
+            const edges = [
+                [0, 1], [1, 2], [2, 3], [3, 0],
+                [4, 5], [5, 6], [6, 7], [7, 4],
+                [0, 4], [1, 5], [2, 6], [3, 7]
+            ];
+
+            function resize() {
+                W = canvas.width = window.innerWidth;
+                H = canvas.height = window.innerHeight;
+            }
+
+            function project(x, y, z) {
+                const fov = 4, scale = Math.min(W, H) * 0.32;
+                const pz = fov + z;
+                return { x: W / 2 + (x / pz) * scale, y: H / 2 + (y / pz) * scale };
+            }
+
+            function rotateY(x, y, z, a) {
+                return [x * Math.cos(a) - z * Math.sin(a), y, x * Math.sin(a) + z * Math.cos(a)];
+            }
+
+            function rotateX(x, y, z, a) {
+                return [x, y * Math.cos(a) - z * Math.sin(a), y * Math.sin(a) + z * Math.cos(a)];
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, W, H);
+                const a = angle;
+                const rotated = verts.map(([x, y, z]) => {
+                    let v = rotateY(x, y, z, a);
+                    v = rotateX(v[0], v[1], v[2], a * 0.4);
+                    return project(v[0], v[1], v[2]);
+                });
+                ctx.strokeStyle = 'rgba(67, 56, 202, 0.07)';
+                ctx.lineWidth = 0.8;
+                for (const [a_, b] of edges) {
+                    ctx.beginPath();
+                    ctx.moveTo(rotated[a_].x, rotated[a_].y);
+                    ctx.lineTo(rotated[b].x, rotated[b].y);
+                    ctx.stroke();
+                }
+                angle += 0.0018;
+                requestAnimationFrame(draw);
+            }
+
+            window.addEventListener('resize', resize);
+            resize();
+            draw();
+        })();
+
+        // ─── Screen transition logic ─────────────────────────────────────
+        const screenHero   = document.getElementById('screenHero');
+        const screenWorlds = document.getElementById('screenWorlds');
+        const usernameInput = document.getElementById('usernameInput');
+        const displayName   = document.getElementById('displayName');
+        const backBtn       = document.getElementById('backBtn');
+        const buildCard     = document.getElementById('buildCard');
+        const dataCard      = document.getElementById('dataCard');
+        const aboutBtn      = document.getElementById('aboutBtn');
+        const aboutModal    = document.getElementById('aboutModal');
+        const closeAbout    = document.getElementById('closeAbout');
 
         function getUsername() {
-            return input.value.trim() || 'Anonymous';
+            return usernameInput.value.trim() || 'Explorer';
         }
 
-        buildCard.addEventListener('click', function (e) {
+        function goToWorlds() {
+            const name = getUsername();
+            displayName.textContent = name;
+            screenHero.classList.add('screen--exit');
+            setTimeout(() => {
+                screenHero.classList.add('screen--hidden');
+                screenHero.classList.remove('screen--exit');
+                screenWorlds.classList.remove('screen--hidden');
+                screenWorlds.classList.add('screen--enter');
+                setTimeout(() => screenWorlds.classList.remove('screen--enter'), 600);
+            }, 400);
+        }
+
+        function goBack() {
+            screenWorlds.classList.add('screen--exit');
+            setTimeout(() => {
+                screenWorlds.classList.add('screen--hidden');
+                screenWorlds.classList.remove('screen--exit');
+                screenHero.classList.remove('screen--hidden');
+                screenHero.classList.add('screen--enter');
+                setTimeout(() => {
+                    screenHero.classList.remove('screen--enter');
+                    usernameInput.focus();
+                }, 600);
+            }, 400);
+        }
+
+        usernameInput.addEventListener('keydown', e => {
+            if (e.key === 'Enter') goToWorlds();
+        });
+
+        backBtn.addEventListener('click', goBack);
+
+        buildCard.addEventListener('click', e => {
             e.preventDefault();
             window.location.href = 'scenes/scene.html?username=' + encodeURIComponent(getUsername());
         });
 
-        dataCard.addEventListener('click', function (e) {
+        dataCard.addEventListener('click', e => {
             e.preventDefault();
             window.location.href = 'scenes/babia.html?username=' + encodeURIComponent(getUsername());
         });
 
-        helpBtn.addEventListener('click', () => {
-            instructionsModal.style.display = 'flex';
+        // ─── About modal ─────────────────────────────────────────────────
+        aboutBtn.addEventListener('click', () => {
+            aboutModal.classList.add('modal--open');
+            document.getElementById('closeAbout').focus();
+        });
+        closeAbout.addEventListener('click', () => aboutModal.classList.remove('modal--open'));
+        aboutModal.addEventListener('click', e => {
+            if (e.target === aboutModal) aboutModal.classList.remove('modal--open');
+        });
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') aboutModal.classList.remove('modal--open');
         });
 
-        closeInstructionsBtn.addEventListener('click', () => {
-            instructionsModal.style.display = 'none';
-        });
-
-        instructionsModal.addEventListener('click', (e) => {
-            if (e.target === instructionsModal) {
-                instructionsModal.style.display = 'none';
-            }
-        });
-
-        // Focus input on load
-        window.addEventListener('DOMContentLoaded', () => {
-            input.focus();
-        });
-
-        // Enter key on input goes to data world by default
-        input.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                dataCard.click();
-            }
-        });
+        // ─── Focus username on load ───────────────────────────────────────
+        window.addEventListener('DOMContentLoaded', () => usernameInput.focus());
     </script>
-</body>
 
+</body>
 </html>
