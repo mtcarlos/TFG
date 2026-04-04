@@ -1,0 +1,10 @@
+[
+  { "event": "Team Standup", "attendees": 45 },
+  { "event": "Sprint Review", "attendees": 32 },
+  { "event": "Workshop", "attendees": 28 },
+  { "event": "All Hands", "attendees": 120 },
+  { "event": "Tech Talk", "attendees": 55 },
+  { "event": "Design Review", "attendees": 18 },
+  { "event": "Board Meeting", "attendees": 12 },
+  { "event": "Onboarding", "attendees": 8 }
+]

@@ -1,0 +1,22 @@
+[
+  { "department": "Marketing", "quarter": "Q1", "sales": 120 },
+  { "department": "Marketing", "quarter": "Q2", "sales": 150 },
+  { "department": "Marketing", "quarter": "Q3", "sales": 135 },
+  { "department": "Marketing", "quarter": "Q4", "sales": 180 },
+  { "department": "Engineering", "quarter": "Q1", "sales": 210 },
+  { "department": "Engineering", "quarter": "Q2", "sales": 245 },
+  { "department": "Engineering", "quarter": "Q3", "sales": 230 },
+  { "department": "Engineering", "quarter": "Q4", "sales": 275 },
+  { "department": "Sales", "quarter": "Q1", "sales": 95 },
+  { "department": "Sales", "quarter": "Q2", "sales": 110 },
+  { "department": "Sales", "quarter": "Q3", "sales": 140 },
+  { "department": "Sales", "quarter": "Q4", "sales": 165 },
+  { "department": "Operations", "quarter": "Q1", "sales": 80 },
+  { "department": "Operations", "quarter": "Q2", "sales": 85 },
+  { "department": "Operations", "quarter": "Q3", "sales": 90 },
+  { "department": "Operations", "quarter": "Q4", "sales": 105 },
+  { "department": "Design", "quarter": "Q1", "sales": 60 },
+  { "department": "Design", "quarter": "Q2", "sales": 75 },
+  { "department": "Design", "quarter": "Q3", "sales": 88 },
+  { "department": "Design", "quarter": "Q4", "sales": 95 }
+]

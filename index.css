@@ -1,467 +1,534 @@
+/* =============================================
+   COLLABORATIVE VR SPACES — INDEX STYLES
+   Professional, clean, technology-forward
+   ============================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
 :root {
-    --primary: #6366f1;
-    --primary-hover: #4f46e5;
-    --bg: #0f172a;
-    --text: #f8fafc;
-    --surface: rgba(30, 41, 59, 0.7);
-    --mac-bar: rgba(15, 23, 42, 0.85);
-    --mac-close: #ff5f56;
-    --mac-minimize: #ffbd2e;
-    --mac-maximize: #27c93f;
-    --term-text: #4ade80;
-    /* a slightly softer green */
+    --bg-primary: #0a0e1a;
+    --bg-surface: rgba(15, 20, 35, 0.7);
+    --bg-card: rgba(20, 28, 50, 0.55);
+    --bg-card-hover: rgba(30, 42, 70, 0.7);
+    --text-primary: #f0f4ff;
+    --text-secondary: #8b95b0;
+    --text-muted: #515a70;
+    --accent-blue: #3b82f6;
+    --accent-cyan: #06b6d4;
+    --accent-violet: #8b5cf6;
+    --accent-emerald: #10b981;
+    --accent-amber: #f59e0b;
+    --border-subtle: rgba(255, 255, 255, 0.06);
+    --border-hover: rgba(255, 255, 255, 0.12);
+    --glow-blue: rgba(59, 130, 246, 0.15);
+    --glow-cyan: rgba(6, 182, 212, 0.15);
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --radius-xl: 24px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-    margin: 0;
-    padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background-color: var(--bg);
-    background-image: url('assets/images/fondodiablillos.png');
-    /* Custom background image */
-    background-size: cover;
-    background-position: center bottom;
-    background-repeat: no-repeat;
-    color: var(--text);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
     overflow: hidden;
     position: relative;
 }
 
-.bg-gradient {
-    position: absolute;
-    width: 200%;
-    height: 200%;
-    top: -50%;
-    left: -50%;
-    z-index: -1;
-    background: radial-gradient(circle at 60% 40%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
-        radial-gradient(circle at 40% 60%, rgba(192, 132, 252, 0.15) 0%, transparent 40%);
-    opacity: 0.8;
-    animation: rotate 60s linear infinite;
+/* =============================================
+   ANIMATED BACKGROUND
+   ============================================= */
+.bg-mesh {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background:
+        radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.04) 0%, transparent 60%);
 }
 
-@keyframes rotate {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
-    }
+.bg-glow {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: 0;
+    opacity: 0.5;
+    animation: floatGlow 20s ease-in-out infinite;
 }
 
-/* MacOS Window Style */
-.mac-window {
-    background: rgba(15, 23, 42, 0.65);
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
-    border-radius: 12px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.15) inset;
-    width: 90%;
-    max-width: 580px;
-    overflow: hidden;
+.bg-glow-1 {
+    width: 400px;
+    height: 400px;
+    background: rgba(59, 130, 246, 0.12);
+    top: 10%;
+    left: 20%;
+}
+
+.bg-glow-2 {
+    width: 350px;
+    height: 350px;
+    background: rgba(6, 182, 212, 0.1);
+    bottom: 15%;
+    right: 15%;
+    animation-delay: -10s;
+}
+
+@keyframes floatGlow {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(30px, -20px) scale(1.05); }
+    50% { transform: translate(-20px, 30px) scale(0.95); }
+    75% { transform: translate(20px, 20px) scale(1.02); }
+}
+
+/* =============================================
+   MAIN CONTAINER
+   ============================================= */
+.hub-container {
+    position: relative;
+    z-index: 1;
+    width: 92%;
+    max-width: 620px;
     display: flex;
     flex-direction: column;
+    gap: 28px;
 }
 
-.mac-titlebar {
-    background: var(--mac-bar);
-    height: 38px;
+/* =============================================
+   HEADER
+   ============================================= */
+.hub-header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 0 14px;
-    position: relative;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+    gap: 16px;
 }
 
-.mac-controls {
+.logo-mark {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+    border-radius: var(--radius-md);
     display: flex;
-    gap: 8px;
-    z-index: 2;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.25);
+}
+
+.logo-mark svg {
+    width: 26px;
+    height: 26px;
+    color: #fff;
+}
+
+.header-text {
     flex: 1;
 }
 
-.mac-titlebar-right {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    flex: 1;
-    z-index: 2;
-}
-
-.mac-btn {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    display: inline-block;
-    cursor: pointer;
-    box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.2);
-}
-
-.mac-btn.close {
-    background-color: var(--mac-close);
-}
-
-.mac-btn.minimize {
-    background-color: var(--mac-minimize);
-}
-
-.mac-btn.maximize {
-    background-color: var(--mac-maximize);
-}
-
-.mac-title {
-    position: absolute;
-    left: 0;
-    right: 0;
-    text-align: center;
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: #94a3b8;
-    pointer-events: none;
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
-    letter-spacing: 0.3px;
-}
-
-.mac-content {
-    padding: 3rem 4rem;
-    text-align: center;
-}
-
-h1 {
-    font-size: 2.2rem;
-    margin-top: 0;
-    margin-bottom: 0.8rem;
-    background: linear-gradient(to right, #ffffff, #a5b4fc);
+.header-text h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    font-weight: 700;
-    letter-spacing: -0.5px;
+    line-height: 1.2;
 }
 
-p {
-    color: #cbd5e1;
-    margin-bottom: 2.2rem;
-    font-size: 1.05rem;
-    line-height: 1.5;
+.header-text .subtitle {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-weight: 400;
+    margin-top: 2px;
+    margin-bottom: 0;
 }
 
-/* Terminal Input Style */
-.terminal-container {
+.help-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
     display: flex;
     align-items: center;
-    background: rgba(0, 0, 0, 0.55);
-    border: 1px solid rgba(0, 0, 0, 0.5);
-    border-radius: 8px;
-    padding: 1rem 1.2rem;
-    margin-bottom: 2rem;
-    font-family: "Fira Code", "Menlo", "Monaco", "Courier New", monospace;
-    transition: all 0.3s ease;
-    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(255, 255, 255, 0.1);
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    flex-shrink: 0;
 }
 
-.terminal-container:focus-within {
-    border-color: rgba(99, 102, 241, 0.5);
-    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.4), 0 0 0 2px rgba(99, 102, 241, 0.3);
+.help-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--border-hover);
+    color: var(--text-primary);
+}
+
+.help-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* =============================================
+   USERNAME INPUT — Terminal Style
+   ============================================= */
+.username-section {
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 14px 18px;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.username-section:focus-within {
+    border-color: rgba(59, 130, 246, 0.4);
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+
+.terminal-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Fira Code', 'Menlo', 'Monaco', monospace;
 }
 
 .terminal-prompt {
-    color: var(--term-text);
-    margin-right: 0.8rem;
+    color: var(--accent-emerald);
+    font-size: 0.85rem;
     font-weight: 500;
-    font-size: 1.05rem;
     user-select: none;
+    white-space: nowrap;
 }
 
 .terminal-input {
     background: transparent;
     border: none;
-    color: var(--text);
-    font-size: 1.05rem;
-    font-family: inherit;
-    flex-grow: 1;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    font-family: 'Fira Code', 'Menlo', 'Monaco', monospace;
+    flex: 1;
     outline: none;
-    width: 100%;
-    caret-color: var(--term-text);
+    caret-color: var(--accent-cyan);
 }
 
 .terminal-input::placeholder {
-    color: rgba(255, 255, 255, 0.25);
+    color: rgba(255, 255, 255, 0.2);
 }
 
-.action-container {
-    margin-top: 1rem;
+/* =============================================
+   SECTION TITLE
+   ============================================= */
+.section-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin: 0;
 }
 
-.btn {
-    display: inline-flex;
+/* =============================================
+   WORLD CARDS
+   ============================================= */
+.worlds-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.world-card {
+    display: flex;
     align-items: center;
-    justify-content: center;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    color: white;
+    gap: 18px;
+    padding: 20px 22px;
+    background: var(--bg-card);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
     text-decoration: none;
-    border-radius: 30px;
-    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: inherit;
     cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.btn-icon {
-    width: 50px;
-    height: 50px;
-    padding: 0;
-    box-sizing: border-box;
+    transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+    position: relative;
     overflow: hidden;
 }
 
-.icon-svg {
-    width: 22px;
-    height: 22px;
-    flex-shrink: 0;
-    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-.btn-text {
-    max-width: 0;
+.world-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.02) 100%);
     opacity: 0;
-    white-space: nowrap;
-    transition: all 0.9s cubic-bezier(0.25, 1, 0.5, 1);
-    font-size: 0.95rem;
-    font-weight: 600;
+    transition: opacity 0.35s ease;
 }
 
-.btn-icon:hover {
-    width: 220px;
-    /* Expand to fit text */
-    background: rgba(255, 255, 255, 0.2);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-    border-color: rgba(255, 255, 255, 0.25);
+.world-card:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border-hover);
     transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
 }
 
-.btn-icon:hover .btn-text {
-    max-width: 160px;
-    /* Reveal text */
+.world-card:hover::before {
     opacity: 1;
-    margin-left: 12px;
 }
 
-.btn-icon:hover .icon-svg {
-    transform: translateX(-4px);
-}
-
-.btn:active {
+.world-card:active {
     transform: translateY(0);
 }
 
-/* Menu Bar Styles */
-.mac-menubar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 28px;
-    background: rgba(25, 25, 25, 0.85);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+/* World icons */
+.world-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: var(--radius-md);
     display: flex;
     align-items: center;
-    padding: 0 10px;
-    box-sizing: border-box;
-    z-index: 1000;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.5);
-    font-size: 13px;
-    font-weight: 500;
-    color: #e5e5e5;
-    user-select: none;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.35s ease;
 }
 
-.mac-menu-item {
-    padding: 0 10px;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    cursor: default;
-    border-radius: 4px;
-    margin: 0 2px;
+.world-icon svg {
+    width: 26px;
+    height: 26px;
 }
 
-.mac-menu-item.logo {
-    font-size: 16px;
-    padding: 0 12px;
+.world-icon-build {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(245, 158, 11, 0.05));
+    color: var(--accent-amber);
+    border: 1px solid rgba(245, 158, 11, 0.15);
 }
 
-.mac-menu-item.active {
-    font-weight: 700;
+.world-card:hover .world-icon-build {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(245, 158, 11, 0.1));
+    box-shadow: 0 4px 16px rgba(245, 158, 11, 0.15);
 }
 
-.mac-menu-item:not(.clock):hover,
-.mac-menu-item.hover {
-    background: rgba(255, 255, 255, 0.15);
+.world-icon-data {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(59, 130, 246, 0.05));
+    color: var(--accent-cyan);
+    border: 1px solid rgba(6, 182, 212, 0.15);
 }
 
-.mac-menu-right {
-    margin-left: auto;
-    display: flex;
-    align-items: center;
+.world-card:hover .world-icon-data {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.25), rgba(59, 130, 246, 0.1));
+    box-shadow: 0 4px 16px rgba(6, 182, 212, 0.15);
 }
 
-/* Dropdown Styles */
-.mac-dropdown {
-    display: none;
-    position: fixed;
-    background: rgba(35, 35, 35, 0.95);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(0, 0, 0, 0.5);
-    border-radius: 6px;
-    padding: 4px;
-    min-width: 200px;
-    z-index: 1001;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+/* World info */
+.world-info {
+    flex: 1;
+    min-width: 0;
 }
 
-.mac-dropdown-item {
-    padding: 4px 10px;
-    border-radius: 4px;
-    cursor: default;
-    color: #e5e5e5;
-    font-size: 13px;
+.world-info h3 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 3px;
+    letter-spacing: -0.01em;
 }
 
-.mac-dropdown-item:not(.disabled):hover {
-    background: #0063e1;
-    color: white;
-}
-
-.mac-dropdown-item.disabled {
-    color: #777;
-}
-
-.mac-dropdown-divider {
-    height: 1px;
-    background: rgba(255, 255, 255, 0.1);
-    margin: 4px 0;
-}
-
-/* Instructions Window Specific */
-.instructions-window {
-    position: absolute;
-    /* Needs to be absolute for dragging */
-    top: 50px;
-    left: 50px;
-    width: 400px;
-    background: rgba(22, 27, 34, 0.95);
-}
-
-.instructions-window .mac-content {
-    padding: 2rem;
-}
-
-.text-left {
-    text-align: left;
-}
-
-.text-left h2 {
-    margin-top: 0;
-    font-size: 1.5rem;
-    color: var(--text);
-}
-
-.text-left h3 {
-    color: #a5b4fc;
-    margin-top: 1.5rem;
-    margin-bottom: 0.5rem;
-}
-
-.instructions-list {
+.world-info p {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
     margin: 0;
-    padding-left: 20px;
-    color: #cbd5e1;
-    line-height: 1.6;
 }
 
-/* Update main window to position absolute for z-index stacking */
-.main-window {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+/* Arrow */
+.world-arrow {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    flex-shrink: 0;
+    transition: all 0.35s ease;
 }
 
-/* Avatar Card Styles */
-.avatar-card {
-    flex: 0 0 auto;
-    width: 100px;
-    max-height: 100px;
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 200px;
-    padding: 0px;
+.world-arrow svg {
+    width: 18px;
+    height: 18px;
+}
+
+.world-card:hover .world-arrow {
+    color: var(--text-primary);
+    transform: translateX(4px);
+}
+
+/* =============================================
+   FOOTER
+   ============================================= */
+.hub-footer {
     text-align: center;
+    padding-top: 4px;
 }
 
-.avatar-card-img {
-    width: 100%;
-    height: auto;
-    border-radius: 200px;
-    mix-blend-mode: screen;
-    object-fit: contain;
-    max-height: 250px;
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
-    transition: all 0.5s ease;
-
+.hub-footer span {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    letter-spacing: 0.02em;
 }
 
-.avatar-card-img:hover {
-    border-radius: 0px;
-    cursor: pointer;
-    /* Al cambiar object-fit a "contain" la imagen deja de estar recortada y se muestra entera */
-    object-fit: contain;
-    /* La hace un poco más grande y la centra elevándola para dar el efecto 3D */
-    transform: scale(1.7) translateY(-10px);
-    z-index: 10;
+/* =============================================
+   INSTRUCTIONS MODAL
+   ============================================= */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(6px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-card {
+    background: rgba(15, 20, 35, 0.95);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    padding: 36px;
+    width: 90%;
+    max-width: 560px;
+    max-height: 80vh;
+    overflow-y: auto;
     position: relative;
-    mix-blend-mode: normal;
-    width: 100%;
-    height: 100%;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
 }
 
-.avatar-card-title {
-    margin: 10px 0 5px 0;
-    color: #f8fafc;
-    font-size: 1.1rem;
+.modal-card h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
-.avatar-card-subtitle {
-    font-size: 0.85rem;
-    color: #94a3b8;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+.modal-close {
+    position: absolute;
+    top: 16px;
+    right: 18px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid var(--border-subtle);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    line-height: 1;
 }
 
+.modal-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.instruction-block {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 18px;
+}
+
+.instruction-block h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+.instruction-block p {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: 12px;
+}
+
+.instruction-block ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.instruction-block li {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    background: rgba(0, 0, 0, 0.3);
+    padding: 5px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border-subtle);
+}
+
+.instruction-block li strong {
+    color: var(--text-primary);
+    font-family: 'Fira Code', monospace;
+    font-size: 0.75rem;
+}
+
+/* =============================================
+   RESPONSIVE
+   ============================================= */
 @media (max-width: 480px) {
-    .mac-content {
-        padding: 2.5rem 2rem;
+    .hub-container {
+        gap: 22px;
     }
 
-    .terminal-container {
+    .hub-header {
+        flex-wrap: wrap;
+    }
+
+    .header-text h1 {
+        font-size: 1.3rem;
+    }
+
+    .world-card {
+        padding: 16px 18px;
+        gap: 14px;
+    }
+
+    .world-icon {
+        width: 44px;
+        height: 44px;
+    }
+
+    .terminal-row {
         flex-direction: column;
         align-items: flex-start;
-        gap: 0.5rem;
-    }
-
-    .terminal-prompt {
-        margin-bottom: 0.2rem;
+        gap: 6px;
     }
 }

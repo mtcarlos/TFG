@@ -4,163 +4,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multiuser Logic Lobby</title>
+    <title>Collaborative VR Spaces</title>
+    <meta name="description"
+        content="Immersive multiuser VR platform for collaboration, building and data visualization.">
     <link rel="icon" type="image/png" href="assets/images/MiLogoVR.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="index.css">
 </head>
 
 <body>
 
-
-    <!-- Instructions Modal (Window) -->
-    <div class="mac-window instructions-window" id="instructionsWindow" style="display: none;">
-        <div class="mac-titlebar">
-            <div class="mac-controls">
-                <span class="mac-btn close" id="closeInstructionsBtn"></span>
-                <span class="mac-btn minimize"></span>
-                <span class="mac-btn maximize"></span>
+    <!-- Instructions Modal -->
+    <div class="modal-overlay" id="instructionsModal" style="display: none;">
+        <div class="modal-card">
+            <button class="modal-close" id="closeInstructionsBtn">&times;</button>
+            <h2>How It Works</h2>
+            <div class="modal-body">
+                <div class="instruction-block">
+                    <h3>🏗️ Construction World</h3>
+                    <p>Build structures using blocks in a shared virtual environment. Place, rotate and remove blocks
+                        with other users in real-time.</p>
+                    <ul>
+                        <li><strong>WASD</strong> — Move</li>
+                        <li><strong>Mouse</strong> — Look around</li>
+                        <li><strong>R-Click</strong> — Place block</li>
+                        <li><strong>N</strong> — Remove block</li>
+                    </ul>
+                </div>
+                <div class="instruction-block">
+                    <h3>📊 Data Visualization</h3>
+                    <p>Explore interactive 3D charts in a professional meeting room. Analyze data collaboratively with
+                        colleagues in VR.</p>
+                    <ul>
+                        <li><strong>WASD</strong> — Navigate</li>
+                        <li><strong>Mouse</strong> — Look around</li>
+                        <li><strong>Hover</strong> — View data details</li>
+                    </ul>
+                </div>
             </div>
-            <div class="mac-title">README.txt</div>
-        </div>
-        <div class="mac-content text-left">
-            <h2>Welcome to Logic Lobby</h2>
-            <p>This is a shared virtual space where you can connect with others, explore, and interact in real-time.</p>
-
-            <h3>Controls</h3>
-            <ul class="instructions-list">
-                <li><strong>W, A, S, D</strong> - Move your character</li>
-                <li><strong>Mouse Move</strong> - Look around</li>
-                <li><strong>Click</strong> - Interact with objects</li>
-            </ul>
-
-            <h3>Getting Started</h3>
-            <p>Simply enter a username in the terminal window and click "Enter Experience". If you leave it blank, you
-                will join as "Anonymous".</p>
         </div>
     </div>
 
-    <div class="bg-gradient"></div>
-    <div class="mac-window main-window">
-        <!-- Window Title Bar -->
-        <div class="mac-titlebar">
-            <div class="mac-controls">
-                <span class="mac-btn close"></span>
-                <span class="mac-btn minimize"></span>
-                <span class="mac-btn maximize"></span>
+    <!-- Animated background -->
+    <div class="bg-mesh"></div>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+
+    <!-- Main container -->
+    <div class="hub-container">
+        <!-- Header -->
+        <header class="hub-header">
+            <div class="logo-mark">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path
+                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                    <line x1="12" y1="22.08" x2="12" y2="12" />
+                </svg>
             </div>
-            <div class="mac-title">Terminal - node</div>
-            <div class="mac-titlebar-right">
-                <span id="helpMenuBtn"
-                    style="cursor: pointer; font-size: 1.1rem; color: #94a3b8; font-weight: bold; user-select: none;"
-                    title="How to play">?</span>
+            <div class="header-text">
+                <h1>Collaborative VR Spaces</h1>
+                <p class="subtitle">Immersive multiuser environments for teams</p>
+            </div>
+            <button class="help-btn" id="helpBtn" title="How it works">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+            </button>
+        </header>
+
+        <!-- Username input -->
+        <div class="username-section">
+            <div class="terminal-row">
+                <span class="terminal-prompt">user@vr-spaces ~$</span>
+                <input type="text" id="usernameInput" placeholder="enter username" class="terminal-input"
+                    autocomplete="off" spellcheck="false">
             </div>
         </div>
 
-        <!-- Window Content -->
-        <div class="mac-content">
-            <h1>Welcome</h1>
-            <p>Enter a shared virtual space. Connect with others, explore, and interact in real-time.</p>
-
-            <!-- Terminal-style input -->
-            <div class="terminal-container">
-                <span class="terminal-prompt">username:</span>
-                <input type="text" id="usernameInput" placeholder="username" class="terminal-input" autocomplete="off"
-                    spellcheck="false">
-            </div>
-
-            <div class="action-container" style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                <a href="lore.html" class="btn btn-icon"
-                    style="background: rgba(165, 180, 252, 0.15); border-color: rgba(165, 180, 252, 0.3);">
-                    <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+        <!-- World selector -->
+        <h2 class="section-title">Choose your environment</h2>
+        <div class="worlds-grid">
+            <!-- Construction World -->
+            <a href="#" class="world-card" id="buildWorldCard">
+                <div class="world-icon world-icon-build">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path
+                            d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                        <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                        <line x1="12" y1="22.08" x2="12" y2="12" />
                     </svg>
-                    <span class="btn-text" style="color: #e0e7ff;">Lore Database</span>
-                </a>
-                <a href="#" id="enterBtn" class="btn btn-icon">
-                    <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                        stroke-linecap="round" stroke-linejoin="round">
+                </div>
+                <div class="world-info">
+                    <h3>Construction World</h3>
+                    <p>Build and create together in a shared voxel environment</p>
+                </div>
+                <div class="world-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
                         <line x1="5" y1="12" x2="19" y2="12"></line>
                         <polyline points="12 5 19 12 12 19"></polyline>
                     </svg>
-                    <span class="btn-text">Enter Experience</span>
-                </a>
-            </div>
+                </div>
+            </a>
+
+            <!-- Data Visualization World -->
+            <a href="#" class="world-card" id="dataWorldCard">
+                <div class="world-icon world-icon-data">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <line x1="18" y1="20" x2="18" y2="10"></line>
+                        <line x1="12" y1="20" x2="12" y2="4"></line>
+                        <line x1="6" y1="20" x2="6" y2="14"></line>
+                        <line x1="3" y1="20" x2="21" y2="20"></line>
+                    </svg>
+                </div>
+                <div class="world-info">
+                    <h3>Data Visualization</h3>
+                    <p>Explore interactive 3D charts in a professional VR meeting room</p>
+                </div>
+                <div class="world-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </div>
+            </a>
         </div>
+
+        <!-- Footer -->
+        <footer class="hub-footer">
+            <span>Powered by A-Frame &middot; Networked-Aframe &middot; BabiaXR</span>
+        </footer>
     </div>
 
     <script>
         const input = document.getElementById('usernameInput');
-        const btn = document.getElementById('enterBtn');
-
-        // Menu Bar Logic
-        const helpMenuBtn = document.getElementById('helpMenuBtn');
-        const instructionsWindow = document.getElementById('instructionsWindow');
+        const buildCard = document.getElementById('buildWorldCard');
+        const dataCard = document.getElementById('dataWorldCard');
+        const helpBtn = document.getElementById('helpBtn');
+        const instructionsModal = document.getElementById('instructionsModal');
         const closeInstructionsBtn = document.getElementById('closeInstructionsBtn');
 
-        // Toggle Instructions Modal
-        helpMenuBtn.addEventListener('click', () => {
-            if (instructionsWindow.style.display === 'flex') {
-                instructionsWindow.style.display = 'none';
-            } else {
-                instructionsWindow.style.display = 'flex';
-                instructionsWindow.style.zIndex = 100;
-                document.querySelector('.main-window').style.zIndex = 1;
+        function getUsername() {
+            return input.value.trim() || 'Anonymous';
+        }
+
+        buildCard.addEventListener('click', function (e) {
+            e.preventDefault();
+            window.location.href = 'scenes/scene.html?username=' + encodeURIComponent(getUsername());
+        });
+
+        dataCard.addEventListener('click', function (e) {
+            e.preventDefault();
+            window.location.href = 'scenes/babia.html?username=' + encodeURIComponent(getUsername());
+        });
+
+        helpBtn.addEventListener('click', () => {
+            instructionsModal.style.display = 'flex';
+        });
+
+        closeInstructionsBtn.addEventListener('click', () => {
+            instructionsModal.style.display = 'none';
+        });
+
+        instructionsModal.addEventListener('click', (e) => {
+            if (e.target === instructionsModal) {
+                instructionsModal.style.display = 'none';
             }
         });
-
-        // Close Instructions Modal
-        closeInstructionsBtn.addEventListener('click', () => {
-            instructionsWindow.style.display = 'none';
-        });
-
-        // Make Instructions Window draggable (Basic implementation)
-        const instructionsTitlebar = instructionsWindow.querySelector('.mac-titlebar');
-        let isDragging = false;
-        let diffX = 0, diffY = 0;
-
-        instructionsTitlebar.addEventListener('mousedown', (e) => {
-            if (e.target.classList.contains('mac-btn')) return; // Don't drag if clicking buttons
-            isDragging = true;
-            diffX = e.clientX - instructionsWindow.getBoundingClientRect().left;
-            diffY = e.clientY - instructionsWindow.getBoundingClientRect().top;
-            instructionsWindow.style.zIndex = 100; // Bring to front
-            document.querySelector('.main-window').style.zIndex = 1;
-        });
-
-        document.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-            instructionsWindow.style.left = (e.clientX - diffX) + 'px';
-            instructionsWindow.style.top = (e.clientY - diffY) + 'px';
-            instructionsWindow.style.transform = 'none'; // Remove center transform for dragging
-        });
-
-        document.addEventListener('mouseup', () => {
-            isDragging = false;
-        });
-
-        // Focus main window when clicked
-        document.querySelector('.main-window').addEventListener('mousedown', function () {
-            this.style.zIndex = 100;
-            instructionsWindow.style.zIndex = 1;
-        });
-
 
         // Focus input on load
         window.addEventListener('DOMContentLoaded', () => {
             input.focus();
         });
 
-        btn.addEventListener('click', function (e) {
-            e.preventDefault();
-            const username = input.value.trim() || 'Anonymous';
-            window.location.href = 'scene.html?username=' + encodeURIComponent(username);
-        });
-
+        // Enter key on input goes to data world by default
         input.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
-                btn.click();
+                dataCard.click();
             }
         });
     </script>
