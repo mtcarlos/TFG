@@ -144,8 +144,15 @@
             <div class="cards-grid">
                 <!-- PxlBuilder -->
                 <a href="#" class="wcard" id="buildCard">
+                    <div class="wcard-glow"></div>
                     <div class="wcard-top">
-                        <span class="wcard-tag">Creative</span>
+                        <div class="wcard-top-inner">
+                            <span class="wcard-tag">Creative</span>
+                            <div class="live-badge" id="buildBadge">
+                                <div class="live-dot"></div>
+                                <span class="live-text">0 Explorando</span>
+                            </div>
+                        </div>
                         <div class="wcard-icon amber-icon">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                                 <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
@@ -169,8 +176,15 @@
 
                 <!-- Data Room -->
                 <a href="#" class="wcard" id="dataCard">
+                    <div class="wcard-glow"></div>
                     <div class="wcard-top">
-                        <span class="wcard-tag">Analytics</span>
+                        <div class="wcard-top-inner">
+                            <span class="wcard-tag">Analytics</span>
+                            <div class="live-badge" id="dataBadge">
+                                <div class="live-dot"></div>
+                                <span class="live-text">0 Analizando</span>
+                            </div>
+                        </div>
                         <div class="wcard-icon indigo-icon">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                                 <line x1="18" y1="20" x2="18" y2="10" />
@@ -333,6 +347,73 @@
 
         // ─── Focus username on load ───────────────────────────────────────
         window.addEventListener('DOMContentLoaded', () => usernameInput.focus());
+
+        // ─── Premium Experience: Spotlight & 3D Tilt ──────────────────────
+        document.querySelectorAll('.wcard').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--x', `${x}px`);
+                card.style.setProperty('--y', `${y}px`);
+
+                // 3D Tilt logic
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = ((y - centerY) / centerY) * -4; // Max 4deg
+                const rotateY = ((x - centerX) / centerX) * 4;
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
+                card.style.transition = 'transform 0.4s ease, border-color 0.35s ease, box-shadow 0.35s ease'; // Smooth reset
+            });
+            card.addEventListener('mouseenter', () => {
+                card.style.transition = 'none'; // Remove transform transition when entering for instant tracking
+            });
+        });
+
+        // ─── Live Presence Polling ────────────────────────────────────────
+        async function fetchPresence() {
+            try {
+                const res = await fetch('/api/status');
+                if (!res.ok) return;
+                const data = await res.json();
+                
+                // Update PxlBuilder (basic-room)
+                const buildData = data['basic-room'] || { count: 0, users: [] };
+                const buildBadge = document.getElementById('buildBadge');
+                const buildText = buildBadge.querySelector('.live-text');
+                
+                if (buildData.count > 0) {
+                    buildText.textContent = buildData.count + (buildData.count === 1 ? ' Explorando' : ' Explorando');
+                    buildBadge.classList.add('visible');
+                    buildBadge.title = buildData.users.join(', ');
+                } else {
+                    buildBadge.classList.remove('visible');
+                }
+
+                // Update Data Room (babia-data-room)
+                const dataData = data['babia-data-room'] || { count: 0, users: [] };
+                const dataBadge = document.getElementById('dataBadge');
+                const dataText = dataBadge.querySelector('.live-text');
+                
+                if (dataData.count > 0) {
+                    dataText.textContent = dataData.count + (dataData.count === 1 ? ' Analizando' : ' Analizando');
+                    dataBadge.classList.add('visible');
+                    dataBadge.title = dataData.users.join(', ');
+                } else {
+                    dataBadge.classList.remove('visible');
+                }
+            } catch (err) {
+                console.error('Failed to fetch live presence:', err);
+            }
+        }
+
+        // Start polling every 4 seconds
+        setInterval(fetchPresence, 4000);
+        setTimeout(fetchPresence, 500); // Initial fast fetch
     </script>
 
 </body>

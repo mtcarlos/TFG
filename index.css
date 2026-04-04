@@ -656,6 +656,92 @@ kbd {
 
 .modal-foot a:hover { text-decoration: underline; }
 
+/* ─── Premium Experience: Glass & Spotlight ───────────────── */
+.wcard {
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    position: relative;
+    /* Spotlight coordinates */
+    --x: 50%;
+    --y: 50%;
+    transform-style: preserve-3d;
+    transform: perspective(1000px) rotateX(0deg) rotateY(0deg);
+}
+
+.wcard::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    background: radial-gradient(circle at var(--x) var(--y), rgba(255,255,255,0.8) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    mix-blend-mode: overlay;
+    z-index: 10;
+}
+
+.wcard:hover::before {
+    opacity: 1;
+}
+
+.wcard-glow {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    border-radius: inherit;
+}
+#buildCard .wcard-glow { background: radial-gradient(circle at 50% 0%, rgba(180, 83, 9, 0.12) 0%, transparent 60%); }
+#dataCard .wcard-glow { background: radial-gradient(circle at 50% 0%, rgba(67, 56, 202, 0.12) 0%, transparent 60%); }
+
+.wcard:hover .wcard-glow { opacity: 1; }
+
+.wcard-top, .wcard-body, .wcard-cta {
+    position: relative;
+    z-index: 11;
+    transform: translateZ(20px); /* 3D pop effect */
+}
+
+/* ─── Live Presence Badge ─────────────────────────────────── */
+.wcard-top-inner { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+.live-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.5);
+    border: 1px solid var(--border);
+    color: var(--text-2);
+    box-shadow: var(--shadow-sm);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.live-badge.visible { opacity: 1; }
+
+.live-dot {
+    width: 6px;
+    height: 6px;
+    background: #10B981;
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(16,185,129,0.8);
+    animation: pulseDot 2s infinite;
+}
+
+@keyframes pulseDot {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16,185,129, 0.6); }
+    70% { transform: scale(1); box-shadow: 0 0 0 5px rgba(16,185,129, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16,185,129, 0); }
+}
+
 /* ─── Reveal animations ───────────────────────────────────── */
 @keyframes fadeUp {
     from { opacity: 0; transform: translateY(18px); }

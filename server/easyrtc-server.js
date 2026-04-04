@@ -37,6 +37,20 @@ if (process.env.NODE_ENV === "development") {
   );
 }
 
+// Global state to track active users per room for the Presence API
+const activeRoomsTracker = {}; // easyrtcid -> { username, roomName }
+
+// API Endpoint for dynamic Lobby Presence
+app.get("/api/status", (req, res) => {
+  const counts = { "basic-room": { count: 0, users: [] }, "babia-data-room": { count: 0, users: [] } };
+  for (const [id, conn] of Object.entries(activeRoomsTracker)) {
+    if (!counts[conn.roomName]) counts[conn.roomName] = { count: 0, users: [] };
+    counts[conn.roomName].count++;
+    if (conn.username) counts[conn.roomName].users.push(conn.username);
+  }
+  res.json(counts);
+});
+
 // Serve the files from the project root
 app.use(express.static(path.resolve(__dirname, "..")));
 
@@ -81,10 +95,27 @@ easyrtc.events.on("easyrtcAuth", (socket, easyrtcid, msg, socketCallback, callba
   });
 });
 
-// To test, lets print the credential to the console for every room join!
+// Intercept Room Join to maintain Presence Tracker
 easyrtc.events.on("roomJoin", (connectionObj, roomName, roomParameter, callback) => {
-  console.log("[" + connectionObj.getEasyrtcid() + "] Credential retrieved!", connectionObj.getFieldValueSync("credential"));
+  const cred = connectionObj.getFieldValueSync("credential");
+  const username = (cred && cred.username) ? cred.username : "Explorer";
+  activeRoomsTracker[connectionObj.getEasyrtcid()] = { roomName, username };
+  
+  console.log(`[${connectionObj.getEasyrtcid()}] ${username} joined ${roomName}`);
   easyrtc.events.defaultListeners.roomJoin(connectionObj, roomName, roomParameter, callback);
+});
+
+// Intercept Room Leave to update Presence Tracker
+easyrtc.events.on("roomLeave", (connectionObj, roomName, callback) => {
+  delete activeRoomsTracker[connectionObj.getEasyrtcid()];
+  console.log(`[${connectionObj.getEasyrtcid()}] left ${roomName}`);
+  easyrtc.events.defaultListeners.roomLeave(connectionObj, roomName, callback);
+});
+
+// Intercept Disconnect cleans up Presence Tracker
+easyrtc.events.on("disconnect", (connectionObj, next) => {
+  delete activeRoomsTracker[connectionObj.getEasyrtcid()];
+  easyrtc.events.defaultListeners.disconnect(connectionObj, next);
 });
 
 // Start EasyRTC server
