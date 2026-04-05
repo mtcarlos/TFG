@@ -24,47 +24,81 @@
          ABOUT MODAL
     ═══════════════════════════════ -->
     <div class="modal-overlay" id="aboutModal" role="dialog" aria-modal="true" aria-label="About this project">
-        <div class="modal-box" id="modalBox">
+        <div class="modal-box bento-box" id="modalBox">
             <button class="modal-close" id="closeAbout" aria-label="Close">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
                     <line x1="18" y1="6" x2="6" y2="18" />
                     <line x1="6" y1="6" x2="18" y2="18" />
                 </svg>
             </button>
-            <div class="modal-logo-wrap">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-                    <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-                    <line x1="12" y1="22.08" x2="12" y2="12" />
-                </svg>
+            
+            <!-- Header Section -->
+            <div class="bento-header">
+                <div class="modal-logo-wrap">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                        <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                        <line x1="12" y1="22.08" x2="12" y2="12" />
+                    </svg>
+                </div>
+                <div class="bento-title-group">
+                    <h2 class="modal-title">Collaborative VR Spaces</h2>
+                    <p class="modal-sub">A multiuser WebXR platform for real-time collaboration.</p>
+                </div>
             </div>
-            <h2 class="modal-title">Collaborative VR Spaces</h2>
-            <p class="modal-sub">A multiuser WebXR platform for real-time collaboration in virtual reality.</p>
-            <div class="modal-sections">
-                <div class="modal-sec">
-                    <h3>🏗️ Construction World</h3>
-                    <p>Build voxel structures in real-time with other users. Place, rotate and remove blocks collaboratively.</p>
+
+            <!-- Bento Grid -->
+            <div class="bento-grid">
+                <!-- Construction Card -->
+                <div class="bento-card construction-card">
+                    <div class="bento-card-header">
+                        <div class="bento-icon amber-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                            </svg>
+                        </div>
+                        <h3>PxlBuilder</h3>
+                    </div>
+                    <p>Build voxel structures in real-time. Place, rotate and remove blocks collaboratively.</p>
                     <div class="kbd-row">
                         <span class="kbd-item"><kbd>WASD</kbd> Move</span>
-                        <span class="kbd-item"><kbd>R-Click</kbd> Place</span>
+                        <span class="kbd-item"><kbd>RClick</kbd> Place</span>
                         <span class="kbd-item"><kbd>N</kbd> Remove</span>
                         <span class="kbd-item"><kbd>Scroll</kbd> Switch</span>
                     </div>
                 </div>
-                <div class="modal-sec">
-                    <h3>📊 Data Room</h3>
-                    <p>Explore 3D charts and analytics collaboratively in a professional VR meeting room powered by BabiaXR.</p>
+
+                <!-- Data Room Card -->
+                <div class="bento-card data-card">
+                    <div class="bento-card-header">
+                        <div class="bento-icon indigo-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="20" x2="18" y2="10"></line>
+                                <line x1="12" y1="20" x2="12" y2="4"></line>
+                                <line x1="6" y1="20" x2="6" y2="14"></line>
+                                <line x1="3" y1="20" x2="21" y2="20"></line>
+                            </svg>
+                        </div>
+                        <h3>Data Room</h3>
+                    </div>
+                    <p>Explore 3D charts and KPIs in a professional VR meeting room powered by BabiaXR.</p>
                     <div class="kbd-row">
                         <span class="kbd-item"><kbd>WASD</kbd> Navigate</span>
                         <span class="kbd-item"><kbd>Mouse</kbd> Look</span>
                         <span class="kbd-item"><kbd>Hover</kbd> Inspect</span>
                     </div>
                 </div>
-            </div>
-            <div class="modal-foot">
-                Powered by <a href="https://aframe.io" target="_blank" rel="noopener">A-Frame</a>,
-                <a href="https://github.com/networked-aframe/networked-aframe" target="_blank" rel="noopener">Networked-Aframe</a>
-                &amp; <a href="https://babiaxr.gitlab.io/babiaxr/" target="_blank" rel="noopener">BabiaXR</a>
+
+                <!-- Tech Stack -->
+                <div class="bento-card stack-card">
+                    <div class="tech-pills">
+                        <a href="https://aframe.io" class="tech-pill" target="_blank" rel="noopener">A-Frame</a>
+                        <a href="https://github.com/networked-aframe/networked-aframe" class="tech-pill" target="_blank" rel="noopener">Networked-Aframe</a>
+                        <a href="https://babiaxr.gitlab.io/babiaxr/" class="tech-pill" target="_blank" rel="noopener">BabiaXR</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -82,7 +116,14 @@
                 </svg>
                 <span>VR Spaces</span>
             </div>
-            <button class="ghost-btn" id="aboutBtn">About</button>
+            <button class="ghost-btn about-pill" id="aboutBtn" aria-label="About">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+                <span>About</span>
+            </button>
         </nav>
 
         <main class="hero">
@@ -135,81 +176,63 @@
             <span class="greeting">Hello, <strong id="displayName">Explorer</strong></span>
         </nav>
 
-        <div class="worlds-main">
-            <div class="worlds-intro">
-                <h2 class="worlds-h2">Choose your<br><em>space.</em></h2>
-                <p class="worlds-sub">Select the environment you want to enter.</p>
-            </div>
+        <div class="spotlight-stage">
+            <h2 class="worlds-h2">Choose your <em>space.</em></h2>
 
-            <div class="cards-grid">
-                <!-- PxlBuilder -->
-                <a href="#" class="wcard" id="buildCard">
-                    <div class="wcard-glow"></div>
-                    <div class="wcard-top">
-                        <div class="wcard-top-inner">
-                            <span class="wcard-tag">Creative</span>
-                            <div class="live-badge" id="buildBadge">
+            <div class="spotlight-body">
+                <button class="spotlight-arrow spotlight-arrow--prev" id="prevWorld" aria-label="Previous world">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6" />
+                    </svg>
+                </button>
+
+                <div class="spotlight-center">
+                    <div class="orb-wrapper" id="orbWrapper">
+                        <div class="orb-glow" id="orbGlow"></div>
+                        <div class="orb-shell" id="orbShell">
+                            <canvas id="orbCanvas"></canvas>
+                        </div>
+                        <div class="orb-ring"></div>
+                        <div class="orb-particles" id="orbParticles"></div>
+                    </div>
+
+                    <div class="spotlight-info" id="spotlightInfo">
+                        <div class="spotlight-meta">
+                            <span class="spotlight-tag" id="worldTag">Creative</span>
+                            <div class="live-badge" id="worldBadge">
                                 <div class="live-dot"></div>
-                                <span class="live-text">0 Explorando</span>
+                                <span class="live-text" id="worldBadgeText">0 online</span>
                             </div>
                         </div>
-                        <div class="wcard-icon amber-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-                                <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-                                <line x1="12" y1="22.08" x2="12" y2="12" />
+                        <h3 class="spotlight-name" id="worldName">PxlBuilder</h3>
+                        <p class="spotlight-desc" id="worldDesc">Build voxel structures and gather resources collaboratively in a shared 3D world.</p>
+                        <button class="enter-world-btn" id="enterWorldBtn">
+                            <span>Enter World</span>
+                            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="4" y1="10" x2="16" y2="10" />
+                                <polyline points="11 5 16 10 11 15" />
                             </svg>
-                        </div>
+                        </button>
                     </div>
-                    <div class="wcard-body">
-                        <h3 class="wcard-name">PxlBuilder</h3>
-                        <p class="wcard-desc">Build voxel structures and gather resources collaboratively in a shared 3D world.</p>
-                    </div>
-                    <div class="wcard-cta">
-                        Enter
-                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="3" y1="8" x2="13" y2="8" />
-                            <polyline points="9 4 13 8 9 12" />
-                        </svg>
-                    </div>
-                </a>
 
-                <!-- Data Room -->
-                <a href="#" class="wcard" id="dataCard">
-                    <div class="wcard-glow"></div>
-                    <div class="wcard-top">
-                        <div class="wcard-top-inner">
-                            <span class="wcard-tag">Analytics</span>
-                            <div class="live-badge" id="dataBadge">
-                                <div class="live-dot"></div>
-                                <span class="live-text">0 Analizando</span>
-                            </div>
-                        </div>
-                        <div class="wcard-icon indigo-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                <line x1="18" y1="20" x2="18" y2="10" />
-                                <line x1="12" y1="20" x2="12" y2="4" />
-                                <line x1="6" y1="20" x2="6" y2="14" />
-                                <line x1="3" y1="20" x2="21" y2="20" />
-                            </svg>
-                        </div>
+                    <div class="spotlight-dots">
+                        <button class="s-dot s-dot--active" data-index="0" aria-label="PxlBuilder"></button>
+                        <button class="s-dot" data-index="1" aria-label="Data Room"></button>
                     </div>
-                    <div class="wcard-body">
-                        <h3 class="wcard-name">Data Room</h3>
-                        <p class="wcard-desc">Analyze 3D charts and KPIs collaboratively in an immersive VR meeting room.</p>
-                    </div>
-                    <div class="wcard-cta">
-                        Enter
-                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="3" y1="8" x2="13" y2="8" />
-                            <polyline points="9 4 13 8 9 12" />
-                        </svg>
-                    </div>
-                </a>
+                </div>
+
+                <button class="spotlight-arrow spotlight-arrow--next" id="nextWorld" aria-label="Next world">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                </button>
             </div>
         </div>
 
         <footer class="hero-foot">A-Frame &middot; Networked-Aframe &middot; BabiaXR &middot; EasyRTC</footer>
+
+        <!-- Cinematic enter flash -->
+        <div class="enter-flash" id="enterFlash"></div>
     </div>
 
     <script>
@@ -279,8 +302,6 @@
         const usernameInput = document.getElementById('usernameInput');
         const displayName   = document.getElementById('displayName');
         const backBtn       = document.getElementById('backBtn');
-        const buildCard     = document.getElementById('buildCard');
-        const dataCard      = document.getElementById('dataCard');
         const aboutBtn      = document.getElementById('aboutBtn');
         const aboutModal    = document.getElementById('aboutModal');
         const closeAbout    = document.getElementById('closeAbout');
@@ -319,101 +340,357 @@
         usernameInput.addEventListener('keydown', e => {
             if (e.key === 'Enter') goToWorlds();
         });
-
         backBtn.addEventListener('click', goBack);
-
-        buildCard.addEventListener('click', e => {
-            e.preventDefault();
-            window.location.href = 'scenes/scene.html?username=' + encodeURIComponent(getUsername());
-        });
-
-        dataCard.addEventListener('click', e => {
-            e.preventDefault();
-            window.location.href = 'scenes/babia.html?username=' + encodeURIComponent(getUsername());
-        });
 
         // ─── About modal ─────────────────────────────────────────────────
         aboutBtn.addEventListener('click', () => {
             aboutModal.classList.add('modal--open');
-            document.getElementById('closeAbout').focus();
+            closeAbout.focus();
         });
         closeAbout.addEventListener('click', () => aboutModal.classList.remove('modal--open'));
         aboutModal.addEventListener('click', e => {
             if (e.target === aboutModal) aboutModal.classList.remove('modal--open');
         });
-        document.addEventListener('keydown', e => {
-            if (e.key === 'Escape') aboutModal.classList.remove('modal--open');
-        });
 
         // ─── Focus username on load ───────────────────────────────────────
         window.addEventListener('DOMContentLoaded', () => usernameInput.focus());
 
-        // ─── Premium Experience: Spotlight & 3D Tilt ──────────────────────
-        document.querySelectorAll('.wcard').forEach(card => {
-            card.addEventListener('mousemove', e => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                card.style.setProperty('--x', `${x}px`);
-                card.style.setProperty('--y', `${y}px`);
-
-                // 3D Tilt logic
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                const rotateX = ((y - centerY) / centerY) * -4; // Max 4deg
-                const rotateY = ((x - centerX) / centerX) * 4;
-                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-            });
-
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
-                card.style.transition = 'transform 0.4s ease, border-color 0.35s ease, box-shadow 0.35s ease'; // Smooth reset
-            });
-            card.addEventListener('mouseenter', () => {
-                card.style.transition = 'none'; // Remove transform transition when entering for instant tracking
-            });
-        });
-
-        // ─── Live Presence Polling ────────────────────────────────────────
-        async function fetchPresence() {
-            try {
-                const res = await fetch('/api/status');
-                if (!res.ok) return;
-                const data = await res.json();
-                
-                // Update PxlBuilder (basic-room)
-                const buildData = data['basic-room'] || { count: 0, users: [] };
-                const buildBadge = document.getElementById('buildBadge');
-                const buildText = buildBadge.querySelector('.live-text');
-                
-                if (buildData.count > 0) {
-                    buildText.textContent = buildData.count + (buildData.count === 1 ? ' Explorando' : ' Explorando');
-                    buildBadge.classList.add('visible');
-                    buildBadge.title = buildData.users.join(', ');
-                } else {
-                    buildBadge.classList.remove('visible');
+        // ─── Orbital Portal Spotlight ─────────────────────────────────────
+        (function () {
+            const worlds = [
+                {
+                    id: 'build',
+                    name: 'PxlBuilder',
+                    tag: 'Creative',
+                    desc: 'Build voxel structures and gather resources collaboratively in a shared 3D world.',
+                    url: 'scenes/scene.html',
+                    primary: '#B45309',
+                    glow: 'rgba(180, 83, 9, 0.20)',
+                    particle: 'rgba(245, 158, 11, 0.7)',
+                    room: 'basic-room',
+                    activity: 'Explorando',
+                    presence: { count: 0, users: [] }
+                },
+                {
+                    id: 'data',
+                    name: 'Data Room',
+                    tag: 'Analytics',
+                    desc: 'Analyze 3D charts and KPIs collaboratively in an immersive VR meeting room.',
+                    url: 'scenes/babia.html',
+                    primary: '#4338CA',
+                    glow: 'rgba(67, 56, 202, 0.20)',
+                    particle: 'rgba(129, 140, 248, 0.7)',
+                    room: 'babia-data-room',
+                    activity: 'Analizando',
+                    presence: { count: 0, users: [] }
                 }
+            ];
 
-                // Update Data Room (babia-data-room)
-                const dataData = data['babia-data-room'] || { count: 0, users: [] };
-                const dataBadge = document.getElementById('dataBadge');
-                const dataText = dataBadge.querySelector('.live-text');
-                
-                if (dataData.count > 0) {
-                    dataText.textContent = dataData.count + (dataData.count === 1 ? ' Analizando' : ' Analizando');
-                    dataBadge.classList.add('visible');
-                    dataBadge.title = dataData.users.join(', ');
-                } else {
-                    dataBadge.classList.remove('visible');
+            let currentIndex = 0;
+            let isTransitioning = false;
+
+            // DOM
+            const orbWrapper   = document.getElementById('orbWrapper');
+            const orbCanvas    = document.getElementById('orbCanvas');
+            const orbGlow      = document.getElementById('orbGlow');
+            const orbParticles = document.getElementById('orbParticles');
+            const info         = document.getElementById('spotlightInfo');
+            const wName        = document.getElementById('worldName');
+            const wDesc        = document.getElementById('worldDesc');
+            const wTag         = document.getElementById('worldTag');
+            const wBadge       = document.getElementById('worldBadge');
+            const wBadgeText   = document.getElementById('worldBadgeText');
+            const enterBtn     = document.getElementById('enterWorldBtn');
+            const prevBtn      = document.getElementById('prevWorld');
+            const nextBtn      = document.getElementById('nextWorld');
+            const dots         = document.querySelectorAll('.s-dot');
+            const enterFlash   = document.getElementById('enterFlash');
+
+            // Canvas setup
+            const ORB = 520;
+            orbCanvas.width = ORB;
+            orbCanvas.height = ORB;
+            const ctx = orbCanvas.getContext('2d');
+
+            // ── Particles ─────────────────────────────────────
+            function createParticles() {
+                orbParticles.innerHTML = '';
+                for (let i = 0; i < 10; i++) {
+                    const p = document.createElement('span');
+                    p.className = 'orb-particle';
+                    const a = (i / 10) * Math.PI * 2;
+                    const r = 130;
+                    p.style.left = (130 + Math.cos(a) * r) + 'px';
+                    p.style.top  = (130 + Math.sin(a) * r) + 'px';
+                    p.style.setProperty('--px', Math.cos(a) * (40 + Math.random() * 30) + 'px');
+                    p.style.setProperty('--py', Math.sin(a) * (40 + Math.random() * 30) + 'px');
+                    p.style.animationDelay = (Math.random() * 2).toFixed(1) + 's';
+                    orbParticles.appendChild(p);
                 }
-            } catch (err) {
-                console.error('Failed to fetch live presence:', err);
             }
-        }
 
-        // Start polling every 4 seconds
-        setInterval(fetchPresence, 4000);
-        setTimeout(fetchPresence, 500); // Initial fast fetch
+            // ── Update display ────────────────────────────────
+            function applyWorld(w) {
+                wName.textContent = w.name;
+                wDesc.textContent = w.desc;
+                wTag.textContent  = w.tag;
+                document.documentElement.style.setProperty('--orb-primary', w.primary);
+                document.documentElement.style.setProperty('--orb-glow', w.glow);
+                document.documentElement.style.setProperty('--orb-particle', w.particle);
+                dots.forEach((d, i) => d.classList.toggle('s-dot--active', i === currentIndex));
+
+                // Presence
+                if (w.presence.count > 0) {
+                    wBadge.classList.add('visible');
+                    wBadgeText.textContent = w.presence.count + ' ' + w.activity;
+                    wBadge.title = w.presence.users.join(', ');
+                } else {
+                    wBadge.classList.remove('visible');
+                }
+            }
+
+            // ── Transition ────────────────────────────────────
+            function goTo(idx) {
+                if (isTransitioning || idx === currentIndex) return;
+                isTransitioning = true;
+
+                orbWrapper.style.opacity = '0';
+                orbWrapper.style.filter  = 'blur(10px)';
+                info.classList.add('info--changing');
+
+                setTimeout(() => {
+                    currentIndex = idx;
+                    applyWorld(worlds[idx]);
+                    orbWrapper.offsetHeight; // reflow
+                    orbWrapper.style.opacity = '1';
+                    orbWrapper.style.filter  = 'blur(0)';
+                    info.classList.remove('info--changing');
+                    setTimeout(() => { isTransitioning = false; }, 420);
+                }, 380);
+            }
+
+            function next() { goTo((currentIndex + 1) % worlds.length); }
+            function prev() { goTo((currentIndex - 1 + worlds.length) % worlds.length); }
+
+            prevBtn.addEventListener('click', prev);
+            nextBtn.addEventListener('click', next);
+            dots.forEach((d, i) => d.addEventListener('click', () => goTo(i)));
+
+            // Keyboard arrows
+            document.addEventListener('keydown', e => {
+                if (screenWorlds.classList.contains('screen--hidden')) return;
+                if (aboutModal.classList.contains('modal--open')) return;
+                if (e.key === 'Escape') aboutModal.classList.remove('modal--open');
+                if (e.key === 'ArrowLeft')  prev();
+                if (e.key === 'ArrowRight') next();
+            });
+
+            // ── Enter world (cinematic) ───────────────────────
+            enterBtn.addEventListener('click', () => {
+                if (isTransitioning) return;
+                isTransitioning = true;
+                const w = worlds[currentIndex];
+
+                orbWrapper.style.transition = 'transform 0.7s cubic-bezier(.4,0,.2,1), opacity 0.7s ease';
+                orbWrapper.style.transform  = 'scale(2.8)';
+                orbWrapper.style.opacity    = '0';
+
+                setTimeout(() => {
+                    enterFlash.classList.add('enter-flash--active');
+                    setTimeout(() => {
+                        window.location.href = w.url + '?username=' + encodeURIComponent(getUsername());
+                    }, 350);
+                }, 450);
+            });
+
+            // ── Canvas: Voxel Preview ─────────────────────────
+            function drawIso(cx, cy, s, topA, leftA, rightA) {
+                const h = s * 0.58;
+                // Top
+                ctx.beginPath();
+                ctx.moveTo(cx, cy - h);
+                ctx.lineTo(cx + s, cy);
+                ctx.lineTo(cx, cy + h);
+                ctx.lineTo(cx - s, cy);
+                ctx.closePath();
+                ctx.fillStyle = `rgba(245,158,11,${topA})`;
+                ctx.fill();
+                // Left
+                ctx.beginPath();
+                ctx.moveTo(cx - s, cy);
+                ctx.lineTo(cx, cy + h);
+                ctx.lineTo(cx, cy + h + s * 0.85);
+                ctx.lineTo(cx - s, cy + s * 0.85);
+                ctx.closePath();
+                ctx.fillStyle = `rgba(180,83,9,${leftA})`;
+                ctx.fill();
+                // Right
+                ctx.beginPath();
+                ctx.moveTo(cx + s, cy);
+                ctx.lineTo(cx, cy + h);
+                ctx.lineTo(cx, cy + h + s * 0.85);
+                ctx.lineTo(cx + s, cy + s * 0.85);
+                ctx.closePath();
+                ctx.fillStyle = `rgba(180,83,9,${rightA})`;
+                ctx.fill();
+                // Edges
+                ctx.strokeStyle = 'rgba(251,191,36,0.35)';
+                ctx.lineWidth = 0.8;
+                ctx.beginPath();
+                ctx.moveTo(cx, cy - h); ctx.lineTo(cx + s, cy); ctx.lineTo(cx, cy + h); ctx.lineTo(cx - s, cy); ctx.closePath(); ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(cx - s, cy); ctx.lineTo(cx - s, cy + s*0.85); ctx.lineTo(cx, cy + h + s*0.85); ctx.lineTo(cx, cy + h); ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(cx + s, cy); ctx.lineTo(cx + s, cy + s*0.85); ctx.lineTo(cx, cy + h + s*0.85); ctx.lineTo(cx, cy + h); ctx.stroke();
+            }
+
+            function drawVoxel(t) {
+                const s = ORB;
+                const bg = ctx.createRadialGradient(s/2, s/2, 0, s/2, s/2, s*0.5);
+                bg.addColorStop(0, '#1f1408');
+                bg.addColorStop(1, '#0a0604');
+                ctx.fillStyle = bg;
+                ctx.fillRect(0, 0, s, s);
+
+                const cubes = [
+                    [0,0,0],[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],
+                    [0,0,1],[1,1,0],[-1,1,0],[1,0,1],[0,2,0],
+                    [-1,0,1],[2,0,0],[1,-1,0]
+                ];
+                const cs = s * 0.038;
+                const spacing = cs * 2.8;
+                const angle = t * 0.00035;
+                const cosA = Math.cos(angle), sinA = Math.sin(angle);
+
+                const proj = cubes.map(([gx,gy,gz]) => {
+                    const rx = gx * cosA - gz * sinA;
+                    const rz = gx * sinA + gz * cosA;
+                    const sx = s/2 + (rx - rz) * spacing * 0.7;
+                    const sy = s/2 + (rx + rz) * spacing * 0.35 - gy * spacing * 0.82;
+                    const pulse = 0.35 + Math.sin(t * 0.0015 + gx*2 + gy*3 + gz) * 0.2;
+                    return { sx, sy, depth: rx + rz - gy * 0.5, pulse };
+                });
+                proj.sort((a, b) => a.depth - b.depth);
+                for (const { sx, sy, pulse } of proj) {
+                    drawIso(sx, sy, cs, pulse * 0.7, pulse * 0.5, pulse * 0.35);
+                }
+
+                // sparkles
+                for (let i = 0; i < 6; i++) {
+                    const a2 = t * 0.0004 + i * 1.05;
+                    const r2 = s * 0.28 + Math.sin(t * 0.001 + i) * s * 0.04;
+                    const px = s/2 + Math.cos(a2) * r2;
+                    const py = s/2 + Math.sin(a2) * r2 * 0.55;
+                    const al = 0.15 + Math.sin(t * 0.003 + i * 1.7) * 0.12;
+                    ctx.beginPath();
+                    ctx.arc(px, py, s * 0.005, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(251,191,36,${al})`;
+                    ctx.fill();
+                }
+            }
+
+            // ── Canvas: Data Preview ──────────────────────────
+            function drawData(t) {
+                const s = ORB;
+                const bg = ctx.createRadialGradient(s/2, s/2, 0, s/2, s/2, s*0.5);
+                bg.addColorStop(0, '#0c0a1e');
+                bg.addColorStop(1, '#050510');
+                ctx.fillStyle = bg;
+                ctx.fillRect(0, 0, s, s);
+
+                const barCount = 7, barW = s * 0.032;
+                const gap = s * 0.07;
+                const startX = s/2 - ((barCount - 1) * gap) / 2;
+                const baseY = s * 0.62;
+
+                // Bars
+                for (let i = 0; i < barCount; i++) {
+                    const x = startX + i * gap;
+                    const hf = 0.25 + Math.sin(t*0.0008 + i*0.9)*0.18 + Math.sin(t*0.0013 + i*1.4)*0.12;
+                    const h = s * hf;
+                    const grad = ctx.createLinearGradient(x, baseY, x, baseY - h);
+                    grad.addColorStop(0, 'rgba(67,56,202,0.25)');
+                    grad.addColorStop(1, 'rgba(129,140,248,0.75)');
+                    ctx.fillStyle = grad;
+                    ctx.beginPath();
+                    ctx.moveTo(x - barW/2, baseY);
+                    ctx.lineTo(x - barW/2, baseY - h + barW/2);
+                    ctx.quadraticCurveTo(x - barW/2, baseY - h, x, baseY - h);
+                    ctx.quadraticCurveTo(x + barW/2, baseY - h, x + barW/2, baseY - h + barW/2);
+                    ctx.lineTo(x + barW/2, baseY);
+                    ctx.closePath();
+                    ctx.fill();
+
+                    // Top dot
+                    ctx.beginPath();
+                    ctx.arc(x, baseY - h, barW * 0.38, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(199,210,254,0.85)';
+                    ctx.fill();
+                }
+
+                // Base line
+                ctx.beginPath();
+                ctx.moveTo(s*0.2, baseY);
+                ctx.lineTo(s*0.8, baseY);
+                ctx.strokeStyle = 'rgba(67,56,202,0.25)';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+
+                // Line chart overlay
+                ctx.beginPath();
+                for (let i = 0; i < barCount; i++) {
+                    const x = startX + i * gap;
+                    const hf = 0.2 + Math.sin(t*0.0006 + i*1.1)*0.12 + Math.cos(t*0.001 + i*0.7)*0.08;
+                    const y = baseY - s * hf;
+                    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+                }
+                ctx.strokeStyle = 'rgba(167,139,250,0.4)';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+
+                // Floating particles
+                for (let i = 0; i < 10; i++) {
+                    const a2 = t * 0.00025 + i * (Math.PI * 2 / 10);
+                    const r2 = s * 0.3 + Math.sin(t * 0.0008 + i) * s * 0.05;
+                    const px = s/2 + Math.cos(a2) * r2;
+                    const py = s/2 + Math.sin(a2) * r2 * 0.6;
+                    const al = 0.12 + Math.sin(t * 0.002 + i * 2.5) * 0.1;
+                    ctx.beginPath();
+                    ctx.arc(px, py, s * 0.006, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(129,140,248,${al})`;
+                    ctx.fill();
+                }
+            }
+
+            // ── Animation loop ────────────────────────────────
+            function drawOrb() {
+                const t = performance.now();
+                if (worlds[currentIndex].id === 'build') drawVoxel(t);
+                else drawData(t);
+                requestAnimationFrame(drawOrb);
+            }
+
+            // ── Presence polling ──────────────────────────────
+            async function fetchPresence() {
+                try {
+                    const res = await fetch('/api/status');
+                    if (!res.ok) return;
+                    const data = await res.json();
+                    worlds[0].presence = data['basic-room'] || { count: 0, users: [] };
+                    worlds[1].presence = data['babia-data-room'] || { count: 0, users: [] };
+                    applyWorld(worlds[currentIndex]);
+                } catch (err) {
+                    // silent
+                }
+            }
+            setInterval(fetchPresence, 4000);
+            setTimeout(fetchPresence, 500);
+
+            // ── Init ──────────────────────────────────────────
+            createParticles();
+            applyWorld(worlds[0]);
+            drawOrb();
+        })();
     </script>
 
 </body>
