@@ -9,7 +9,9 @@
     <link rel="icon" type="image/png" href="assets/images/MiLogoVR.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="index.css">
 </head>
 
@@ -23,83 +25,146 @@
     <!-- ═══════════════════════════════
          ABOUT MODAL
     ═══════════════════════════════ -->
-    <div class="modal-overlay" id="aboutModal" role="dialog" aria-modal="true" aria-label="About this project">
-        <div class="modal-box bento-box" id="modalBox">
-            <button class="modal-close" id="closeAbout" aria-label="Close">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-                    <line x1="18" y1="6" x2="6" y2="18" />
-                    <line x1="6" y1="6" x2="18" y2="18" />
-                </svg>
-            </button>
-            
-            <!-- Header Section -->
-            <div class="bento-header">
-                <div class="modal-logo-wrap">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-                        <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-                        <line x1="12" y1="22.08" x2="12" y2="12" />
-                    </svg>
-                </div>
-                <div class="bento-title-group">
-                    <h2 class="modal-title">Collaborative VR Spaces</h2>
-                    <p class="modal-sub">A multiuser WebXR platform for real-time collaboration.</p>
+    <!-- ═══════════════════════════════
+         CINEMATIC BLUEPRINT HUD
+    ═══════════════════════════════ -->
+    <div class="hud-overlay" id="hudOverlay" role="dialog" aria-modal="true" aria-label="System Tutorial">
+        <button class="hud-close" id="closeHud" aria-label="Close Guide">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+            <span>Close HUD</span>
+        </button>
+
+        <!-- Navigation Arrows -->
+        <button class="hud-nav hud-prev" id="hudPrev" aria-label="Previous Slide">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M15 18l-6-6 6-6" />
+            </svg>
+        </button>
+        <button class="hud-nav hud-next" id="hudNext" aria-label="Next Slide">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M9 18l6-6-6-6" />
+            </svg>
+        </button>
+
+        <div class="hud-slides" id="hudSlides">
+            <!-- Slide 1: Welcome & Stack -->
+            <div class="hud-slide active" data-theme="neutral">
+                <div class="hud-content">
+                    <h2 class="hud-mega-title">Collaborative<br>VR Spaces.</h2>
+                    <p class="hud-subtitle">A multiuser WebXR platform pushing boundaries.</p>
+
+                    <div class="hud-hero-graphic">
+                        <img src="assets/images/MiLogoVR.png" alt="MiLogoVR" class="hud-logo-img" draggable="false">
+                    </div>
+
+                    <div class="hud-stack">
+                        <span>Powered by Carlos Malagón</span>
+                        <div class="hud-tech-pills">
+                            <a href="https://aframe.io" class="hud-tech" target="_blank" rel="noopener">A-Frame</a>
+                            <a href="https://github.com/networked-aframe/networked-aframe" class="hud-tech"
+                                target="_blank" rel="noopener">Networked-Aframe</a>
+                            <a href="https://babiaxr.gitlab.io/babiaxr/" class="hud-tech" target="_blank"
+                                rel="noopener">BabiaXR</a>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Bento Grid -->
-            <div class="bento-grid">
-                <!-- Construction Card -->
-                <div class="bento-card construction-card">
-                    <div class="bento-card-header">
-                        <div class="bento-icon amber-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                                <line x1="12" y1="22.08" x2="12" y2="12"></line>
-                            </svg>
-                        </div>
-                        <h3>PxlBuilder</h3>
-                    </div>
-                    <p>Build voxel structures in real-time. Place, rotate and remove blocks collaboratively.</p>
-                    <div class="kbd-row">
-                        <span class="kbd-item"><kbd>WASD</kbd> Move</span>
-                        <span class="kbd-item"><kbd>RClick</kbd> Place</span>
-                        <span class="kbd-item"><kbd>N</kbd> Remove</span>
-                        <span class="kbd-item"><kbd>Scroll</kbd> Switch</span>
-                    </div>
-                </div>
+            <!-- Slide 2: PxlBuilder -->
+            <div class="hud-slide" data-theme="amber">
+                <div class="hud-content">
+                    <h2 class="hud-title"><span class="hud-accent-amber">PxlBuilder</span> Protocol</h2>
 
-                <!-- Data Room Card -->
-                <div class="bento-card data-card">
-                    <div class="bento-card-header">
-                        <div class="bento-icon indigo-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                <line x1="18" y1="20" x2="18" y2="10"></line>
-                                <line x1="12" y1="20" x2="12" y2="4"></line>
-                                <line x1="6" y1="20" x2="6" y2="14"></line>
-                                <line x1="3" y1="20" x2="21" y2="20"></line>
-                            </svg>
+                    <div class="hud-split">
+                        <div class="hud-text-block">
+                            <p>Build voxel structures in real-time. Coordinate massive edits across clients synchronized
+                                seamlessly.</p>
                         </div>
-                        <h3>Data Room</h3>
+                        <div class="hud-wireframe-display active-wireframe">
+                            <div class="hud-wire-group">
+                                <svg class="blueprint-svg mouse-blueprint" viewBox="0 0 100 160">
+                                    <rect class="draw-base" x="20" y="20" width="60" height="100" rx="30"
+                                        stroke="currentColor" fill="none" stroke-width="2" />
+                                    <path class="draw-line" d="M20 60 L80 60" stroke="currentColor" fill="none"
+                                        stroke-width="2" />
+                                    <path class="draw-line" d="M50 20 L50 60" stroke="currentColor" fill="none"
+                                        stroke-width="2" />
+                                    <path class="draw-glow hud-amber-glow" d="M50 20 Q 80 20 80 50 L 50 50 Z"
+                                        fill="currentColor" />
+                                    <rect class="draw-scroll" x="46" y="30" width="8" height="16" rx="4"
+                                        stroke="currentColor" fill="none" stroke-width="2" />
+                                </svg>
+                                <div class="hud-keys-blueprint">
+                                    <div class="hud-key key-w"><span class="draw-text">W</span></div>
+                                    <div class="hud-key key-a"><span class="draw-text">A</span></div>
+                                    <div class="hud-key key-s"><span class="draw-text">S</span></div>
+                                    <div class="hud-key key-d"><span class="draw-text">D</span></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <p>Explore 3D charts and KPIs in a professional VR meeting room powered by BabiaXR.</p>
-                    <div class="kbd-row">
-                        <span class="kbd-item"><kbd>WASD</kbd> Navigate</span>
-                        <span class="kbd-item"><kbd>Mouse</kbd> Look</span>
-                        <span class="kbd-item"><kbd>Hover</kbd> Inspect</span>
-                    </div>
-                </div>
 
-                <!-- Tech Stack -->
-                <div class="bento-card stack-card">
-                    <div class="tech-pills">
-                        <a href="https://aframe.io" class="tech-pill" target="_blank" rel="noopener">A-Frame</a>
-                        <a href="https://github.com/networked-aframe/networked-aframe" class="tech-pill" target="_blank" rel="noopener">Networked-Aframe</a>
-                        <a href="https://babiaxr.gitlab.io/babiaxr/" class="tech-pill" target="_blank" rel="noopener">BabiaXR</a>
+                    <div class="hud-legend">
+                        <div class="legend-item"><span class="legend-dot amber-glow"></span> <strong>R-Click:</strong>
+                            Place Block</div>
+                        <div class="legend-item"><span class="legend-dot amber-glow"></span> <strong>Scroll:</strong>
+                            Switch Material</div>
+                        <div class="legend-item"><span class="legend-dot amber-glow"></span> <strong>N:</strong> Remove
+                            Block</div>
                     </div>
                 </div>
             </div>
+
+            <!-- Slide 3: Data Room -->
+            <div class="hud-slide" data-theme="indigo">
+                <div class="hud-content">
+                    <h2 class="hud-title"><span class="hud-accent-indigo">Data Room</span> Analysis</h2>
+
+                    <div class="hud-split">
+                        <div class="hud-text-block">
+                            <p>Explore multidimensional 3D charts in an immersive meeting room powered by BabiaXR data
+                                engines.</p>
+                        </div>
+                        <div class="hud-wireframe-display active-wireframe">
+                            <svg class="blueprint-svg chart-blueprint" viewBox="0 0 200 150">
+                                <path class="draw-axis" d="M20 130 L180 130" stroke="var(--text-3)" fill="none"
+                                    stroke-width="1.5" />
+                                <path class="draw-axis" d="M20 130 L20 20" stroke="var(--text-3)" fill="none"
+                                    stroke-width="1.5" />
+                                <rect class="draw-bar bar-1 hud-indigo-glow" x="40" y="80" width="20" height="50"
+                                    fill="none" stroke="currentColor" stroke-width="1.5" />
+                                <rect class="draw-bar bar-2 hud-indigo-glow" x="80" y="40" width="20" height="90"
+                                    fill="none" stroke="currentColor" stroke-width="1.5" />
+                                <rect class="draw-bar bar-3 hud-indigo-glow" x="120" y="60" width="20" height="70"
+                                    fill="none" stroke="currentColor" stroke-width="1.5" />
+                                <path class="draw-trend" d="M50 70 L90 30 L130 50 L170 20" stroke="currentColor"
+                                    fill="none" stroke-width="2" stroke-dasharray="4 4" />
+                                <path class="draw-gaze" d="M 120 10 L 130 50" stroke="var(--text-1)" fill="none"
+                                    stroke-width="1.5" />
+                                <circle class="draw-eye" cx="115" cy="5" r="5" fill="none" stroke="var(--text-1)"
+                                    stroke-width="1.5" />
+                                <circle class="draw-eye" cx="115" cy="5" r="1.5" fill="var(--text-1)" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="hud-legend">
+                        <div class="legend-item"><span class="legend-dot indigo-glow"></span> <strong>Gaze /
+                                Hover:</strong> Inspect Metrics</div>
+                        <div class="legend-item"><span class="legend-dot indigo-glow"></span> <strong>Mouse:</strong>
+                            Look Around</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="hud-dots" id="hudDots">
+            <button class="h-dot active" aria-label="Slide 1"></button>
+            <button class="h-dot" aria-label="Slide 2"></button>
+            <button class="h-dot" aria-label="Slide 3"></button>
         </div>
     </div>
 
@@ -110,14 +175,16 @@
         <nav class="nav">
             <div class="brand">
                 <svg class="brand-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                    <path
+                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
                     <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
                     <line x1="12" y1="22.08" x2="12" y2="12" />
                 </svg>
                 <span>VR Spaces</span>
             </div>
             <button class="ghost-btn about-pill" id="aboutBtn" aria-label="About">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
                     <circle cx="12" cy="12" r="10"></circle>
                     <line x1="12" y1="16" x2="12" y2="12"></line>
                     <line x1="12" y1="8" x2="12.01" y2="8"></line>
@@ -129,7 +196,8 @@
         <main class="hero">
             <p class="eyebrow">Collaborative VR Platform</p>
             <h1 class="hero-h1">Enter the<br><em>virtual</em> world.</h1>
-            <p class="hero-sub">Shared immersive environments to build, explore<br class="br-desk"> and analyze — together, in real time.</p>
+            <p class="hero-sub">Shared immersive environments to build, explore<br class="br-desk"> and analyze —
+                together, in real time.</p>
 
             <div class="terminal-card">
                 <div class="tc-titlebar">
@@ -147,8 +215,8 @@
                 </div>
                 <div class="tc-body">
                     <span class="tc-prompt">user@vr-spaces ~$</span>
-                    <input type="text" id="usernameInput" class="tc-input"
-                        placeholder="enter your name" autocomplete="off" spellcheck="false" maxlength="30">
+                    <input type="text" id="usernameInput" class="tc-input" placeholder="enter your name"
+                        autocomplete="off" spellcheck="false" maxlength="30">
                 </div>
             </div>
 
@@ -167,7 +235,8 @@
     <div class="screen screen--hidden" id="screenWorlds">
         <nav class="nav">
             <button class="back-btn" id="backBtn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
                     <line x1="19" y1="12" x2="5" y2="12" />
                     <polyline points="12 19 5 12 12 5" />
                 </svg>
@@ -181,7 +250,8 @@
 
             <div class="spotlight-body">
                 <button class="spotlight-arrow spotlight-arrow--prev" id="prevWorld" aria-label="Previous world">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
                         <polyline points="15 18 9 12 15 6" />
                     </svg>
                 </button>
@@ -205,10 +275,12 @@
                             </div>
                         </div>
                         <h3 class="spotlight-name" id="worldName">PxlBuilder</h3>
-                        <p class="spotlight-desc" id="worldDesc">Build voxel structures and gather resources collaboratively in a shared 3D world.</p>
+                        <p class="spotlight-desc" id="worldDesc">Build voxel structures and gather resources
+                            collaboratively in a shared 3D world.</p>
                         <button class="enter-world-btn" id="enterWorldBtn">
                             <span>Enter World</span>
-                            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
                                 <line x1="4" y1="10" x2="16" y2="10" />
                                 <polyline points="11 5 16 10 11 15" />
                             </svg>
@@ -222,7 +294,8 @@
                 </div>
 
                 <button class="spotlight-arrow spotlight-arrow--next" id="nextWorld" aria-label="Next world">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
                         <polyline points="9 18 15 12 9 6" />
                     </svg>
                 </button>
@@ -297,14 +370,18 @@
         })();
 
         // ─── Screen transition logic ─────────────────────────────────────
-        const screenHero   = document.getElementById('screenHero');
+        const screenHero = document.getElementById('screenHero');
         const screenWorlds = document.getElementById('screenWorlds');
         const usernameInput = document.getElementById('usernameInput');
-        const displayName   = document.getElementById('displayName');
-        const backBtn       = document.getElementById('backBtn');
-        const aboutBtn      = document.getElementById('aboutBtn');
-        const aboutModal    = document.getElementById('aboutModal');
-        const closeAbout    = document.getElementById('closeAbout');
+        const displayName = document.getElementById('displayName');
+        const backBtn = document.getElementById('backBtn');
+        const aboutBtn = document.getElementById('aboutBtn');
+        const hudOverlay = document.getElementById('hudOverlay');
+        const closeHud = document.getElementById('closeHud');
+        const hudSlides = document.querySelectorAll('.hud-slide');
+        const hDots = document.querySelectorAll('.h-dot');
+        const hudPrev = document.getElementById('hudPrev');
+        const hudNext = document.getElementById('hudNext');
 
         function getUsername() {
             return usernameInput.value.trim() || 'Explorer';
@@ -342,14 +419,34 @@
         });
         backBtn.addEventListener('click', goBack);
 
-        // ─── About modal ─────────────────────────────────────────────────
+        // ─── Cinematic HUD Logic ─────────────────────────────────────────
+        let currentHudSlide = 0;
+
+        function updateHudSlide(index) {
+            hudSlides.forEach((s, i) => s.classList.toggle('active', i === index));
+            hDots.forEach((d, i) => d.classList.toggle('active', i === index));
+        }
+
         aboutBtn.addEventListener('click', () => {
-            aboutModal.classList.add('modal--open');
-            closeAbout.focus();
+            hudOverlay.classList.add('hud--open');
+            currentHudSlide = 0;
+            updateHudSlide(0);
         });
-        closeAbout.addEventListener('click', () => aboutModal.classList.remove('modal--open'));
-        aboutModal.addEventListener('click', e => {
-            if (e.target === aboutModal) aboutModal.classList.remove('modal--open');
+
+        closeHud.addEventListener('click', () => hudOverlay.classList.remove('hud--open'));
+        hudPrev.addEventListener('click', () => {
+            currentHudSlide = (currentHudSlide > 0) ? currentHudSlide - 1 : hudSlides.length - 1;
+            updateHudSlide(currentHudSlide);
+        });
+        hudNext.addEventListener('click', () => {
+            currentHudSlide = (currentHudSlide < hudSlides.length - 1) ? currentHudSlide + 1 : 0;
+            updateHudSlide(currentHudSlide);
+        });
+        hDots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                currentHudSlide = index;
+                updateHudSlide(currentHudSlide);
+            });
         });
 
         // ─── Focus username on load ───────────────────────────────────────
@@ -390,21 +487,21 @@
             let isTransitioning = false;
 
             // DOM
-            const orbWrapper   = document.getElementById('orbWrapper');
-            const orbCanvas    = document.getElementById('orbCanvas');
-            const orbGlow      = document.getElementById('orbGlow');
+            const orbWrapper = document.getElementById('orbWrapper');
+            const orbCanvas = document.getElementById('orbCanvas');
+            const orbGlow = document.getElementById('orbGlow');
             const orbParticles = document.getElementById('orbParticles');
-            const info         = document.getElementById('spotlightInfo');
-            const wName        = document.getElementById('worldName');
-            const wDesc        = document.getElementById('worldDesc');
-            const wTag         = document.getElementById('worldTag');
-            const wBadge       = document.getElementById('worldBadge');
-            const wBadgeText   = document.getElementById('worldBadgeText');
-            const enterBtn     = document.getElementById('enterWorldBtn');
-            const prevBtn      = document.getElementById('prevWorld');
-            const nextBtn      = document.getElementById('nextWorld');
-            const dots         = document.querySelectorAll('.s-dot');
-            const enterFlash   = document.getElementById('enterFlash');
+            const info = document.getElementById('spotlightInfo');
+            const wName = document.getElementById('worldName');
+            const wDesc = document.getElementById('worldDesc');
+            const wTag = document.getElementById('worldTag');
+            const wBadge = document.getElementById('worldBadge');
+            const wBadgeText = document.getElementById('worldBadgeText');
+            const enterBtn = document.getElementById('enterWorldBtn');
+            const prevBtn = document.getElementById('prevWorld');
+            const nextBtn = document.getElementById('nextWorld');
+            const dots = document.querySelectorAll('.s-dot');
+            const enterFlash = document.getElementById('enterFlash');
 
             // Canvas setup
             const ORB = 520;
@@ -421,7 +518,7 @@
                     const a = (i / 10) * Math.PI * 2;
                     const r = 130;
                     p.style.left = (130 + Math.cos(a) * r) + 'px';
-                    p.style.top  = (130 + Math.sin(a) * r) + 'px';
+                    p.style.top = (130 + Math.sin(a) * r) + 'px';
                     p.style.setProperty('--px', Math.cos(a) * (40 + Math.random() * 30) + 'px');
                     p.style.setProperty('--py', Math.sin(a) * (40 + Math.random() * 30) + 'px');
                     p.style.animationDelay = (Math.random() * 2).toFixed(1) + 's';
@@ -433,7 +530,7 @@
             function applyWorld(w) {
                 wName.textContent = w.name;
                 wDesc.textContent = w.desc;
-                wTag.textContent  = w.tag;
+                wTag.textContent = w.tag;
                 document.documentElement.style.setProperty('--orb-primary', w.primary);
                 document.documentElement.style.setProperty('--orb-glow', w.glow);
                 document.documentElement.style.setProperty('--orb-particle', w.particle);
@@ -455,7 +552,7 @@
                 isTransitioning = true;
 
                 orbWrapper.style.opacity = '0';
-                orbWrapper.style.filter  = 'blur(10px)';
+                orbWrapper.style.filter = 'blur(10px)';
                 info.classList.add('info--changing');
 
                 setTimeout(() => {
@@ -463,7 +560,7 @@
                     applyWorld(worlds[idx]);
                     orbWrapper.offsetHeight; // reflow
                     orbWrapper.style.opacity = '1';
-                    orbWrapper.style.filter  = 'blur(0)';
+                    orbWrapper.style.filter = 'blur(0)';
                     info.classList.remove('info--changing');
                     setTimeout(() => { isTransitioning = false; }, 420);
                 }, 380);
@@ -481,7 +578,7 @@
                 if (screenWorlds.classList.contains('screen--hidden')) return;
                 if (aboutModal.classList.contains('modal--open')) return;
                 if (e.key === 'Escape') aboutModal.classList.remove('modal--open');
-                if (e.key === 'ArrowLeft')  prev();
+                if (e.key === 'ArrowLeft') prev();
                 if (e.key === 'ArrowRight') next();
             });
 
@@ -492,8 +589,8 @@
                 const w = worlds[currentIndex];
 
                 orbWrapper.style.transition = 'transform 0.7s cubic-bezier(.4,0,.2,1), opacity 0.7s ease';
-                orbWrapper.style.transform  = 'scale(2.8)';
-                orbWrapper.style.opacity    = '0';
+                orbWrapper.style.transform = 'scale(2.8)';
+                orbWrapper.style.opacity = '0';
 
                 setTimeout(() => {
                     enterFlash.classList.add('enter-flash--active');
@@ -539,35 +636,35 @@
                 ctx.beginPath();
                 ctx.moveTo(cx, cy - h); ctx.lineTo(cx + s, cy); ctx.lineTo(cx, cy + h); ctx.lineTo(cx - s, cy); ctx.closePath(); ctx.stroke();
                 ctx.beginPath();
-                ctx.moveTo(cx - s, cy); ctx.lineTo(cx - s, cy + s*0.85); ctx.lineTo(cx, cy + h + s*0.85); ctx.lineTo(cx, cy + h); ctx.stroke();
+                ctx.moveTo(cx - s, cy); ctx.lineTo(cx - s, cy + s * 0.85); ctx.lineTo(cx, cy + h + s * 0.85); ctx.lineTo(cx, cy + h); ctx.stroke();
                 ctx.beginPath();
-                ctx.moveTo(cx + s, cy); ctx.lineTo(cx + s, cy + s*0.85); ctx.lineTo(cx, cy + h + s*0.85); ctx.lineTo(cx, cy + h); ctx.stroke();
+                ctx.moveTo(cx + s, cy); ctx.lineTo(cx + s, cy + s * 0.85); ctx.lineTo(cx, cy + h + s * 0.85); ctx.lineTo(cx, cy + h); ctx.stroke();
             }
 
             function drawVoxel(t) {
                 const s = ORB;
-                const bg = ctx.createRadialGradient(s/2, s/2, 0, s/2, s/2, s*0.5);
+                const bg = ctx.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s * 0.5);
                 bg.addColorStop(0, '#1f1408');
                 bg.addColorStop(1, '#0a0604');
                 ctx.fillStyle = bg;
                 ctx.fillRect(0, 0, s, s);
 
                 const cubes = [
-                    [0,0,0],[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],
-                    [0,0,1],[1,1,0],[-1,1,0],[1,0,1],[0,2,0],
-                    [-1,0,1],[2,0,0],[1,-1,0]
+                    [0, 0, 0], [1, 0, 0], [-1, 0, 0], [0, 1, 0], [0, -1, 0],
+                    [0, 0, 1], [1, 1, 0], [-1, 1, 0], [1, 0, 1], [0, 2, 0],
+                    [-1, 0, 1], [2, 0, 0], [1, -1, 0]
                 ];
                 const cs = s * 0.038;
                 const spacing = cs * 2.8;
                 const angle = t * 0.00035;
                 const cosA = Math.cos(angle), sinA = Math.sin(angle);
 
-                const proj = cubes.map(([gx,gy,gz]) => {
+                const proj = cubes.map(([gx, gy, gz]) => {
                     const rx = gx * cosA - gz * sinA;
                     const rz = gx * sinA + gz * cosA;
-                    const sx = s/2 + (rx - rz) * spacing * 0.7;
-                    const sy = s/2 + (rx + rz) * spacing * 0.35 - gy * spacing * 0.82;
-                    const pulse = 0.35 + Math.sin(t * 0.0015 + gx*2 + gy*3 + gz) * 0.2;
+                    const sx = s / 2 + (rx - rz) * spacing * 0.7;
+                    const sy = s / 2 + (rx + rz) * spacing * 0.35 - gy * spacing * 0.82;
+                    const pulse = 0.35 + Math.sin(t * 0.0015 + gx * 2 + gy * 3 + gz) * 0.2;
                     return { sx, sy, depth: rx + rz - gy * 0.5, pulse };
                 });
                 proj.sort((a, b) => a.depth - b.depth);
@@ -579,8 +676,8 @@
                 for (let i = 0; i < 6; i++) {
                     const a2 = t * 0.0004 + i * 1.05;
                     const r2 = s * 0.28 + Math.sin(t * 0.001 + i) * s * 0.04;
-                    const px = s/2 + Math.cos(a2) * r2;
-                    const py = s/2 + Math.sin(a2) * r2 * 0.55;
+                    const px = s / 2 + Math.cos(a2) * r2;
+                    const py = s / 2 + Math.sin(a2) * r2 * 0.55;
                     const al = 0.15 + Math.sin(t * 0.003 + i * 1.7) * 0.12;
                     ctx.beginPath();
                     ctx.arc(px, py, s * 0.005, 0, Math.PI * 2);
@@ -592,7 +689,7 @@
             // ── Canvas: Data Preview ──────────────────────────
             function drawData(t) {
                 const s = ORB;
-                const bg = ctx.createRadialGradient(s/2, s/2, 0, s/2, s/2, s*0.5);
+                const bg = ctx.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s * 0.5);
                 bg.addColorStop(0, '#0c0a1e');
                 bg.addColorStop(1, '#050510');
                 ctx.fillStyle = bg;
@@ -600,24 +697,24 @@
 
                 const barCount = 7, barW = s * 0.032;
                 const gap = s * 0.07;
-                const startX = s/2 - ((barCount - 1) * gap) / 2;
+                const startX = s / 2 - ((barCount - 1) * gap) / 2;
                 const baseY = s * 0.62;
 
                 // Bars
                 for (let i = 0; i < barCount; i++) {
                     const x = startX + i * gap;
-                    const hf = 0.25 + Math.sin(t*0.0008 + i*0.9)*0.18 + Math.sin(t*0.0013 + i*1.4)*0.12;
+                    const hf = 0.25 + Math.sin(t * 0.0008 + i * 0.9) * 0.18 + Math.sin(t * 0.0013 + i * 1.4) * 0.12;
                     const h = s * hf;
                     const grad = ctx.createLinearGradient(x, baseY, x, baseY - h);
                     grad.addColorStop(0, 'rgba(67,56,202,0.25)');
                     grad.addColorStop(1, 'rgba(129,140,248,0.75)');
                     ctx.fillStyle = grad;
                     ctx.beginPath();
-                    ctx.moveTo(x - barW/2, baseY);
-                    ctx.lineTo(x - barW/2, baseY - h + barW/2);
-                    ctx.quadraticCurveTo(x - barW/2, baseY - h, x, baseY - h);
-                    ctx.quadraticCurveTo(x + barW/2, baseY - h, x + barW/2, baseY - h + barW/2);
-                    ctx.lineTo(x + barW/2, baseY);
+                    ctx.moveTo(x - barW / 2, baseY);
+                    ctx.lineTo(x - barW / 2, baseY - h + barW / 2);
+                    ctx.quadraticCurveTo(x - barW / 2, baseY - h, x, baseY - h);
+                    ctx.quadraticCurveTo(x + barW / 2, baseY - h, x + barW / 2, baseY - h + barW / 2);
+                    ctx.lineTo(x + barW / 2, baseY);
                     ctx.closePath();
                     ctx.fill();
 
@@ -630,8 +727,8 @@
 
                 // Base line
                 ctx.beginPath();
-                ctx.moveTo(s*0.2, baseY);
-                ctx.lineTo(s*0.8, baseY);
+                ctx.moveTo(s * 0.2, baseY);
+                ctx.lineTo(s * 0.8, baseY);
                 ctx.strokeStyle = 'rgba(67,56,202,0.25)';
                 ctx.lineWidth = 1;
                 ctx.stroke();
@@ -640,7 +737,7 @@
                 ctx.beginPath();
                 for (let i = 0; i < barCount; i++) {
                     const x = startX + i * gap;
-                    const hf = 0.2 + Math.sin(t*0.0006 + i*1.1)*0.12 + Math.cos(t*0.001 + i*0.7)*0.08;
+                    const hf = 0.2 + Math.sin(t * 0.0006 + i * 1.1) * 0.12 + Math.cos(t * 0.001 + i * 0.7) * 0.08;
                     const y = baseY - s * hf;
                     if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
                 }
@@ -652,8 +749,8 @@
                 for (let i = 0; i < 10; i++) {
                     const a2 = t * 0.00025 + i * (Math.PI * 2 / 10);
                     const r2 = s * 0.3 + Math.sin(t * 0.0008 + i) * s * 0.05;
-                    const px = s/2 + Math.cos(a2) * r2;
-                    const py = s/2 + Math.sin(a2) * r2 * 0.6;
+                    const px = s / 2 + Math.cos(a2) * r2;
+                    const py = s / 2 + Math.sin(a2) * r2 * 0.6;
                     const al = 0.12 + Math.sin(t * 0.002 + i * 2.5) * 0.1;
                     ctx.beginPath();
                     ctx.arc(px, py, s * 0.006, 0, Math.PI * 2);
@@ -694,4 +791,5 @@
     </script>
 
 </body>
+
 </html>
