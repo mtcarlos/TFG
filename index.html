@@ -16,10 +16,11 @@
 </head>
 
 <body>
-
     <!-- ═══════════════════════════════
-         CANVAS: Wireframe background
+         CUSTOM CURSOR
     ═══════════════════════════════ -->
+    <div id="cursor" class="custom-cursor" aria-hidden="true"></div>
+
     <canvas id="bgCanvas" aria-hidden="true"></canvas>
 
     <!-- ═══════════════════════════════
@@ -195,7 +196,7 @@
 
         <main class="hero">
             <p class="eyebrow">Collaborative VR Platform</p>
-            <h1 class="hero-h1">Enter the<br><em>virtual</em> world.</h1>
+            <h1 class="hero-h1" id="heroTitle">Enter the<br><em>virtual</em> world.</h1>
             <p class="hero-sub">Shared immersive environments to build, explore<br class="br-desk"> and analyze —
                 together, in real time.</p>
 
@@ -309,58 +310,329 @@
     </div>
 
     <script>
-        // ─── Canvas: slow-rotating wireframe cube ───────────────────────
+        // ─── Immersive UX: Audio Engine (Procedural) ─────────────────────
+        const AudioEngine = (function () {
+            let ctx = null;
+            let initialized = false;
+            let ambientOsc = null;
+            let ambientGain = null;
+
+            function init() {
+                if (initialized) return;
+                try {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    ctx = new AudioContext();
+                    initialized = true;
+                    startAmbient();
+                } catch (e) { }
+            }
+
+            function startAmbient() {
+                if (!ctx) return;
+                ambientOsc = ctx.createOscillator();
+                ambientGain = ctx.createGain();
+                ambientOsc.type = 'sine';
+                ambientOsc.frequency.value = 55; // Deep bass rumble (A1)
+
+                ambientGain.gain.value = 0;
+                ambientOsc.connect(ambientGain);
+                ambientGain.connect(ctx.destination);
+
+                ambientOsc.start();
+                ambientGain.gain.setTargetAtTime(0.04, ctx.currentTime, 4.0); // Fade in over 4s
+            }
+
+            function playTick() {
+                if (!ctx) return;
+                const time = ctx.currentTime;
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(800, time);
+                osc.frequency.exponentialRampToValueAtTime(300, time + 0.05);
+
+                gain.gain.setValueAtTime(0, time);
+                gain.gain.linearRampToValueAtTime(0.02, time + 0.01);
+                gain.gain.exponentialRampToValueAtTime(0.001, time + 0.05);
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc.start(time);
+                osc.stop(time + 0.06);
+            }
+
+            function playHover() {
+                if (!ctx) return;
+                const time = ctx.currentTime;
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(1200, time);
+                osc.frequency.exponentialRampToValueAtTime(400, time + 0.1);
+
+                gain.gain.setValueAtTime(0, time);
+                gain.gain.linearRampToValueAtTime(0.015, time + 0.02);
+                gain.gain.exponentialRampToValueAtTime(0.001, time + 0.15);
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc.start(time);
+                osc.stop(time + 0.2);
+            }
+
+            // Init audio context on first user interaction
+            document.addEventListener('click', init, { once: true });
+            document.addEventListener('keydown', init, { once: true });
+
+            return { playTick, playHover };
+        })();
+
+        // ─── Immersive UX: Custom Cursor Physics ────────────────────────
+        (function () {
+            const cursor = document.getElementById('cursor');
+            if (!cursor || !window.matchMedia("(pointer: fine)").matches) return;
+
+            let clientX = window.innerWidth / 2;
+            let clientY = window.innerHeight / 2;
+            let renderX = clientX;
+            let renderY = clientY;
+
+            document.addEventListener('mousemove', e => {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            });
+
+            function render() {
+                // Spring physics interpolation
+                renderX += (clientX - renderX) * 0.2;
+                renderY += (clientY - renderY) * 0.2;
+                cursor.style.transform = `translate(${renderX}px, ${renderY}px)`;
+                requestAnimationFrame(render);
+            }
+            requestAnimationFrame(render);
+
+            // Hover states based on elements
+            let lastClass = 'custom-cursor';
+
+            const updateCursorState = (e) => {
+                const target = e.target;
+                const tag = target.tagName.toLowerCase();
+                let newClass = 'custom-cursor';
+
+                // Typing
+                if (tag === 'input' || tag === 'textarea') {
+                    newClass = 'custom-cursor typing';
+                }
+                // Orb hover
+                else if (target.closest('#orbWrapper')) {
+                    newClass = 'custom-cursor orb-hover';
+                }
+                // Buttons / Links
+                else if (tag === 'button' || tag === 'a' || target.closest('button') || target.closest('a') || target.classList.contains('s-dot')) {
+                    newClass = 'custom-cursor hovering';
+                }
+
+                if (newClass !== lastClass) {
+                    cursor.className = newClass;
+                    lastClass = newClass;
+                }
+            };
+
+            // Ticking sound when typing
+            document.addEventListener('keydown', e => {
+                if (e.target.tagName && (e.target.tagName.toLowerCase() === 'input' || e.target.tagName.toLowerCase() === 'textarea')) {
+                    // Only play tick on actual character input or backspace
+                    if (e.key.length === 1 || e.key === 'Backspace') {
+                        AudioEngine.playTick();
+                    }
+                }
+            });
+
+            document.addEventListener('mouseover', updateCursorState);
+            document.addEventListener('mouseout', (e) => {
+                if (!e.relatedTarget) cursor.className = 'custom-cursor';
+            });
+            document.addEventListener('mousedown', () => {
+                cursor.style.transform = `translate(${renderX}px, ${renderY}px) scale(0.8)`;
+            });
+            document.addEventListener('mouseup', () => {
+                cursor.style.transform = `translate(${renderX}px, ${renderY}px) scale(1)`;
+            });
+        })();
+
+        // ─── Immersive UX: Kinetic Typography ───────────────────────────
+        (function () {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*<>';
+            const heroTitle = document.getElementById('heroTitle');
+            if (!heroTitle) return;
+
+            // Simple text extraction avoiding HTML tags
+            const rawHTML = heroTitle.innerHTML;
+            const textNodes = [];
+
+            function traverse(node) {
+                if (node.nodeType === 3) {
+                    const text = node.textContent;
+                    if (text.trim() === '') return;
+                    const spanContent = text.split('').map(char => {
+                        if (char === ' ') return ' ';
+                        return `<span class="kin-char" data-char="${char}">${char}</span>`;
+                    }).join('');
+
+                    const wrapper = document.createElement('span');
+                    wrapper.innerHTML = spanContent;
+                    node.parentNode.replaceChild(wrapper, node);
+                } else {
+                    Array.from(node.childNodes).forEach(traverse);
+                }
+            }
+
+            // Only decrypt once
+            let decrypted = false;
+
+            function decrypt() {
+                if (decrypted) return;
+                decrypted = true;
+
+                traverse(heroTitle);
+                const charSpans = heroTitle.querySelectorAll('.kin-char');
+
+                charSpans.forEach((span, index) => {
+                    const targetChar = span.getAttribute('data-char');
+                    let iterations = 0;
+                    const maxIterations = 5 + Math.random() * 15 + (index * 0.3); // Staggered left-to-right
+
+                    const interval = setInterval(() => {
+                        if (iterations >= maxIterations) {
+                            clearInterval(interval);
+                            span.textContent = targetChar;
+                        } else {
+                            span.textContent = chars[Math.floor(Math.random() * chars.length)];
+                            iterations++;
+                        }
+                    }, 40);
+                });
+            }
+
+            // Start animation after a slight delay to allow layout completion
+            setTimeout(decrypt, 300);
+        })();
+
+        // ─── Canvas: Fluid Point Cloud Background ───────────────────────
         (function () {
             const canvas = document.getElementById('bgCanvas');
             const ctx = canvas.getContext('2d');
-            let W, H, angle = 0;
+            let W, H;
+            const points = [];
 
-            const verts = [
-                [-1, -1, -1], [1, -1, -1], [1, 1, -1], [-1, 1, -1],
-                [-1, -1, 1], [1, -1, 1], [1, 1, 1], [-1, 1, 1]
-            ];
-            const edges = [
-                [0, 1], [1, 2], [2, 3], [3, 0],
-                [4, 5], [5, 6], [6, 7], [7, 4],
-                [0, 4], [1, 5], [2, 6], [3, 7]
-            ];
+            let mouseX = -1000;
+            let mouseY = -1000;
+            let targetMouseX = -1000;
+            let targetMouseY = -1000;
+
+            document.addEventListener('mousemove', e => {
+                targetMouseX = e.clientX;
+                targetMouseY = e.clientY;
+            });
 
             function resize() {
                 W = canvas.width = window.innerWidth;
                 H = canvas.height = window.innerHeight;
+                initPoints();
             }
 
-            function project(x, y, z) {
-                const fov = 4, scale = Math.min(W, H) * 0.32;
-                const pz = fov + z;
-                return { x: W / 2 + (x / pz) * scale, y: H / 2 + (y / pz) * scale };
-            }
-
-            function rotateY(x, y, z, a) {
-                return [x * Math.cos(a) - z * Math.sin(a), y, x * Math.sin(a) + z * Math.cos(a)];
-            }
-
-            function rotateX(x, y, z, a) {
-                return [x, y * Math.cos(a) - z * Math.sin(a), y * Math.sin(a) + z * Math.cos(a)];
+            function initPoints() {
+                points.length = 0;
+                // Density based on screen size, approx 150 points for 1080p
+                const numPoints = Math.floor((W * H) / 12000);
+                for (let i = 0; i < numPoints; i++) {
+                    points.push({
+                        x: Math.random() * W,
+                        y: Math.random() * H,
+                        originX: Math.random() * W,
+                        originY: Math.random() * H,
+                        vx: 0,
+                        vy: 0,
+                        phase: Math.random() * Math.PI * 2,
+                        speed: 0.0005 + Math.random() * 0.001
+                    });
+                }
             }
 
             function draw() {
                 ctx.clearRect(0, 0, W, H);
-                const a = angle;
-                const rotated = verts.map(([x, y, z]) => {
-                    let v = rotateY(x, y, z, a);
-                    v = rotateX(v[0], v[1], v[2], a * 0.4);
-                    return project(v[0], v[1], v[2]);
-                });
-                ctx.strokeStyle = 'rgba(67, 56, 202, 0.07)';
-                ctx.lineWidth = 0.8;
-                for (const [a_, b] of edges) {
+
+                // Interpolate mouse for smoother wave
+                mouseX += (targetMouseX - mouseX) * 0.1;
+                mouseY += (targetMouseY - mouseY) * 0.1;
+
+                const t = performance.now();
+
+                // Update and draw points
+                ctx.fillStyle = 'rgba(161, 161, 166, 0.4)'; // Subtle grey
+
+                for (let i = 0; i < points.length; i++) {
+                    const p = points[i];
+
+                    // Gentle ambient float
+                    p.originX += Math.cos(t * p.speed + p.phase) * 0.2;
+                    p.originY += Math.sin(t * p.speed + p.phase) * 0.2;
+
+                    // Wrap around
+                    if (p.originX < -50) p.originX = W + 50;
+                    if (p.originX > W + 50) p.originX = -50;
+                    if (p.originY < -50) p.originY = H + 50;
+                    if (p.originY > H + 50) p.originY = -50;
+
+                    // Mouse repulsion physics
+                    const dx = mouseX - p.originX;
+                    const dy = mouseY - p.originY;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    const maxDist = 250;
+
+                    let targetX = p.originX;
+                    let targetY = p.originY;
+
+                    if (dist < maxDist) {
+                        const force = (maxDist - dist) / maxDist;
+                        targetX -= (dx / dist) * force * 40;
+                        targetY -= (dy / dist) * force * 40;
+                    }
+
+                    // Spring to target
+                    p.x += (targetX - p.x) * 0.1;
+                    p.y += (targetY - p.y) * 0.1;
+
                     ctx.beginPath();
-                    ctx.moveTo(rotated[a_].x, rotated[a_].y);
-                    ctx.lineTo(rotated[b].x, rotated[b].y);
-                    ctx.stroke();
+                    ctx.arc(p.x, p.y, 1.2, 0, Math.PI * 2);
+                    ctx.fill();
                 }
-                angle += 0.0018;
+
+                // Draw connecting lines
+                ctx.lineWidth = 0.5;
+                for (let i = 0; i < points.length; i++) {
+                    for (let j = i + 1; j < points.length; j++) {
+                        const p1 = points[i];
+                        const p2 = points[j];
+                        const dx = p1.x - p2.x;
+                        const dy = p1.y - p2.y;
+                        const distSq = dx * dx + dy * dy;
+
+                        if (distSq < 10000) { // 100px connection radius
+                            const alpha = 0.15 * (1 - distSq / 10000);
+                            ctx.strokeStyle = `rgba(161, 161, 166, ${alpha})`;
+                            ctx.beginPath();
+                            ctx.moveTo(p1.x, p1.y);
+                            ctx.lineTo(p2.x, p2.y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+
                 requestAnimationFrame(draw);
             }
 
@@ -388,30 +660,60 @@
         }
 
         function goToWorlds() {
-            const name = getUsername();
-            displayName.textContent = name;
-            screenHero.classList.add('screen--exit');
+            const rawName = getUsername();
+            const lowerName = rawName.toLowerCase();
+            
+            if (lowerName === 'admin' || lowerName === 'sudo' || lowerName === 'matrix') {
+                triggerGlitch();
+                return;
+            }
+
+            displayName.textContent = rawName;
+            screenHero.classList.add('screen--z-exit');
             setTimeout(() => {
-                screenHero.classList.add('screen--hidden');
-                screenHero.classList.remove('screen--exit');
-                screenWorlds.classList.remove('screen--hidden');
-                screenWorlds.classList.add('screen--enter');
-                setTimeout(() => screenWorlds.classList.remove('screen--enter'), 600);
-            }, 400);
+                screenHero.classList.add('screen--z-hidden');
+                screenHero.classList.remove('screen--z-exit');
+                screenWorlds.classList.remove('screen--hidden'); // Remove initial old state
+                screenWorlds.classList.remove('screen--z-hidden');
+                screenWorlds.classList.add('screen--z-enter');
+                setTimeout(() => screenWorlds.classList.remove('screen--z-enter'), 700);
+            }, 450); // Matches CSS transition timing
         }
 
         function goBack() {
-            screenWorlds.classList.add('screen--exit');
+            screenWorlds.classList.add('screen--exit'); // Simple fade out
             setTimeout(() => {
-                screenWorlds.classList.add('screen--hidden');
+                screenWorlds.classList.add('screen--z-hidden');
                 screenWorlds.classList.remove('screen--exit');
+                screenHero.classList.remove('screen--z-hidden');
                 screenHero.classList.remove('screen--hidden');
-                screenHero.classList.add('screen--enter');
+                screenHero.classList.add('screen--z-enter');
                 setTimeout(() => {
-                    screenHero.classList.remove('screen--enter');
+                    screenHero.classList.remove('screen--z-enter');
                     usernameInput.focus();
-                }, 600);
+                }, 700);
             }, 400);
+        }
+
+        function triggerGlitch() {
+            document.body.classList.add('glitch-mode');
+            document.body.classList.add('glitch-shake');
+            const originalPrompt = document.querySelector('.tc-prompt').textContent;
+            document.querySelector('.tc-prompt').textContent = 'SYSTEM_ERROR ~$';
+            usernameInput.value = '[ ACCESS DENIED ]';
+            usernameInput.disabled = true;
+            
+            // Glitch effect sound if AudioEngine is available
+            if (typeof AudioEngine !== 'undefined') AudioEngine.playTick();
+            
+            setTimeout(() => {
+                document.body.classList.remove('glitch-mode');
+                document.body.classList.remove('glitch-shake');
+                document.querySelector('.tc-prompt').textContent = originalPrompt;
+                usernameInput.value = '';
+                usernameInput.disabled = false;
+                usernameInput.focus();
+            }, 2500);
         }
 
         usernameInput.addEventListener('keydown', e => {

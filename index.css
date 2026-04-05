@@ -105,6 +105,78 @@ body {
     }
 }
 
+/* ─── Z-Axis Dive Transitions ─────────────────────────────── */
+.screen--z-exit {
+    opacity: 0 !important;
+    transform: perspective(1000px) scale(1.6) translateZ(100px) !important;
+    filter: blur(12px);
+    pointer-events: none;
+    transition: opacity 0.5s var(--ease), transform 0.6s var(--ease), filter 0.5s var(--ease) !important;
+}
+
+.screen--z-hidden {
+    opacity: 0 !important;
+    pointer-events: none;
+    transform: perspective(1000px) scale(0.6) translateZ(-200px) !important;
+    filter: blur(10px);
+}
+
+.screen--z-enter {
+    animation: screenZEnter 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes screenZEnter {
+    from {
+        opacity: 0;
+        transform: perspective(1000px) scale(0.6) translateZ(-200px);
+        filter: blur(10px);
+    }
+    to {
+        opacity: 1;
+        transform: perspective(1000px) scale(1) translateZ(0);
+        filter: blur(0);
+    }
+}
+
+/* ─── Glitch / Easter Egg Mode ────────────────────────────── */
+body.glitch-mode {
+    --bg: #030a03;
+    --text-1: #33ff33;
+    --text-2: #11aa11;
+    --text-3: #005500;
+    --accent: #33ff33;
+    --terminal-bg: #000;
+    --terminal-border: #33ff33;
+    --terminal-prompt: #33ff33;
+    --terminal-text: #fff;
+    --bg-card: #001100;
+}
+
+body.glitch-mode * {
+    font-family: 'Fira Code', 'Courier New', monospace !important;
+    transition: background 0.1s, color 0.1s, border-color 0.1s;
+}
+
+body.glitch-mode .custom-cursor {
+    mix-blend-mode: normal !important;
+    background: #33ff33 !important;
+    border-radius: 0 !important;
+    width: 20px !important;
+    height: 30px !important;
+}
+
+/* Animate entire screen slightly during glitch */
+.glitch-shake {
+    animation: glitchJitter 0.2s infinite;
+}
+@keyframes glitchJitter {
+    0% { transform: translate(1px, 1px) }
+    25% { transform: translate(-1px, -2px) }
+    50% { transform: translate(-2px, 1px) }
+    75% { transform: translate(2px, -1px) }
+    100% { transform: translate(1px, -2px) }
+}
+
 /* ─── Nav ─────────────────────────────────────────────────── */
 .nav {
     display: flex;
@@ -1363,3 +1435,55 @@ body {
         font-size: 0.82rem;
     }
 }
+
+/* ─── Immersive UX: Custom Cursor ─────────────────────────── */
+@media (pointer: fine) {
+    * {
+        cursor: none !important;
+    }
+}
+
+.custom-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    mix-blend-mode: difference;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
+                height 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
+                border-radius 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+                opacity 0.2s ease, background 0.3s ease;
+    will-change: transform, width, height;
+}
+
+.custom-cursor.typing {
+    width: 4px;
+    height: 28px;
+    border-radius: 2px;
+}
+
+.custom-cursor.hovering {
+    width: 4px;
+    height: 4px;
+    opacity: 0.2;
+}
+
+.custom-cursor.orb-hover {
+    width: 80px;
+    height: 80px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    mix-blend-mode: normal;
+}
+
+/* Kinetic Typography */
+.kin-char {
+    display: inline-block;
+    min-width: 0.2em; /* To maintain space */
+}
