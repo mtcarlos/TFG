@@ -327,13 +327,57 @@ body.glitch-mode .custom-cursor {
     box-shadow: var(--shadow-lg), 0 0 0 1px rgba(0, 0, 0, 0.15);
     animation: fadeUp 0.6s var(--ease) 0.4s both;
     margin-bottom: 20px;
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    transition: box-shadow 0.3s ease, transform 0.4s var(--ease-spring), width 0.4s var(--ease-spring), height 0.4s var(--ease-spring), opacity 0.4s ease;
+    will-change: transform, width, height;
+    z-index: 10;
 }
 
-.terminal-card:focus-within {
+.terminal-card:focus-within:not(.dragging) {
     box-shadow: var(--shadow-lg), 0 0 0 1px rgba(0, 0, 0, 0.15),
         0 0 0 3px var(--accent-border);
-    transform: translateY(-1px);
+}
+
+.terminal-card.dragging {
+    transition: none;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.1);
+    transform: scale(1.02);
+}
+
+.terminal--minimized {
+    height: 44px !important; /* Only titlebar */
+    width: 200px !important;
+}
+.terminal--minimized .tc-body {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.terminal--maximized {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    width: 90vw !important;
+    max-width: 1400px !important;
+    height: 85vh !important;
+    transform: translate(-50%, -50%) !important;
+}
+.terminal--maximized .tc-body {
+    align-items: flex-start;
+    height: calc(100% - 44px);
+}
+.terminal--maximized .tc-input {
+    font-size: 1.5rem;
+}
+
+.terminal--dropped {
+    pointer-events: none;
+    animation: terminalDropDrop 1.5s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards;
+}
+
+@keyframes terminalDropDrop {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    20% { transform: translateY(-20px) rotate(-2deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(15deg); opacity: 0; display: none; }
 }
 
 .tc-titlebar {
@@ -366,6 +410,15 @@ body.glitch-mode .custom-cursor {
 
 .dot-green {
     background: #28C840;
+}
+
+/* Make dots clickable */
+.tc-dots .dot {
+    cursor: pointer;
+    transition: filter 0.2s;
+}
+.tc-dots .dot:hover {
+    filter: brightness(1.2);
 }
 
 .tc-name {
@@ -1454,7 +1507,7 @@ body.glitch-mode .custom-cursor {
     mix-blend-mode: difference;
     pointer-events: none;
     z-index: 9999;
-    transform: translate(-50%, -50%);
+    transform: translate(var(--cx, -50%), var(--cy, -50%)) translate(-50%, -50%) scale(var(--cscale, 1));
     transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
                 height 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
                 border-radius 0.3s cubic-bezier(0.25, 1, 0.5, 1),

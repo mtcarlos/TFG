@@ -200,12 +200,12 @@
             <p class="hero-sub">Shared immersive environments to build, explore<br class="br-desk"> and analyze —
                 together, in real time.</p>
 
-            <div class="terminal-card">
-                <div class="tc-titlebar">
+            <div class="terminal-card" id="terminalCard">
+                <div class="tc-titlebar" id="tcTitlebar">
                     <div class="tc-dots">
-                        <span class="dot dot-red"></span>
-                        <span class="dot dot-yellow"></span>
-                        <span class="dot dot-green"></span>
+                        <span class="dot dot-red" id="tcClose" title="Cerrar"></span>
+                        <span class="dot dot-yellow" id="tcMin" title="Minimizar"></span>
+                        <span class="dot dot-green" id="tcMax" title="Maximizar"></span>
                     </div>
                     <span class="tc-name">vr-spaces — terminal</span>
                     <div class="tc-dots tc-dots-fake" aria-hidden="true">
@@ -410,7 +410,8 @@
                 // Spring physics interpolation
                 renderX += (clientX - renderX) * 0.2;
                 renderY += (clientY - renderY) * 0.2;
-                cursor.style.transform = `translate(${renderX}px, ${renderY}px)`;
+                cursor.style.setProperty('--cx', `${renderX}px`);
+                cursor.style.setProperty('--cy', `${renderY}px`);
                 requestAnimationFrame(render);
             }
             requestAnimationFrame(render);
@@ -420,21 +421,25 @@
 
             const updateCursorState = (e) => {
                 const target = e.target;
+                if (!target || !target.tagName || !target.tagName.toLowerCase) return;
+                
                 const tag = target.tagName.toLowerCase();
                 let newClass = 'custom-cursor';
 
-                // Typing
-                if (tag === 'input' || tag === 'textarea') {
-                    newClass = 'custom-cursor typing';
-                }
-                // Orb hover
-                else if (target.closest('#orbWrapper')) {
-                    newClass = 'custom-cursor orb-hover';
-                }
-                // Buttons / Links
-                else if (tag === 'button' || tag === 'a' || target.closest('button') || target.closest('a') || target.classList.contains('s-dot')) {
-                    newClass = 'custom-cursor hovering';
-                }
+                try {
+                    // Typing
+                    if (tag === 'input' || tag === 'textarea') {
+                        newClass = 'custom-cursor typing';
+                    }
+                    // Orb hover
+                    else if (target.closest('#orbWrapper')) {
+                        newClass = 'custom-cursor orb-hover';
+                    }
+                    // Buttons / Links
+                    else if (tag === 'button' || tag === 'a' || target.closest('button') || target.closest('a') || target.classList.contains('s-dot') || target.classList.contains('dot')) {
+                        newClass = 'custom-cursor hovering';
+                    }
+                } catch(e) {}
 
                 if (newClass !== lastClass) {
                     cursor.className = newClass;
@@ -447,7 +452,7 @@
                 if (e.target.tagName && (e.target.tagName.toLowerCase() === 'input' || e.target.tagName.toLowerCase() === 'textarea')) {
                     // Only play tick on actual character input or backspace
                     if (e.key.length === 1 || e.key === 'Backspace') {
-                        AudioEngine.playTick();
+                        if (typeof AudioEngine !== 'undefined') AudioEngine.playTick();
                     }
                 }
             });
@@ -457,10 +462,10 @@
                 if (!e.relatedTarget) cursor.className = 'custom-cursor';
             });
             document.addEventListener('mousedown', () => {
-                cursor.style.transform = `translate(${renderX}px, ${renderY}px) scale(0.8)`;
+                cursor.style.setProperty('--cscale', '0.8');
             });
             document.addEventListener('mouseup', () => {
-                cursor.style.transform = `translate(${renderX}px, ${renderY}px) scale(1)`;
+                cursor.style.setProperty('--cscale', '1');
             });
         })();
 
@@ -639,6 +644,114 @@
             window.addEventListener('resize', resize);
             resize();
             draw();
+        })();
+
+        // ─── Immersive UX: Draggable Mac Terminal ─────────────────────────
+        (function() {
+            const terminal = document.getElementById('terminalCard');
+            const titlebar = document.getElementById('tcTitlebar');
+            const btnClose = document.getElementById('tcClose');
+            const btnMin = document.getElementById('tcMin');
+            const btnMax = document.getElementById('tcMax');
+
+            if (!terminal || !titlebar) return;
+
+            // Drag State
+            let isDragging = false;
+            let startX = 0, startY = 0;
+            let initialTransform = '';
+            let currentX = 0, currentY = 0;
+
+            // Draggable mechanics
+            titlebar.addEventListener('mousedown', e => {
+                if (e.target.closest('.tc-dots')) return; // Ignore if clicking buttons
+                isDragging = true;
+                terminal.classList.add('dragging');
+                
+                startX = e.clientX - currentX;
+                startY = e.clientY - currentY;
+                
+                document.body.style.userSelect = 'none'; // Prevent text selection
+            });
+
+            document.addEventListener('mousemove', e => {
+                if (!isDragging) return;
+                
+                currentX = e.clientX - startX;
+                currentY = e.clientY - startY;
+                
+                // Add a slight rotation based on velocity
+                const vX = e.movementX;
+                const rotation = Math.max(-5, Math.min(5, vX * 0.2));
+                
+                terminal.style.transform = `translate(${currentX}px, ${currentY}px) rotate(${rotation}deg)`;
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (!isDragging) return;
+                isDragging = false;
+                terminal.classList.remove('dragging');
+                document.body.style.userSelect = '';
+                
+                // Snap back rotation
+                terminal.style.transform = `translate(${currentX}px, ${currentY}px) rotate(0deg)`;
+            });
+
+            // Window Controls
+            
+            // 🟢 Maximize
+            btnMax.addEventListener('click', () => {
+                terminal.style.transform = ''; // reset drag translation
+                currentX = 0; currentY = 0;
+                terminal.classList.toggle('terminal--maximized');
+                // Cannot drag while maximized
+                titlebar.style.cursor = terminal.classList.contains('terminal--maximized') ? 'default' : 'grab';
+                if (typeof AudioEngine !== 'undefined') AudioEngine.playTick();
+            });
+
+            // 🟡 Minimize
+            btnMin.addEventListener('click', () => {
+                if (terminal.classList.contains('terminal--maximized')) {
+                    terminal.classList.remove('terminal--maximized');
+                }
+                terminal.classList.toggle('terminal--minimized');
+                if (typeof AudioEngine !== 'undefined') AudioEngine.playTick();
+            });
+
+            // 🔴 Close (Easter Egg: Error & Respawn)
+            btnClose.addEventListener('click', () => {
+                if (typeof AudioEngine !== 'undefined') AudioEngine.playTick();
+                
+                terminal.classList.add('terminal--dropped'); // CSS animation causes it to drop
+                
+                setTimeout(() => {
+                    // Respawn the terminal with a scary message
+                    terminal.classList.remove('terminal--dropped');
+                    terminal.classList.remove('terminal--maximized');
+                    terminal.classList.remove('terminal--minimized');
+                    terminal.style.transform = '';
+                    currentX = 0; currentY = 0;
+                    
+                    const originalPrompt = document.querySelector('.tc-prompt').textContent;
+                    document.querySelector('.tc-prompt').textContent = '[ FATAL_ERROR ] ~$';
+                    const userIn = document.getElementById('usernameInput');
+                    const oldVal = userIn.value;
+                    userIn.value = 'COMPONENT REQUIRED';
+                    userIn.style.color = '#FF5F57';
+                    
+                    document.body.classList.add('glitch-shake');
+                    
+                    setTimeout(() => {
+                        document.body.classList.remove('glitch-shake');
+                        document.querySelector('.tc-prompt').textContent = originalPrompt;
+                        userIn.value = oldVal;
+                        userIn.style.color = '';
+                        userIn.focus();
+                    }, 1500);
+
+                }, 1800); // After drop animation
+            });
+
         })();
 
         // ─── Screen transition logic ─────────────────────────────────────
