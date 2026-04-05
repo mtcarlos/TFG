@@ -14,6 +14,12 @@
 
     <!-- A-Frame & extensions -->
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+
+    <!-- WORKAROUND: Remove built-in A-Frame 1.5+ grabbable to avoid
+         conflict with superhands' grabbable component -->
+    <script>delete AFRAME.components["grabbable"];</script>
+
+    <!-- Networking -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.min.js"></script>
     <script src="/easyrtc/easyrtc.js"></script>
     <script src="/js/networked-aframe.js"></script>
@@ -22,10 +28,13 @@
     <!-- BabiaXR -->
     <script src="https://unpkg.com/aframe-babia-components/dist/aframe-babia-components.min.js"></script>
 
-    <!-- A-Frame extras -->
+    <!-- A-Frame extras (sphere-collider, etc.) -->
     <script src="https://cdn.jsdelivr.net/npm/aframe-environment-component@1.3.7/dist/aframe-environment-component.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v7.2.0/dist/aframe-extras.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.5.0/dist/aframe-extras.min.js"></script>
     <script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"></script>
+
+    <!-- Superhands — Natural VR interaction -->
+    <script src="https://unpkg.com/super-hands@^3.0.6/dist/super-hands.min.js"></script>
 
     <link rel="stylesheet" href="../css/babia.css">
 </head>
@@ -117,7 +126,7 @@
 
         <!-- ==================== ENVIRONMENT ==================== -->
 
-        <!-- Sky: Deep dark with subtle blue-black gradient -->
+        <!-- Sky: Deep dark -->
         <a-sky color="#08090c"></a-sky>
 
         <!-- Main Platform: Dark reflective rectangle (boardroom style) -->
@@ -142,13 +151,12 @@
             material="color: #2997ff; emissive: #2997ff; emissiveIntensity: 0.15; opacity: 0.2; transparent: true">
         </a-box>
 
-        <!-- Outer ambient floor (infinite feel, fades into dark) -->
+        <!-- Outer ambient floor -->
         <a-plane position="0 -0.02 -4" rotation="-90 0 0" width="80" height="80"
             material="color: #050507; metalness: 0.8; roughness: 0.5; opacity: 0.8; transparent: true; side: double">
         </a-plane>
 
         <!-- ==================== LIGHTING ==================== -->
-        <!-- Museo cinematográfico: Ambient tenue + Spotlights por chart + Glow en detalles -->
 
         <!-- Global ambient — very dim -->
         <a-light type="ambient" intensity="0.2" color="#d4d8e0"></a-light>
@@ -180,27 +188,61 @@
         <a-entity id="attendance-data" babia-queryjson="url: ../data/demo/attendance.json"></a-entity>
         <a-entity id="kpis-data" babia-queryjson="url: ../data/demo/kpis.json"></a-entity>
 
-        <!-- ==================== CHARTS (BabiaXR) ==================== -->
+        <!-- ==================== CHARTS (Interactive Wrappers) ==================== -->
 
         <!-- CENTRAL: 3D Bars Map — Sales by Department & Quarter -->
-        <a-entity id="chart-barsmap"
-            babia-barsmap="from: sales-data; legend: true; palette: bussiness; x_axis: department; z_axis: quarter; height: sales"
-            position="0 0 -5" scale="0.6 0.6 0.6"
-            animation="property: scale; from: 0 0 0; to: 0.6 0.6 0.6; dur: 1200; easing: easeOutElastic; delay: 400">
+        <a-entity id="chart-barsmap-wrapper"
+            position="0 0 -5"
+            hoverable grabbable stretchable draggable
+            hover-glow
+            grab-visual
+            chart-sync="syncId: barsmap"
+            ownership-lock>
+            <!-- Invisible hitbox for raycaster collision -->
+            <a-box class="sh-hitbox" position="0 2 0"
+                width="6" height="5" depth="6"
+                material="opacity: 0; transparent: true; side: double"></a-box>
+            <a-entity id="chart-barsmap"
+                babia-barsmap="from: sales-data; legend: true; palette: bussiness; x_axis: department; z_axis: quarter; height: sales"
+                scale="0.6 0.6 0.6"
+                animation="property: scale; from: 0 0 0; to: 0.6 0.6 0.6; dur: 1200; easing: easeOutElastic; delay: 400">
+            </a-entity>
         </a-entity>
 
         <!-- LEFT: Pie Chart — Attendance Distribution -->
-        <a-entity id="chart-pie"
-            babia-pie="from: attendance-data; legend: true; palette: sunset; key: event; size: attendees"
-            position="-9 2.5 -6" rotation="90 0 0" scale="1.5 1.5 1.5"
-            animation="property: scale; from: 0 0 0; to: 1.5 1.5 1.5; dur: 1000; easing: easeOutElastic; delay: 700">
+        <a-entity id="chart-pie-wrapper"
+            position="-9 2.5 -6"
+            hoverable grabbable stretchable draggable
+            hover-glow
+            grab-visual
+            chart-sync="syncId: pie"
+            ownership-lock>
+            <a-box class="sh-hitbox" position="0 0 0"
+                width="4" height="3" depth="4"
+                material="opacity: 0; transparent: true; side: double"></a-box>
+            <a-entity id="chart-pie"
+                babia-pie="from: attendance-data; legend: true; palette: sunset; key: event; size: attendees"
+                rotation="90 0 0" scale="1.5 1.5 1.5"
+                animation="property: scale; from: 0 0 0; to: 1.5 1.5 1.5; dur: 1000; easing: easeOutElastic; delay: 700">
+            </a-entity>
         </a-entity>
 
         <!-- RIGHT: Simple Bars — Monthly KPIs -->
-        <a-entity id="chart-bars"
-            babia-bars="from: kpis-data; legend: true; palette: blues; x_axis: month; height: revenue"
-            position="8 0 -6" scale="0.015 0.015 0.015"
-            animation="property: scale; from: 0 0 0; to: 0.015 0.015 0.015; dur: 1000; easing: easeOutElastic; delay: 1000">
+        <a-entity id="chart-bars-wrapper"
+            position="8 0 -6"
+            hoverable grabbable stretchable draggable
+            hover-glow
+            grab-visual
+            chart-sync="syncId: bars"
+            ownership-lock>
+            <a-box class="sh-hitbox" position="0 2 0"
+                width="5" height="5" depth="4"
+                material="opacity: 0; transparent: true; side: double"></a-box>
+            <a-entity id="chart-bars"
+                babia-bars="from: kpis-data; legend: true; palette: blues; x_axis: month; height: revenue"
+                scale="0.015 0.015 0.015"
+                animation="property: scale; from: 0 0 0; to: 0.015 0.015 0.015; dur: 1000; easing: easeOutElastic; delay: 1000">
+            </a-entity>
         </a-entity>
 
         <!-- ==================== LABELS 3D — Clean Floating ==================== -->
@@ -249,12 +291,19 @@
             opacity="0.4">
         </a-text>
 
-        <!-- ==================== METRIC CARDS — Floating KPI badges ==================== -->
+        <!-- ==================== METRIC CARDS — Interactive ==================== -->
 
         <!-- Metric Card: Central (Sales Total) -->
         <a-entity id="metric-sales" position="3.5 3.2 -3.5"
+            hoverable grabbable
+            hover-glow
+            grab-visual
+            chart-sync="syncId: metric-sales"
+            ownership-lock
             animation="property: position; to: 3.5 3.4 -3.5; dir: alternate; dur: 4000; easing: easeInOutSine; loop: true">
-            <a-plane width="1.6" height="0.65" 
+            <a-box class="sh-hitbox" width="1.8" height="0.8" depth="0.1"
+                material="opacity: 0; transparent: true; side: double"></a-box>
+            <a-plane width="1.6" height="0.65"
                 material="color: #0a0a0c; opacity: 0.85; transparent: true; side: double"
                 geometry="primitive: plane; width: 1.6; height: 0.65">
             </a-plane>
@@ -276,7 +325,14 @@
 
         <!-- Metric Card: Left (Attendance Total) -->
         <a-entity id="metric-attendance" position="-7 4.2 -4.5"
+            hoverable grabbable
+            hover-glow
+            grab-visual
+            chart-sync="syncId: metric-attendance"
+            ownership-lock
             animation="property: position; to: -7 4.4 -4.5; dir: alternate; dur: 3500; easing: easeInOutSine; loop: true">
+            <a-box class="sh-hitbox" width="1.7" height="0.8" depth="0.1"
+                material="opacity: 0; transparent: true; side: double"></a-box>
             <a-plane width="1.5" height="0.65"
                 material="color: #0a0a0c; opacity: 0.85; transparent: true; side: double">
             </a-plane>
@@ -297,7 +353,14 @@
 
         <!-- Metric Card: Right (Revenue YTD) -->
         <a-entity id="metric-revenue" position="10 3.2 -4.5"
+            hoverable grabbable
+            hover-glow
+            grab-visual
+            chart-sync="syncId: metric-revenue"
+            ownership-lock
             animation="property: position; to: 10 3.4 -4.5; dir: alternate; dur: 4500; easing: easeInOutSine; loop: true">
+            <a-box class="sh-hitbox" width="1.8" height="0.8" depth="0.1"
+                material="opacity: 0; transparent: true; side: double"></a-box>
             <a-plane width="1.6" height="0.65"
                 material="color: #0a0a0c; opacity: 0.85; transparent: true; side: double">
             </a-plane>
@@ -328,19 +391,56 @@
 
         <!-- ==================== PLAYER RIG ==================== -->
         <a-entity id="rig" networked="template:#avatar-template;attachTemplateToLocal:false;"
-            position="0 0 5" spawn-in-circle="radius:3" player-info>
+            position="0 0 5" spawn-in-circle="radius:3" player-info
+            pointer-sync>
 
             <a-entity id="player" class="player-cam" camera position="0 1.6 0"
                 wasd-controls="fly: true"
                 look-controls="pointerLockEnabled: false">
+                <!-- Desktop cursor (unchanged) -->
                 <a-cursor raycaster="objects: .babia-bar, .babia-slice, .babia-cyl" color="#2997ff" fuse="false"></a-cursor>
                 <a-sphere class="head" visible="false" random-color></a-sphere>
                 <a-text class="nametag" visible="false"></a-text>
             </a-entity>
 
-            <!-- VR Controllers -->
-            <a-entity id="left-hand" laser-controls="hand: left"></a-entity>
-            <a-entity id="right-hand" laser-controls="hand: right"></a-entity>
+            <!-- ══════ VR CONTROLLERS — Superhands + Laser Pointer ══════ -->
+
+            <!-- Left Controller: Locomotion (thumbstick) + Grab (trigger/grip) -->
+            <a-entity id="left-controller"
+                laser-controls="hand: left; model: true"
+                raycaster="objects: .sh-hitbox, .babia-bar, .babia-slice, .babia-cyl; far: 15; showLine: true; lineColor: #2997ff; lineOpacity: 0.35"
+                super-hands="colliderEvent: raycaster-intersection;
+                             colliderEventProperty: els;
+                             colliderEndEvent: raycaster-intersection-cleared;
+                             colliderEndEventProperty: clearedEls"
+                thumbstick-move="speed: 2.5">
+            </a-entity>
+
+            <!-- Right Controller: Snap Turn (thumbstick) + Grab (trigger/grip) -->
+            <a-entity id="right-controller"
+                laser-controls="hand: right; model: true"
+                raycaster="objects: .sh-hitbox, .babia-bar, .babia-slice, .babia-cyl; far: 15; showLine: true; lineColor: #2997ff; lineOpacity: 0.35"
+                super-hands="colliderEvent: raycaster-intersection;
+                             colliderEventProperty: els;
+                             colliderEndEvent: raycaster-intersection-cleared;
+                             colliderEndEventProperty: clearedEls"
+                thumbstick-turn="snapAngle: 45">
+            </a-entity>
+
+            <!-- ══════ HAND TRACKING FALLBACK (Quest 3 bare hands) ══════ -->
+
+            <a-entity id="left-hand-tracking"
+                hand-tracking-controls="hand: left; modelColor: #2997ff; modelOpacity: 0.3"
+                sphere-collider="objects: .sh-hitbox; radius: 0.04"
+                super-hands>
+            </a-entity>
+
+            <a-entity id="right-hand-tracking"
+                hand-tracking-controls="hand: right; modelColor: #2997ff; modelOpacity: 0.3"
+                sphere-collider="objects: .sh-hitbox; radius: 0.04"
+                super-hands>
+            </a-entity>
+
         </a-entity>
 
     </a-scene>
