@@ -126,268 +126,122 @@
 
         <!-- ==================== ENVIRONMENT ==================== -->
 
-        <!-- Sky: Deep dark -->
-        <a-sky color="#08090c"></a-sky>
+        <!-- ==================== ENVIRONMENT & ARCHITECTURE ==================== -->
 
-        <!-- Main Platform: Dark reflective rectangle (boardroom style) -->
-        <a-plane position="0 0 -4" rotation="-90 0 0" width="28" height="20"
-            material="color: #0a0a0c; metalness: 0.95; roughness: 0.12; envMap: #; side: double">
+        <!-- Sky & Infinite Floor -->
+        <a-sky color="#F5F5F7"></a-sky>
+        <a-plane position="0 -0.02 0" rotation="-90 0 0" width="200" height="200"
+            material="shader: flat; color: #F5F5F7; opacity: 1; transparent: false; side: double">
         </a-plane>
 
-        <!-- Platform edge glow — front -->
-        <a-box position="0 0.01 6" width="28" height="0.02" depth="0.04"
-            material="color: #2997ff; emissive: #2997ff; emissiveIntensity: 0.3; opacity: 0.4; transparent: true">
-        </a-box>
-        <!-- Platform edge glow — back -->
-        <a-box position="0 0.01 -14" width="28" height="0.02" depth="0.04"
-            material="color: #2997ff; emissive: #2997ff; emissiveIntensity: 0.2; opacity: 0.25; transparent: true">
-        </a-box>
-        <!-- Platform edge glow — left -->
-        <a-box position="-14 0.01 -4" width="0.04" height="0.02" depth="20"
-            material="color: #2997ff; emissive: #2997ff; emissiveIntensity: 0.15; opacity: 0.2; transparent: true">
-        </a-box>
-        <!-- Platform edge glow — right -->
-        <a-box position="14 0.01 -4" width="0.04" height="0.02" depth="20"
-            material="color: #2997ff; emissive: #2997ff; emissiveIntensity: 0.15; opacity: 0.2; transparent: true">
-        </a-box>
+        <!-- The Agora (Central Platform) -->
+        <a-cylinder position="0 -0.01 0" radius="18" height="0.02" material="color: #ffffff; roughness: 0.9; metalness: 0"></a-cylinder>
+        <a-ring position="0 0 0" rotation="-90 0 0" radius-inner="17.8" radius-outer="18.2" material="color: #4338CA; opacity: 0.1"></a-ring>
 
-        <!-- Outer ambient floor -->
-        <a-plane position="0 -0.02 -4" rotation="-90 0 0" width="80" height="80"
-            material="color: #050507; metalness: 0.8; roughness: 0.5; opacity: 0.8; transparent: true; side: double">
-        </a-plane>
+
 
         <!-- ==================== LIGHTING ==================== -->
 
-        <!-- Global ambient — very dim -->
-        <a-light type="ambient" intensity="0.2" color="#d4d8e0"></a-light>
+        <!-- Bright Ambient Studio Light -->
+        <a-light type="ambient" intensity="0.85" color="#ffffff"></a-light>
+        <a-light type="directional" intensity="0.4" position="5 20 10" color="#ffffff" castShadow="false"></a-light>
 
-        <!-- Soft directional fill from above -->
-        <a-light type="directional" intensity="0.25" position="0 20 5" color="#e0e4ea"></a-light>
+        <!-- Highlight Spots for the 3 Exhibits -->
+        <a-light type="spot" intensity="0.6" color="#ffffff" position="0 12 -12" target="#exhibit-sales" angle="35" penumbra="1" distance="20" decay="1.2"></a-light>
+        <a-light type="spot" intensity="0.6" color="#ffffff" position="-10.4 12 6" target="#exhibit-attendance" angle="35" penumbra="1" distance="20" decay="1.2"></a-light>
+        <a-light type="spot" intensity="0.6" color="#ffffff" position="10.4 12 6" target="#exhibit-kpis" angle="35" penumbra="1" distance="20" decay="1.2"></a-light>
 
-        <!-- SPOTLIGHT: Central chart (barsmap) — warm white -->
-        <a-light type="spot" intensity="1.2" color="#f5f0e8" position="0 10 -5"
-            target="#chart-barsmap" angle="35" penumbra="0.6" distance="18" decay="1.5">
-        </a-light>
-
-        <!-- SPOTLIGHT: Left chart (pie) — neutral white -->
-        <a-light type="spot" intensity="1.0" color="#f0f0f0" position="-9 10 -6"
-            target="#chart-pie" angle="30" penumbra="0.5" distance="16" decay="1.5">
-        </a-light>
-
-        <!-- SPOTLIGHT: Right chart (bars) — cool white -->
-        <a-light type="spot" intensity="1.0" color="#e8f0f5" position="8 10 -6"
-            target="#chart-bars" angle="30" penumbra="0.5" distance="16" decay="1.5">
-        </a-light>
-
-        <!-- Subtle floor reflection light -->
-        <a-light type="point" intensity="0.08" position="0 0.5 -4" color="#2997ff" distance="15"></a-light>
-
-        <!-- ==================== DATA SOURCES (BabiaXR) ==================== -->
-
+        <!-- ==================== DATA SOURCES ==================== -->
         <a-entity id="sales-data" babia-queryjson="url: ../data/demo/sales.json"></a-entity>
         <a-entity id="attendance-data" babia-queryjson="url: ../data/demo/attendance.json"></a-entity>
         <a-entity id="kpis-data" babia-queryjson="url: ../data/demo/kpis.json"></a-entity>
 
-        <!-- ==================== CHARTS (Interactive Wrappers) ==================== -->
+        <!-- ==================== EXHIBIT 1: SALES ==================== -->
+        <a-entity id="exhibit-sales" position="0 0 -12">
+            <!-- Pedestal -->
+            <a-cylinder position="0 0.4 0" radius="3" height="0.8" material="color: #ffffff; opacity: 0.95"></a-cylinder>
+            <a-cylinder position="0 0.81 0" radius="2.8" height="0.02" material="color: #4338CA; opacity: 0.15; transparent: true"></a-cylinder>
+            
+            <!-- Floating Labels -->
+            <a-text value="Sales by Department" position="0 1.2 3.2" rotation="-15 0 0" align="center" color="#1D1D1F" width="5" font="https://cdn.aframe.io/fonts/Exo2Bold.fnt" opacity="0.9"></a-text>
+            <a-text value="Quarterly Comparison" position="0 0.95 3.2" rotation="-15 0 0" align="center" color="#6E6E73" width="3.5" opacity="0.8"></a-text>
 
-        <!-- CENTRAL: 3D Bars Map — Sales by Department & Quarter -->
-        <a-entity id="chart-barsmap-wrapper"
-            position="0 0 -5"
-            hoverable grabbable stretchable draggable
-            hover-glow
-            grab-visual
-            chart-sync="syncId: barsmap"
-            ownership-lock>
-            <!-- Invisible hitbox for raycaster collision -->
-            <a-box class="sh-hitbox" position="0 2 0"
-                width="6" height="5" depth="6"
-                material="opacity: 0; transparent: true; side: double"></a-box>
-            <a-entity id="chart-barsmap"
-                babia-barsmap="from: sales-data; legend: true; palette: bussiness; x_axis: department; z_axis: quarter; height: sales"
-                scale="0.6 0.6 0.6"
-                animation="property: scale; from: 0 0 0; to: 0.6 0.6 0.6; dur: 1200; easing: easeOutElastic; delay: 400">
+            <!-- Chart -->
+            <a-entity id="chart-barsmap-wrapper" position="0 0.82 0" hoverable grabbable stretchable draggable hover-glow grab-visual chart-sync="syncId: barsmap" ownership-lock>
+                <a-box class="sh-hitbox" position="0 -0.25 0" width="6.5" height="0.5" depth="6.5" material="opacity: 0; transparent: true; side: double"></a-box>
+                <a-entity id="chart-barsmap" babia-barsmap="from: sales-data; legend: true; palette: bussiness; x_axis: department; z_axis: quarter; height: sales" scale="0.6 0.6 0.6" animation="property: scale; from: 0 0 0; to: 0.6 0.6 0.6; dur: 1200; easing: easeOutElastic; delay: 400"></a-entity>
+            </a-entity>
+
+            <!-- Metric Plaque -->
+            <a-entity id="metric-sales" position="0 0.4 3.01" hoverable grabbable hover-glow grab-visual chart-sync="syncId: metric-sales" ownership-lock animation="property: position; to: 0 0.42 3.01; dir: alternate; dur: 4000; easing: easeInOutSine; loop: true">
+                <a-box class="sh-hitbox" width="1.8" height="0.8" depth="0.1" material="opacity: 0; transparent: true; side: double"></a-box>
+                <a-plane width="1.6" height="0.65" material="color: #ffffff; opacity: 0.85; transparent: true" geometry="primitive: plane; width: 1.6; height: 0.65"></a-plane>
+                <a-plane width="1.62" height="0.67" position="0 0 -0.001" material="color: #4338CA; opacity: 0.2; transparent: true"></a-plane>
+                <a-text value="Total Sales" position="0 0.12 0.01" align="center" color="#6E6E73" width="2"></a-text>
+                <a-text id="metric-sales-value" value="3,608" position="0 -0.1 0.01" align="center" color="#1D1D1F" width="3" font="https://cdn.aframe.io/fonts/Exo2Bold.fnt"></a-text>
             </a-entity>
         </a-entity>
 
-        <!-- LEFT: Pie Chart — Attendance Distribution -->
-        <a-entity id="chart-pie-wrapper"
-            position="-9 2.5 -6"
-            hoverable grabbable stretchable draggable
-            hover-glow
-            grab-visual
-            chart-sync="syncId: pie"
-            ownership-lock>
-            <a-box class="sh-hitbox" position="0 0 0"
-                width="4" height="3" depth="4"
-                material="opacity: 0; transparent: true; side: double"></a-box>
-            <a-entity id="chart-pie"
-                babia-pie="from: attendance-data; legend: true; palette: sunset; key: event; size: attendees"
-                rotation="90 0 0" scale="1.5 1.5 1.5"
-                animation="property: scale; from: 0 0 0; to: 1.5 1.5 1.5; dur: 1000; easing: easeOutElastic; delay: 700">
+        <!-- ==================== EXHIBIT 2: ATTENDANCE (Rotated 120 deg) ==================== -->
+        <a-entity id="exhibit-attendance" position="-10.4 0 6" rotation="0 120 0">
+            <!-- Pedestal -->
+            <a-cylinder position="0 0.4 0" radius="2.5" height="0.8" material="color: #ffffff; opacity: 0.95"></a-cylinder>
+            <a-cylinder position="0 0.81 0" radius="2.3" height="0.02" material="color: #4338CA; opacity: 0.15; transparent: true"></a-cylinder>
+            
+            <!-- Floating Labels -->
+            <a-text value="Meeting Attendance" position="0 1.2 2.7" rotation="-15 0 0" align="center" color="#1D1D1F" width="5" font="https://cdn.aframe.io/fonts/Exo2Bold.fnt" opacity="0.9"></a-text>
+            <a-text value="Event Distribution" position="0 0.95 2.7" rotation="-15 0 0" align="center" color="#6E6E73" width="3.5" opacity="0.8"></a-text>
+
+            <!-- Chart (pie is larger, placed slightly higher if needed) -->
+            <a-entity id="chart-pie-wrapper" position="0 2.3 0" hoverable grabbable stretchable draggable hover-glow grab-visual chart-sync="syncId: pie" ownership-lock>
+                <!-- Because pie chart is vertically rotated locally, we place handle below it -->
+                <a-box class="sh-hitbox" position="0 -1.8 0" width="4.5" height="0.5" depth="4.5" material="opacity: 0; transparent: true; side: double"></a-box>
+                <a-entity id="chart-pie" babia-pie="from: attendance-data; legend: true; palette: sunset; key: event; size: attendees" rotation="90 0 0" scale="1.5 1.5 1.5" animation="property: scale; from: 0 0 0; to: 1.5 1.5 1.5; dur: 1000; easing: easeOutElastic; delay: 700"></a-entity>
+            </a-entity>
+
+            <!-- Metric Plaque -->
+            <a-entity id="metric-attendance" position="0 0.4 2.51" hoverable grabbable hover-glow grab-visual chart-sync="syncId: metric-attendance" ownership-lock animation="property: position; to: 0 0.42 2.51; dir: alternate; dur: 3500; easing: easeInOutSine; loop: true">
+                <a-box class="sh-hitbox" width="1.7" height="0.8" depth="0.1" material="opacity: 0; transparent: true; side: double"></a-box>
+                <a-plane width="1.5" height="0.65" material="color: #ffffff; opacity: 0.85; transparent: true"></a-plane>
+                <a-plane width="1.52" height="0.67" position="0 0 -0.001" material="color: #4338CA; opacity: 0.2; transparent: true"></a-plane>
+                <a-text value="Total Attendees" position="0 0.12 0.01" align="center" color="#6E6E73" width="2"></a-text>
+                <a-text id="metric-attendance-value" value="318" position="0 -0.1 0.01" align="center" color="#1D1D1F" width="3" font="https://cdn.aframe.io/fonts/Exo2Bold.fnt"></a-text>
             </a-entity>
         </a-entity>
 
-        <!-- RIGHT: Simple Bars — Monthly KPIs -->
-        <a-entity id="chart-bars-wrapper"
-            position="8 0 -6"
-            hoverable grabbable stretchable draggable
-            hover-glow
-            grab-visual
-            chart-sync="syncId: bars"
-            ownership-lock>
-            <a-box class="sh-hitbox" position="0 2 0"
-                width="5" height="5" depth="4"
-                material="opacity: 0; transparent: true; side: double"></a-box>
-            <a-entity id="chart-bars"
-                babia-bars="from: kpis-data; legend: true; palette: blues; x_axis: month; height: revenue"
-                scale="0.015 0.015 0.015"
-                animation="property: scale; from: 0 0 0; to: 0.015 0.015 0.015; dur: 1000; easing: easeOutElastic; delay: 1000">
+        <!-- ==================== EXHIBIT 3: KPIs (Rotated -120 deg) ==================== -->
+        <a-entity id="exhibit-kpis" position="10.4 0 6" rotation="0 -120 0">
+            <!-- Pedestal -->
+            <a-cylinder position="0 0.4 0" radius="2.5" height="0.8" material="color: #ffffff; opacity: 0.95"></a-cylinder>
+            <a-cylinder position="0 0.81 0" radius="2.3" height="0.02" material="color: #4338CA; opacity: 0.15; transparent: true"></a-cylinder>
+            
+            <!-- Floating Labels -->
+            <a-text value="Monthly KPIs" position="0 1.2 2.7" rotation="-15 0 0" align="center" color="#1D1D1F" width="5" font="https://cdn.aframe.io/fonts/Exo2Bold.fnt" opacity="0.9"></a-text>
+            <a-text value="Revenue Track" position="0 0.95 2.7" rotation="-15 0 0" align="center" color="#6E6E73" width="3.5" opacity="0.8"></a-text>
+
+            <!-- Chart -->
+            <a-entity id="chart-bars-wrapper" position="0 0.82 0" hoverable grabbable stretchable draggable hover-glow grab-visual chart-sync="syncId: bars" ownership-lock>
+                <a-box class="sh-hitbox" position="0 -0.25 0" width="5.5" height="0.5" depth="4.5" material="opacity: 0; transparent: true; side: double"></a-box>
+                <a-entity id="chart-bars" babia-bars="from: kpis-data; legend: true; palette: blues; x_axis: month; height: revenue" scale="0.015 0.015 0.015" animation="property: scale; from: 0 0 0; to: 0.015 0.015 0.015; dur: 1000; easing: easeOutElastic; delay: 1000"></a-entity>
+            </a-entity>
+
+            <!-- Metric Plaque -->
+            <a-entity id="metric-revenue" position="0 0.4 2.51" hoverable grabbable hover-glow grab-visual chart-sync="syncId: metric-revenue" ownership-lock animation="property: position; to: 0 0.42 2.51; dir: alternate; dur: 4500; easing: easeInOutSine; loop: true">
+                <a-box class="sh-hitbox" width="1.8" height="0.8" depth="0.1" material="opacity: 0; transparent: true; side: double"></a-box>
+                <a-plane width="1.6" height="0.65" material="color: #ffffff; opacity: 0.85; transparent: true"></a-plane>
+                <a-plane width="1.62" height="0.67" position="0 0 -0.001" material="color: #4338CA; opacity: 0.2; transparent: true"></a-plane>
+                <a-text value="YTD Revenue" position="0 0.12 0.01" align="center" color="#6E6E73" width="2"></a-text>
+                <a-text id="metric-revenue-value" value="$1.25M" position="0 -0.1 0.01" align="center" color="#1D1D1F" width="3" font="https://cdn.aframe.io/fonts/Exo2Bold.fnt"></a-text>
             </a-entity>
         </a-entity>
 
-        <!-- ==================== LABELS 3D — Clean Floating ==================== -->
-
-        <!-- Main title — discrete, ethereal -->
-        <a-text value="Data Analytics" position="0 6.2 -13"
-            align="center" color="#f5f5f7" width="14"
-            font="https://cdn.aframe.io/fonts/Exo2Bold.fnt"
-            opacity="0.25">
-        </a-text>
-        <a-text value="Collaborative Dashboard" position="0 5.7 -13"
-            align="center" color="#a1a1a6" width="8"
-            opacity="0.15">
-        </a-text>
-
-        <!-- Central chart label -->
-        <a-text value="Sales by Department" position="0 4.2 -5"
-            align="center" color="#f5f5f7" width="5"
-            font="https://cdn.aframe.io/fonts/Exo2Bold.fnt"
-            opacity="0.7">
-        </a-text>
-        <a-text value="Quarterly Comparison" position="0 3.85 -5"
-            align="center" color="#a1a1a6" width="3.5"
-            opacity="0.4">
-        </a-text>
-
-        <!-- Left chart label -->
-        <a-text value="Meeting Attendance" position="-9 5 -6"
-            align="center" color="#f5f5f7" width="4.5"
-            font="https://cdn.aframe.io/fonts/Exo2Bold.fnt"
-            opacity="0.7">
-        </a-text>
-        <a-text value="Event Distribution" position="-9 4.65 -6"
-            align="center" color="#a1a1a6" width="3"
-            opacity="0.4">
-        </a-text>
-
-        <!-- Right chart label -->
-        <a-text value="Monthly Revenue" position="8 4.2 -6"
-            align="center" color="#f5f5f7" width="4.5"
-            font="https://cdn.aframe.io/fonts/Exo2Bold.fnt"
-            opacity="0.7">
-        </a-text>
-        <a-text value="Fiscal Year 2026" position="8 3.85 -6"
-            align="center" color="#a1a1a6" width="3"
-            opacity="0.4">
-        </a-text>
-
-        <!-- ==================== METRIC CARDS — Interactive ==================== -->
-
-        <!-- Metric Card: Central (Sales Total) -->
-        <a-entity id="metric-sales" position="3.5 3.2 -3.5"
-            hoverable grabbable
-            hover-glow
-            grab-visual
-            chart-sync="syncId: metric-sales"
-            ownership-lock
-            animation="property: position; to: 3.5 3.4 -3.5; dir: alternate; dur: 4000; easing: easeInOutSine; loop: true">
-            <a-box class="sh-hitbox" width="1.8" height="0.8" depth="0.1"
-                material="opacity: 0; transparent: true; side: double"></a-box>
-            <a-plane width="1.6" height="0.65"
-                material="color: #0a0a0c; opacity: 0.85; transparent: true; side: double"
-                geometry="primitive: plane; width: 1.6; height: 0.65">
-            </a-plane>
-            <a-plane width="1.6" height="0.65"
-                material="color: #2997ff; opacity: 0.06; transparent: true; side: double">
-            </a-plane>
-            <!-- Border effect -->
-            <a-plane width="1.62" height="0.67" position="0 0 -0.001"
-                material="color: #2997ff; opacity: 0.12; transparent: true; side: double">
-            </a-plane>
-            <a-text value="Total Sales" position="0 0.12 0.01"
-                align="center" color="#a1a1a6" width="2" opacity="0.7">
-            </a-text>
-            <a-text id="metric-sales-value" value="3,608" position="0 -0.1 0.01"
-                align="center" color="#f5f5f7" width="3"
-                font="https://cdn.aframe.io/fonts/Exo2Bold.fnt" opacity="0.9">
-            </a-text>
+        <!-- ==================== 3D CLOCK & WELCOME ==================== -->
+        <a-entity id="scene-clock" position="0 6 -12" clock-display>
+            <a-text value="The Analytics Pavilion" position="0 0.9 0" align="center" color="#1D1D1F" width="10" font="https://cdn.aframe.io/fonts/Exo2Bold.fnt" opacity="0.8"></a-text>
+            <a-text id="clock-time" value="--:--" position="0 0.3 0" align="center" color="#4338CA" width="9" font="https://cdn.aframe.io/fonts/Exo2Bold.fnt" opacity="0.9"></a-text>
+            <a-text id="clock-date" value="" position="0 -0.3 0" align="center" color="#6E6E73" width="5" opacity="0.8"></a-text>
         </a-entity>
 
-        <!-- Metric Card: Left (Attendance Total) -->
-        <a-entity id="metric-attendance" position="-7 4.2 -4.5"
-            hoverable grabbable
-            hover-glow
-            grab-visual
-            chart-sync="syncId: metric-attendance"
-            ownership-lock
-            animation="property: position; to: -7 4.4 -4.5; dir: alternate; dur: 3500; easing: easeInOutSine; loop: true">
-            <a-box class="sh-hitbox" width="1.7" height="0.8" depth="0.1"
-                material="opacity: 0; transparent: true; side: double"></a-box>
-            <a-plane width="1.5" height="0.65"
-                material="color: #0a0a0c; opacity: 0.85; transparent: true; side: double">
-            </a-plane>
-            <a-plane width="1.5" height="0.65"
-                material="color: #2997ff; opacity: 0.06; transparent: true; side: double">
-            </a-plane>
-            <a-plane width="1.52" height="0.67" position="0 0 -0.001"
-                material="color: #2997ff; opacity: 0.12; transparent: true; side: double">
-            </a-plane>
-            <a-text value="Total Attendees" position="0 0.12 0.01"
-                align="center" color="#a1a1a6" width="2" opacity="0.7">
-            </a-text>
-            <a-text id="metric-attendance-value" value="318" position="0 -0.1 0.01"
-                align="center" color="#f5f5f7" width="3"
-                font="https://cdn.aframe.io/fonts/Exo2Bold.fnt" opacity="0.9">
-            </a-text>
-        </a-entity>
-
-        <!-- Metric Card: Right (Revenue YTD) -->
-        <a-entity id="metric-revenue" position="10 3.2 -4.5"
-            hoverable grabbable
-            hover-glow
-            grab-visual
-            chart-sync="syncId: metric-revenue"
-            ownership-lock
-            animation="property: position; to: 10 3.4 -4.5; dir: alternate; dur: 4500; easing: easeInOutSine; loop: true">
-            <a-box class="sh-hitbox" width="1.8" height="0.8" depth="0.1"
-                material="opacity: 0; transparent: true; side: double"></a-box>
-            <a-plane width="1.6" height="0.65"
-                material="color: #0a0a0c; opacity: 0.85; transparent: true; side: double">
-            </a-plane>
-            <a-plane width="1.6" height="0.65"
-                material="color: #2997ff; opacity: 0.06; transparent: true; side: double">
-            </a-plane>
-            <a-plane width="1.62" height="0.67" position="0 0 -0.001"
-                material="color: #2997ff; opacity: 0.12; transparent: true; side: double">
-            </a-plane>
-            <a-text value="YTD Revenue" position="0 0.12 0.01"
-                align="center" color="#a1a1a6" width="2" opacity="0.7">
-            </a-text>
-            <a-text id="metric-revenue-value" value="$1.25M" position="0 -0.1 0.01"
-                align="center" color="#f5f5f7" width="3"
-                font="https://cdn.aframe.io/fonts/Exo2Bold.fnt" opacity="0.9">
-            </a-text>
-        </a-entity>
-
-        <!-- ==================== 3D CLOCK ==================== -->
-        <a-entity id="scene-clock" position="12 5.5 -13" clock-display>
-            <a-text id="clock-time" value="--:--" align="right" color="#f5f5f7" width="4"
-                font="https://cdn.aframe.io/fonts/Exo2Bold.fnt" opacity="0.35">
-            </a-text>
-            <a-text id="clock-date" value="" position="0 -0.35 0" align="right" color="#a1a1a6" width="2.5"
-                opacity="0.2">
-            </a-text>
-        </a-entity>
 
         <!-- ==================== PLAYER RIG ==================== -->
         <a-entity id="rig" networked="template:#avatar-template;attachTemplateToLocal:false;"
