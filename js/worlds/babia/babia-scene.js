@@ -320,9 +320,21 @@
                 this.forward = new THREE.Vector3();
                 this.right = new THREE.Vector3();
 
+                const onMove = (x, y) => {
+                    this.inputVec.x = x;
+                    this.inputVec.y = y;
+                };
+
                 this.el.addEventListener('thumbstickmoved', (evt) => {
-                    this.inputVec.x = evt.detail.x;
-                    this.inputVec.y = evt.detail.y;
+                    onMove(evt.detail.x, evt.detail.y);
+                });
+
+                this.el.addEventListener('axismove', (evt) => {
+                    if (evt.detail.axis && evt.detail.axis.length >= 4) {
+                        onMove(evt.detail.axis[2], evt.detail.axis[3]);
+                    } else if (evt.detail.axis && evt.detail.axis.length >= 2) {
+                        onMove(evt.detail.axis[0], evt.detail.axis[1]);
+                    }
                 });
             },
             tick: function (time, delta) {
@@ -363,12 +375,13 @@
             },
             init: function () {
                 this.canTurn = true;
-                this.el.addEventListener('thumbstickmoved', (evt) => {
-                    if (Math.abs(evt.detail.x) > this.data.deadzone && this.canTurn) {
+
+                const onMove = (x) => {
+                    if (Math.abs(x) > this.data.deadzone && this.canTurn) {
                         const rig = document.getElementById('rig');
                         if (!rig) return;
                         const rot = rig.getAttribute('rotation') || { x: 0, y: 0, z: 0 };
-                        const dir = evt.detail.x > 0 ? -1 : 1;
+                        const dir = x > 0 ? -1 : 1;
                         rig.setAttribute('rotation', {
                             x: rot.x,
                             y: rot.y + (this.data.snapAngle * dir),
@@ -376,8 +389,20 @@
                         });
                         this.canTurn = false;
                     }
-                    if (Math.abs(evt.detail.x) < 0.3) {
+                    if (Math.abs(x) < 0.3) {
                         this.canTurn = true;
+                    }
+                };
+
+                this.el.addEventListener('thumbstickmoved', (evt) => {
+                    onMove(evt.detail.x);
+                });
+
+                this.el.addEventListener('axismove', (evt) => {
+                    if (evt.detail.axis && evt.detail.axis.length >= 4) {
+                        onMove(evt.detail.axis[2]);
+                    } else if (evt.detail.axis && evt.detail.axis.length >= 2) {
+                        onMove(evt.detail.axis[0]);
                     }
                 });
             }

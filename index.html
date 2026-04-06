@@ -422,7 +422,7 @@
             const updateCursorState = (e) => {
                 const target = e.target;
                 if (!target || !target.tagName || !target.tagName.toLowerCase) return;
-                
+
                 const tag = target.tagName.toLowerCase();
                 let newClass = 'custom-cursor';
 
@@ -439,7 +439,7 @@
                     else if (tag === 'button' || tag === 'a' || target.closest('button') || target.closest('a') || target.classList.contains('s-dot') || target.classList.contains('dot')) {
                         newClass = 'custom-cursor hovering';
                     }
-                } catch(e) {}
+                } catch (e) { }
 
                 if (newClass !== lastClass) {
                     cursor.className = newClass;
@@ -647,7 +647,7 @@
         })();
 
         // ─── Immersive UX: Draggable Mac Terminal ─────────────────────────
-        (function() {
+        (function () {
             const terminal = document.getElementById('terminalCard');
             const titlebar = document.getElementById('tcTitlebar');
             const btnClose = document.getElementById('tcClose');
@@ -667,23 +667,23 @@
                 if (e.target.closest('.tc-dots')) return; // Ignore if clicking buttons
                 isDragging = true;
                 terminal.classList.add('dragging');
-                
+
                 startX = e.clientX - currentX;
                 startY = e.clientY - currentY;
-                
+
                 document.body.style.userSelect = 'none'; // Prevent text selection
             });
 
             document.addEventListener('mousemove', e => {
                 if (!isDragging) return;
-                
+
                 currentX = e.clientX - startX;
                 currentY = e.clientY - startY;
-                
+
                 // Add a slight rotation based on velocity
                 const vX = e.movementX;
                 const rotation = Math.max(-5, Math.min(5, vX * 0.2));
-                
+
                 terminal.style.transform = `translate(${currentX}px, ${currentY}px) rotate(${rotation}deg)`;
             });
 
@@ -692,13 +692,13 @@
                 isDragging = false;
                 terminal.classList.remove('dragging');
                 document.body.style.userSelect = '';
-                
+
                 // Snap back rotation
                 terminal.style.transform = `translate(${currentX}px, ${currentY}px) rotate(0deg)`;
             });
 
             // Window Controls
-            
+
             // 🟢 Maximize
             btnMax.addEventListener('click', () => {
                 terminal.style.transform = ''; // reset drag translation
@@ -721,9 +721,9 @@
             // 🔴 Close (Easter Egg: Error & Respawn)
             btnClose.addEventListener('click', () => {
                 if (typeof AudioEngine !== 'undefined') AudioEngine.playTick();
-                
+
                 terminal.classList.add('terminal--dropped'); // CSS animation causes it to drop
-                
+
                 setTimeout(() => {
                     // Respawn the terminal with a scary message
                     terminal.classList.remove('terminal--dropped');
@@ -731,16 +731,16 @@
                     terminal.classList.remove('terminal--minimized');
                     terminal.style.transform = '';
                     currentX = 0; currentY = 0;
-                    
+
                     const originalPrompt = document.querySelector('.tc-prompt').textContent;
                     document.querySelector('.tc-prompt').textContent = '[ FATAL_ERROR ] ~$';
                     const userIn = document.getElementById('usernameInput');
                     const oldVal = userIn.value;
                     userIn.value = 'COMPONENT REQUIRED';
                     userIn.style.color = '#FF5F57';
-                    
+
                     document.body.classList.add('glitch-shake');
-                    
+
                     setTimeout(() => {
                         document.body.classList.remove('glitch-shake');
                         document.querySelector('.tc-prompt').textContent = originalPrompt;
@@ -775,7 +775,7 @@
         function goToWorlds() {
             const rawName = getUsername();
             const lowerName = rawName.toLowerCase();
-            
+
             if (lowerName === 'admin' || lowerName === 'sudo' || lowerName === 'matrix') {
                 triggerGlitch();
                 return;
@@ -815,10 +815,10 @@
             document.querySelector('.tc-prompt').textContent = 'SYSTEM_ERROR ~$';
             usernameInput.value = '[ ACCESS DENIED ]';
             usernameInput.disabled = true;
-            
+
             // Glitch effect sound if AudioEngine is available
             if (typeof AudioEngine !== 'undefined') AudioEngine.playTick();
-            
+
             setTimeout(() => {
                 document.body.classList.remove('glitch-mode');
                 document.body.classList.remove('glitch-shake');

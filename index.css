@@ -131,6 +131,7 @@ body {
         transform: perspective(1000px) scale(0.6) translateZ(-200px);
         filter: blur(10px);
     }
+
     to {
         opacity: 1;
         transform: perspective(1000px) scale(1) translateZ(0);
@@ -169,12 +170,27 @@ body.glitch-mode .custom-cursor {
 .glitch-shake {
     animation: glitchJitter 0.2s infinite;
 }
+
 @keyframes glitchJitter {
-    0% { transform: translate(1px, 1px) }
-    25% { transform: translate(-1px, -2px) }
-    50% { transform: translate(-2px, 1px) }
-    75% { transform: translate(2px, -1px) }
-    100% { transform: translate(1px, -2px) }
+    0% {
+        transform: translate(1px, 1px)
+    }
+
+    25% {
+        transform: translate(-1px, -2px)
+    }
+
+    50% {
+        transform: translate(-2px, 1px)
+    }
+
+    75% {
+        transform: translate(2px, -1px)
+    }
+
+    100% {
+        transform: translate(1px, -2px)
+    }
 }
 
 /* ─── Nav ─────────────────────────────────────────────────── */
@@ -339,14 +355,16 @@ body.glitch-mode .custom-cursor {
 
 .terminal-card.dragging {
     transition: none;
-    box-shadow: 0 30px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.1);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
     transform: scale(1.02);
 }
 
 .terminal--minimized {
-    height: 44px !important; /* Only titlebar */
+    height: 44px !important;
+    /* Only titlebar */
     width: 200px !important;
 }
+
 .terminal--minimized .tc-body {
     opacity: 0;
     pointer-events: none;
@@ -361,10 +379,12 @@ body.glitch-mode .custom-cursor {
     height: 85vh !important;
     transform: translate(-50%, -50%) !important;
 }
+
 .terminal--maximized .tc-body {
     align-items: flex-start;
     height: calc(100% - 44px);
 }
+
 .terminal--maximized .tc-input {
     font-size: 1.5rem;
 }
@@ -375,9 +395,21 @@ body.glitch-mode .custom-cursor {
 }
 
 @keyframes terminalDropDrop {
-    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-    20% { transform: translateY(-20px) rotate(-2deg); opacity: 1; }
-    100% { transform: translateY(100vh) rotate(15deg); opacity: 0; display: none; }
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+    }
+
+    20% {
+        transform: translateY(-20px) rotate(-2deg);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(100vh) rotate(15deg);
+        opacity: 0;
+        display: none;
+    }
 }
 
 .tc-titlebar {
@@ -417,6 +449,7 @@ body.glitch-mode .custom-cursor {
     cursor: pointer;
     transition: filter 0.2s;
 }
+
 .tc-dots .dot:hover {
     filter: brightness(1.2);
 }
@@ -1508,10 +1541,10 @@ body.glitch-mode .custom-cursor {
     pointer-events: none;
     z-index: 9999;
     transform: translate(var(--cx, -50%), var(--cy, -50%)) translate(-50%, -50%) scale(var(--cscale, 1));
-    transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
-                height 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
-                border-radius 0.3s cubic-bezier(0.25, 1, 0.5, 1),
-                opacity 0.2s ease, background 0.3s ease;
+    transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+        height 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+        border-radius 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+        opacity 0.2s ease, background 0.3s ease;
     will-change: transform, width, height;
 }
 
@@ -1538,5 +1571,6 @@ body.glitch-mode .custom-cursor {
 /* Kinetic Typography */
 .kin-char {
     display: inline-block;
-    min-width: 0.2em; /* To maintain space */
-}
+    min-width: 0.2em;
+    /* To maintain space */
+}
