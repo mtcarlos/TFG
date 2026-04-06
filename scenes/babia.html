@@ -152,33 +152,33 @@
         <a-light type="spot" intensity="0.6" color="#ffffff" position="10.4 12 6" target="#exhibit-kpis" angle="35" penumbra="1" distance="20" decay="1.2"></a-light>
 
         <!-- ==================== DATA SOURCES ==================== -->
-        <a-entity id="sales-data" babia-queryjson="url: ../data/demo/sales.json"></a-entity>
+        <a-entity id="codebase-data" babia-queryjson="url: ../data/demo/tfg_codebase.json"></a-entity>
         <a-entity id="attendance-data" babia-queryjson="url: ../data/demo/attendance.json"></a-entity>
         <a-entity id="kpis-data" babia-queryjson="url: ../data/demo/kpis.json"></a-entity>
 
-        <!-- ==================== EXHIBIT 1: SALES ==================== -->
-        <a-entity id="exhibit-sales" position="0 0 -12">
+        <!-- ==================== EXHIBIT 1: SOFTWARE CITY ==================== -->
+        <a-entity id="exhibit-codebase" position="0 0 -12">
             <!-- Pedestal -->
-            <a-cylinder position="0 0.4 0" radius="3" height="0.8" material="color: #ffffff; opacity: 0.95"></a-cylinder>
-            <a-cylinder position="0 0.81 0" radius="2.8" height="0.02" material="color: #4338CA; opacity: 0.15; transparent: true"></a-cylinder>
+            <a-cylinder position="0 0.4 0" radius="3.5" height="0.8" material="color: #ffffff; opacity: 0.95"></a-cylinder>
+            <a-cylinder position="0 0.81 0" radius="3.3" height="0.02" material="color: #4338CA; opacity: 0.15; transparent: true"></a-cylinder>
             
             <!-- Floating Labels -->
-            <a-text value="Sales by Department" position="0 1.2 3.2" rotation="-15 0 0" align="center" color="#1D1D1F" width="5" font="https://cdn.aframe.io/fonts/Exo2Bold.fnt" opacity="0.9"></a-text>
-            <a-text value="Quarterly Comparison" position="0 0.95 3.2" rotation="-15 0 0" align="center" color="#6E6E73" width="3.5" opacity="0.8"></a-text>
+            <a-text value="Software Architecture" position="0 1.2 3.7" rotation="-15 0 0" align="center" color="#1D1D1F" width="5" font="https://cdn.aframe.io/fonts/Exo2Bold.fnt" opacity="0.9"></a-text>
+            <a-text value="Codebase Volume Map" position="0 0.95 3.7" rotation="-15 0 0" align="center" color="#6E6E73" width="3.5" opacity="0.8"></a-text>
 
             <!-- Chart -->
             <a-entity id="chart-barsmap-wrapper" position="0 0.82 0" hoverable grabbable stretchable draggable hover-glow grab-visual chart-sync="syncId: barsmap" ownership-lock>
-                <a-box class="sh-hitbox" position="0 -0.25 0" width="6.5" height="0.5" depth="6.5" material="opacity: 0; transparent: true; side: double"></a-box>
-                <a-entity id="chart-barsmap" babia-barsmap="from: sales-data; legend: true; palette: bussiness; x_axis: department; z_axis: quarter; height: sales" scale="0.6 0.6 0.6" animation="property: scale; from: 0 0 0; to: 0.6 0.6 0.6; dur: 1200; easing: easeOutElastic; delay: 400"></a-entity>
+                <a-box class="sh-hitbox" position="0 -0.25 0" width="7.5" height="0.5" depth="7.5" material="opacity: 0; transparent: true; side: double"></a-box>
+                <a-entity id="chart-barsmap" babia-barsmap="from: codebase-data; legend: true; palette: blues; x_axis: ext; z_axis: folder; height: loc" scale="0.1 0.1 0.1" animation="property: scale; from: 0 0 0; to: 0.15 0.15 0.15; dur: 1200; easing: easeOutElastic; delay: 400"></a-entity>
             </a-entity>
 
             <!-- Metric Plaque -->
-            <a-entity id="metric-sales" position="0 0.4 3.01" hoverable grabbable hover-glow grab-visual chart-sync="syncId: metric-sales" ownership-lock animation="property: position; to: 0 0.42 3.01; dir: alternate; dur: 4000; easing: easeInOutSine; loop: true">
+            <a-entity id="metric-codebase" position="0 0.4 3.51" hoverable grabbable hover-glow grab-visual chart-sync="syncId: metric-sales" ownership-lock animation="property: position; to: 0 0.42 3.51; dir: alternate; dur: 4000; easing: easeInOutSine; loop: true">
                 <a-box class="sh-hitbox" width="1.8" height="0.8" depth="0.1" material="opacity: 0; transparent: true; side: double"></a-box>
                 <a-plane width="1.6" height="0.65" material="color: #ffffff; opacity: 0.85; transparent: true" geometry="primitive: plane; width: 1.6; height: 0.65"></a-plane>
                 <a-plane width="1.62" height="0.67" position="0 0 -0.001" material="color: #4338CA; opacity: 0.2; transparent: true"></a-plane>
-                <a-text value="Total Sales" position="0 0.12 0.01" align="center" color="#6E6E73" width="2"></a-text>
-                <a-text id="metric-sales-value" value="3,608" position="0 -0.1 0.01" align="center" color="#1D1D1F" width="3" font="https://cdn.aframe.io/fonts/Exo2Bold.fnt"></a-text>
+                <a-text value="Total Files Scanned" position="0 0.12 0.01" align="center" color="#6E6E73" width="2"></a-text>
+                <a-text id="metric-codebase-value" value="67" position="0 -0.1 0.01" align="center" color="#1D1D1F" width="3" font="https://cdn.aframe.io/fonts/Exo2Bold.fnt"></a-text>
             </a-entity>
         </a-entity>
 
