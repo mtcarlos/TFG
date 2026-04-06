@@ -408,34 +408,36 @@
             <!-- Left Controller: Locomotion (thumbstick) + Grab (trigger/grip) -->
             <a-entity id="left-controller"
                 laser-controls="hand: left; model: true"
+                cursor="fuse: false; rayOrigin: entity;"
                 raycaster="objects: .sh-hitbox, .babia-bar, .babia-slice, .babia-cyl; far: 15; showLine: true; lineColor: #2997ff; lineOpacity: 0.35"
                 super-hands="colliderEvent: raycaster-intersection;
                              colliderEventProperty: els;
                              colliderEndEvent: raycaster-intersection-cleared;
                              colliderEndEventProperty: clearedEls;
-                             grabStartButtons: triggerdown,gripdown;
-                             grabEndButtons: triggerup,gripup;
-                             stretchStartButtons: triggerdown,gripdown;
-                             stretchEndButtons: triggerup,gripup;
-                             dragDropStartButtons: triggerdown,gripdown;
-                             dragDropEndButtons: triggerup,gripup"
+                             grabStartButtons: selectstart,triggerdown,gripdown;
+                             grabEndButtons: selectend,triggerup,gripup;
+                             stretchStartButtons: selectstart,triggerdown,gripdown;
+                             stretchEndButtons: selectend,triggerup,gripup;
+                             dragDropStartButtons: selectstart,triggerdown,gripdown;
+                             dragDropEndButtons: selectend,triggerup,gripup"
                 thumbstick-move="speed: 2.5">
             </a-entity>
 
             <!-- Right Controller: Snap Turn (thumbstick) + Grab (trigger/grip) -->
             <a-entity id="right-controller"
                 laser-controls="hand: right; model: true"
+                cursor="fuse: false; rayOrigin: entity;"
                 raycaster="objects: .sh-hitbox, .babia-bar, .babia-slice, .babia-cyl; far: 15; showLine: true; lineColor: #2997ff; lineOpacity: 0.35"
                 super-hands="colliderEvent: raycaster-intersection;
                              colliderEventProperty: els;
                              colliderEndEvent: raycaster-intersection-cleared;
                              colliderEndEventProperty: clearedEls;
-                             grabStartButtons: triggerdown,gripdown;
-                             grabEndButtons: triggerup,gripup;
-                             stretchStartButtons: triggerdown,gripdown;
-                             stretchEndButtons: triggerup,gripup;
-                             dragDropStartButtons: triggerdown,gripdown;
-                             dragDropEndButtons: triggerup,gripup"
+                             grabStartButtons: selectstart,triggerdown,gripdown;
+                             grabEndButtons: selectend,triggerup,gripup;
+                             stretchStartButtons: selectstart,triggerdown,gripdown;
+                             stretchEndButtons: selectend,triggerup,gripup;
+                             dragDropStartButtons: selectstart,triggerdown,gripdown;
+                             dragDropEndButtons: selectend,triggerup,gripup"
                 thumbstick-turn="snapAngle: 45">
             </a-entity>
 

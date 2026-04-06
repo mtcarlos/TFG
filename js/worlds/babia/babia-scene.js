@@ -340,7 +340,26 @@
             tick: function (time, delta) {
                 if (!delta) return;
                 const dz = this.data.deadzone;
-                if (Math.abs(this.inputVec.x) < dz && Math.abs(this.inputVec.y) < dz) return;
+                
+                // Silver bullet: Poll the raw WebXR Gamepad directly if available
+                const tc = this.el.components['tracked-controls'] || this.el.components['oculus-touch-controls'];
+                if (tc && tc.controller && tc.controller.gamepad) {
+                    const axes = tc.controller.gamepad.axes;
+                    if (axes.length >= 4) {
+                        this.inputVec.x = axes[2];
+                        this.inputVec.y = axes[3];
+                    } else if (axes.length >= 2) {
+                        this.inputVec.x = axes[0];
+                        this.inputVec.y = axes[1];
+                    }
+                }
+
+                let ix = this.inputVec.x;
+                let iy = this.inputVec.y;
+                if (Math.abs(ix) < dz) ix = 0;
+                if (Math.abs(iy) < dz) iy = 0;
+                
+                if (ix === 0 && iy === 0) return;
 
                 const rig = document.getElementById('rig');
                 const cam = document.getElementById('player');
@@ -358,8 +377,9 @@
                 this.right.normalize();
 
                 this.direction.set(0, 0, 0);
-                this.direction.addScaledVector(this.forward, -this.inputVec.y * speed);
-                this.direction.addScaledVector(this.right, this.inputVec.x * speed);
+                // In WebXR, pushing forward is usually negative Y
+                this.direction.addScaledVector(this.forward, -iy * speed);
+                this.direction.addScaledVector(this.right, ix * speed);
 
                 rig.object3D.position.add(this.direction);
             }
@@ -375,23 +395,10 @@
             },
             init: function () {
                 this.canTurn = true;
+                this.inputX = 0;
 
                 const onMove = (x) => {
-                    if (Math.abs(x) > this.data.deadzone && this.canTurn) {
-                        const rig = document.getElementById('rig');
-                        if (!rig) return;
-                        const rot = rig.getAttribute('rotation') || { x: 0, y: 0, z: 0 };
-                        const dir = x > 0 ? -1 : 1;
-                        rig.setAttribute('rotation', {
-                            x: rot.x,
-                            y: rot.y + (this.data.snapAngle * dir),
-                            z: rot.z
-                        });
-                        this.canTurn = false;
-                    }
-                    if (Math.abs(x) < 0.3) {
-                        this.canTurn = true;
-                    }
+                    this.inputX = x;
                 };
 
                 this.el.addEventListener('thumbstickmoved', (evt) => {
@@ -405,6 +412,36 @@
                         onMove(evt.detail.axis[0]);
                     }
                 });
+            },
+            tick: function () {
+                let x = this.inputX;
+                
+                // Silver bullet: Poll the raw WebXR Gamepad directly
+                const tc = this.el.components['tracked-controls'] || this.el.components['oculus-touch-controls'];
+                if (tc && tc.controller && tc.controller.gamepad) {
+                    const axes = tc.controller.gamepad.axes;
+                    if (axes.length >= 4) {
+                        x = axes[2];
+                    } else if (axes.length >= 2) {
+                        x = axes[0];
+                    }
+                }
+
+                if (Math.abs(x) > this.data.deadzone && this.canTurn) {
+                    const rig = document.getElementById('rig');
+                    if (!rig) return;
+                    const rot = rig.getAttribute('rotation') || { x: 0, y: 0, z: 0 };
+                    const dir = x > 0 ? -1 : 1;
+                    rig.setAttribute('rotation', {
+                        x: rot.x,
+                        y: rot.y + (this.data.snapAngle * dir),
+                        z: rot.z
+                    });
+                    this.canTurn = false;
+                }
+                if (Math.abs(x) < 0.3) {
+                    this.canTurn = true;
+                }
             }
         });
     }
