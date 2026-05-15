@@ -37,6 +37,14 @@ if (process.env.NODE_ENV === "development") {
   );
 }
 
+// JSON body parser for API endpoints
+app.use(express.json());
+
+// Room & GitHub modules
+const rooms = require("./rooms");
+const githubClient = require("./githubClient");
+const githubDataMapper = require("./githubDataMapper");
+
 // Global state to track active users per room for the Presence API
 const activeRoomsTracker = {}; // easyrtcid -> { username, roomName }
 
@@ -49,6 +57,75 @@ app.get("/api/status", (req, res) => {
     if (conn.username) counts[conn.roomName].users.push(conn.username);
   }
   res.json(counts);
+});
+
+// ─── Room Management API ─────────────────────────────────────
+
+// POST /api/rooms — Create a new Room
+app.post("/api/rooms", (req, res) => {
+  const result = rooms.createRoom();
+  console.log(`[Rooms] Created room: ${result.roomId}`);
+  res.json(result);
+});
+
+// GET /api/rooms/:roomId — Get Room info (public, no hostToken)
+app.get("/api/rooms/:roomId", (req, res) => {
+  const room = rooms.getRoom(req.params.roomId);
+  if (!room) return res.status(404).json({ error: "Room not found" });
+  res.json(room);
+});
+
+// POST /api/rooms/:roomId/repo — Set repo for a Room (host only)
+app.post("/api/rooms/:roomId/repo", async (req, res) => {
+  const { repo, hostToken } = req.body;
+  if (!repo || !hostToken) {
+    return res.status(400).json({ error: "Missing repo or hostToken" });
+  }
+
+  // Parse and validate the repo identifier
+  const parsed = githubClient.parseRepoInput(repo);
+  if (!parsed) {
+    return res.status(400).json({ error: "Invalid repository format. Use 'owner/repo' or a GitHub URL." });
+  }
+
+  // Verify host authorization
+  const setResult = rooms.setRepo(req.params.roomId, hostToken, `${parsed.owner}/${parsed.repo}`);
+  if (!setResult.success) {
+    const status = setResult.error.includes("not found") ? 404 : 403;
+    return res.status(status).json({ error: setResult.error });
+  }
+
+  // Fetch data from GitHub API
+  try {
+    const rawData = await githubClient.fetchAllRepoData(parsed.owner, parsed.repo);
+    const processedData = githubDataMapper.mapRepoData(rawData);
+    const babiaDatasets = githubDataMapper.toBabiaDatasets(processedData);
+
+    // Store both processed data and BabiaXR datasets
+    rooms.setRepoData(req.params.roomId, {
+      ...processedData,
+      babiaDatasets,
+    });
+
+    console.log(`[Rooms] Room ${req.params.roomId} → repo set to ${parsed.owner}/${parsed.repo}`);
+    res.json({ success: true, repo: `${parsed.owner}/${parsed.repo}` });
+  } catch (err) {
+    console.error(`[GitHub API Error]`, err.message || err);
+    const status = err.status || 500;
+    res.status(status).json({ error: err.message || "Failed to fetch repository data" });
+  }
+});
+
+// GET /api/rooms/:roomId/repo-data — Get processed repo data
+app.get("/api/rooms/:roomId/repo-data", (req, res) => {
+  const room = rooms.getRoom(req.params.roomId);
+  if (!room) return res.status(404).json({ error: "Room not found" });
+  if (!room.hasRepo) return res.status(404).json({ error: "No repository selected for this room" });
+
+  const data = rooms.getRepoData(req.params.roomId);
+  if (!data) return res.status(404).json({ error: "Repository data not available yet" });
+
+  res.json(data);
 });
 
 // Serve the files from the project root

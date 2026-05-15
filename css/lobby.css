@@ -1,0 +1,576 @@
+/* ═══════════════════════════════════════════════════════════
+   GITHUB EXPLORER LOBBY
+   Design: Consistent with "Midnight Canvas" — Apple-style
+   Accent: Emerald (#059669) for GitHub Explorer identity
+   ═══════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ─── Tokens ──────────────────────────────────────────────── */
+:root {
+    --bg: #F5F5F7;
+    --bg-card: #FFFFFF;
+    --text-1: #1D1D1F;
+    --text-2: #6E6E73;
+    --text-3: #A1A1A6;
+    --accent: #059669;
+    --accent-light: #34D399;
+    --accent-soft: rgba(5, 150, 105, 0.08);
+    --accent-border: rgba(5, 150, 105, 0.2);
+    --accent-glow: rgba(52, 211, 153, 0.15);
+    --border: rgba(0, 0, 0, 0.07);
+    --border-hover: rgba(0, 0, 0, 0.12);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.04);
+    --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.10), 0 4px 8px rgba(0, 0, 0, 0.04);
+    --terminal-bg: #0D1117;
+    --terminal-text: #E6EDF3;
+    --terminal-prompt: #7EE787;
+    --terminal-border: #21262D;
+    --r-sm: 8px;
+    --r-md: 14px;
+    --r-lg: 18px;
+    --r-xl: 24px;
+    --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --error: #EF4444;
+    --error-soft: rgba(239, 68, 68, 0.08);
+}
+
+/* ─── Reset ───────────────────────────────────────────────── */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text-1);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+
+/* ─── Layout ──────────────────────────────────────────────── */
+.lobby-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ─── Nav ─────────────────────────────────────────────────── */
+.lobby-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 32px;
+    flex-shrink: 0;
+}
+
+.lobby-nav .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-1);
+    letter-spacing: -0.01em;
+    text-decoration: none;
+}
+
+.lobby-nav .brand svg {
+    width: 22px;
+    height: 22px;
+    color: var(--accent);
+}
+
+.lobby-nav .greeting {
+    font-size: 0.85rem;
+    color: var(--text-3);
+}
+
+.lobby-nav .greeting strong {
+    color: var(--text-2);
+    font-weight: 600;
+}
+
+.back-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-2);
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.back-link svg {
+    width: 18px;
+    height: 18px;
+    transition: transform 0.2s ease;
+}
+
+.back-link:hover {
+    color: var(--text-1);
+}
+
+.back-link:hover svg {
+    transform: translateX(-3px);
+}
+
+/* ─── Main Content ────────────────────────────────────────── */
+.lobby-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 24px 40px;
+    gap: 32px;
+}
+
+.lobby-header {
+    text-align: center;
+    animation: fadeUp 0.6s var(--ease) 0.1s both;
+}
+
+.lobby-eyebrow {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+}
+
+.lobby-title {
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+    color: var(--text-1);
+}
+
+.lobby-title em {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+    letter-spacing: -0.02em;
+}
+
+.lobby-subtitle {
+    margin-top: 12px;
+    font-size: 0.95rem;
+    color: var(--text-2);
+    line-height: 1.6;
+    max-width: 480px;
+}
+
+/* ─── Panels Container ────────────────────────────────────── */
+.lobby-panels {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    width: 100%;
+    max-width: 880px;
+    animation: fadeUp 0.6s var(--ease) 0.2s both;
+}
+
+@media (max-width: 700px) {
+    .lobby-panels {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ─── Panel Card ──────────────────────────────────────────── */
+.panel-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-xl);
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.panel-card:hover {
+    border-color: var(--border-hover);
+    box-shadow: var(--shadow-md);
+}
+
+.panel-card.active {
+    border-color: var(--accent-border);
+    box-shadow: var(--shadow-md), 0 0 0 1px var(--accent-border);
+}
+
+.panel-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--r-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.panel-icon.create {
+    background: var(--accent-soft);
+    color: var(--accent);
+}
+
+.panel-icon.join {
+    background: rgba(99, 102, 241, 0.08);
+    color: #6366F1;
+}
+
+.panel-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+.panel-label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-3);
+}
+
+.panel-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-1);
+    letter-spacing: -0.02em;
+}
+
+.panel-desc {
+    font-size: 0.85rem;
+    color: var(--text-2);
+    line-height: 1.55;
+}
+
+/* ─── Input Group ─────────────────────────────────────────── */
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.input-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-2);
+}
+
+.input-row {
+    display: flex;
+    gap: 8px;
+}
+
+.text-input {
+    flex: 1;
+    padding: 10px 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    font-family: 'Fira Code', monospace;
+    font-size: 0.85rem;
+    color: var(--text-1);
+    background: var(--bg);
+    transition: all 0.25s ease;
+    outline: none;
+}
+
+.text-input:focus {
+    border-color: var(--accent-border);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.text-input::placeholder {
+    color: var(--text-3);
+    font-family: 'Inter', sans-serif;
+}
+
+/* ─── Buttons ─────────────────────────────────────────────── */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--r-md);
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s var(--ease);
+    white-space: nowrap;
+}
+
+.btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+.btn-primary {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(5, 150, 105, 0.25);
+}
+
+.btn-primary:hover {
+    background: #047857;
+    box-shadow: 0 4px 16px rgba(5, 150, 105, 0.3);
+    transform: translateY(-1px);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--accent);
+    border: 1px solid var(--accent-border);
+}
+
+.btn-secondary:hover {
+    background: var(--accent-soft);
+}
+
+.btn-ghost {
+    background: transparent;
+    color: var(--text-2);
+    border: 1px solid var(--border);
+    padding: 10px 16px;
+}
+
+.btn-ghost:hover {
+    border-color: var(--border-hover);
+    color: var(--text-1);
+    background: var(--bg);
+}
+
+.btn-lg {
+    padding: 14px 32px;
+    font-size: 0.95rem;
+    border-radius: 999px;
+}
+
+/* ─── Room Info Display ───────────────────────────────────── */
+.room-info {
+    display: none;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    background: var(--accent-soft);
+    border-radius: var(--r-md);
+    border: 1px solid var(--accent-border);
+    animation: fadeUp 0.3s var(--ease) both;
+}
+
+.room-info.visible {
+    display: flex;
+}
+
+.room-id-display {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.room-id-badge {
+    font-family: 'Fira Code', monospace;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+}
+
+.copy-btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    padding: 4px 10px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-2);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.copy-btn:hover {
+    border-color: var(--accent-border);
+    color: var(--accent);
+}
+
+.room-id-hint {
+    font-size: 0.78rem;
+    color: var(--text-2);
+}
+
+/* ─── Repo Display ────────────────────────────────────────── */
+.repo-display {
+    display: none;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--bg);
+    border-radius: var(--r-md);
+    border: 1px solid var(--border);
+}
+
+.repo-display.visible {
+    display: flex;
+}
+
+.repo-display .repo-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--accent-soft);
+    border-radius: var(--r-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    flex-shrink: 0;
+}
+
+.repo-display .repo-icon svg {
+    width: 20px;
+    height: 20px;
+}
+
+.repo-display .repo-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.repo-display .repo-name {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-1);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.repo-display .repo-status {
+    font-size: 0.75rem;
+    color: var(--accent);
+    font-weight: 500;
+}
+
+/* ─── Enter Scene Section ─────────────────────────────────── */
+.enter-section {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    max-width: 880px;
+    animation: fadeUp 0.5s var(--ease) 0.1s both;
+}
+
+.enter-section.visible {
+    display: flex;
+}
+
+.divider {
+    width: 100%;
+    height: 1px;
+    background: var(--border);
+}
+
+/* ─── Status Messages ─────────────────────────────────────── */
+.status-msg {
+    display: none;
+    padding: 10px 16px;
+    border-radius: var(--r-md);
+    font-size: 0.82rem;
+    font-weight: 500;
+    animation: fadeUp 0.2s ease both;
+}
+
+.status-msg.visible {
+    display: block;
+}
+
+.status-msg.error {
+    background: var(--error-soft);
+    color: var(--error);
+    border: 1px solid rgba(239, 68, 68, 0.15);
+}
+
+.status-msg.success {
+    background: var(--accent-soft);
+    color: var(--accent);
+    border: 1px solid var(--accent-border);
+}
+
+.status-msg.loading {
+    background: rgba(99, 102, 241, 0.06);
+    color: #6366F1;
+    border: 1px solid rgba(99, 102, 241, 0.15);
+}
+
+/* ─── Spinner ─────────────────────────────────────────────── */
+.spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ─── Footer ──────────────────────────────────────────────── */
+.lobby-footer {
+    flex-shrink: 0;
+    text-align: center;
+    padding: 16px 24px 20px;
+    font-size: 0.7rem;
+    color: var(--text-3);
+    letter-spacing: 0.04em;
+}
+
+/* ─── Animations ──────────────────────────────────────────── */
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ─── Responsive ──────────────────────────────────────────── */
+@media (max-width: 480px) {
+    .lobby-nav { padding: 16px 20px; }
+    .lobby-main { padding: 0 16px 24px; }
+    .panel-card { padding: 24px; }
+    .input-row { flex-direction: column; }
+    .lobby-title { font-size: 1.8rem; }
+}

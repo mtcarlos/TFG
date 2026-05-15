@@ -291,6 +291,7 @@
                     <div class="spotlight-dots">
                         <button class="s-dot s-dot--active" data-index="0" aria-label="PxlBuilder"></button>
                         <button class="s-dot" data-index="1" aria-label="Data Room"></button>
+                        <button class="s-dot" data-index="2" aria-label="GitHub Explorer"></button>
                     </div>
                 </div>
 
@@ -895,6 +896,19 @@
                     room: 'babia-data-room',
                     activity: 'Analizando',
                     presence: { count: 0, users: [] }
+                },
+                {
+                    id: 'github',
+                    name: 'GitHub Explorer',
+                    tag: 'Analysis',
+                    desc: 'Analyze GitHub repositories collaboratively in immersive 3D. Create rooms and explore code metrics together.',
+                    url: 'lobby.html',
+                    primary: '#059669',
+                    glow: 'rgba(5, 150, 105, 0.20)',
+                    particle: 'rgba(52, 211, 153, 0.7)',
+                    room: 'github-lobby',
+                    activity: 'Analizando',
+                    presence: { count: 0, users: [] }
                 }
             ];
 
@@ -1174,10 +1188,93 @@
                 }
             }
 
+            // ── Canvas: GitHub Preview ────────────────────────
+            function drawGitHub(t) {
+                const s = ORB;
+                const bg = ctx.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s * 0.5);
+                bg.addColorStop(0, '#071a12');
+                bg.addColorStop(1, '#030a06');
+                ctx.fillStyle = bg;
+                ctx.fillRect(0, 0, s, s);
+
+                // Network graph nodes
+                const nodeCount = 12;
+                const nodes = [];
+                for (let i = 0; i < nodeCount; i++) {
+                    const angle = (i / nodeCount) * Math.PI * 2 + t * 0.0002;
+                    const radius = s * (0.15 + (i % 3) * 0.08);
+                    const wobble = Math.sin(t * 0.001 + i * 2.1) * s * 0.03;
+                    const nx = s / 2 + Math.cos(angle) * (radius + wobble);
+                    const ny = s / 2 + Math.sin(angle) * (radius + wobble) * 0.7;
+                    nodes.push({ x: nx, y: ny, i });
+                }
+
+                // Draw connections
+                ctx.lineWidth = 1;
+                for (let i = 0; i < nodes.length; i++) {
+                    for (let j = i + 1; j < nodes.length; j++) {
+                        const dx = nodes[i].x - nodes[j].x;
+                        const dy = nodes[i].y - nodes[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < s * 0.28) {
+                            const alpha = 0.15 * (1 - dist / (s * 0.28));
+                            ctx.strokeStyle = `rgba(52, 211, 153, ${alpha})`;
+                            ctx.beginPath();
+                            ctx.moveTo(nodes[i].x, nodes[i].y);
+                            ctx.lineTo(nodes[j].x, nodes[j].y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+
+                // Draw nodes
+                nodes.forEach((node, idx) => {
+                    const pulse = 0.6 + Math.sin(t * 0.002 + idx * 1.5) * 0.3;
+                    const r = s * (0.012 + (idx % 4 === 0 ? 0.008 : 0));
+
+                    // Glow
+                    const glow = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, r * 4);
+                    glow.addColorStop(0, `rgba(52, 211, 153, ${pulse * 0.3})`);
+                    glow.addColorStop(1, 'transparent');
+                    ctx.fillStyle = glow;
+                    ctx.beginPath();
+                    ctx.arc(node.x, node.y, r * 4, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Core
+                    ctx.beginPath();
+                    ctx.arc(node.x, node.y, r, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(52, 211, 153, ${pulse})`;
+                    ctx.fill();
+                });
+
+                // Central icon placeholder (commit dot)
+                const cx = s / 2, cy = s / 2;
+                ctx.beginPath();
+                ctx.arc(cx, cy, s * 0.025, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(5, 150, 105, ${0.7 + Math.sin(t * 0.003) * 0.2})`;
+                ctx.fill();
+
+                // Orbiting sparkles
+                for (let i = 0; i < 8; i++) {
+                    const a2 = t * 0.0003 + i * (Math.PI * 2 / 8);
+                    const r2 = s * 0.32 + Math.sin(t * 0.0008 + i) * s * 0.04;
+                    const px = s / 2 + Math.cos(a2) * r2;
+                    const py = s / 2 + Math.sin(a2) * r2 * 0.6;
+                    const al = 0.15 + Math.sin(t * 0.002 + i * 2.5) * 0.1;
+                    ctx.beginPath();
+                    ctx.arc(px, py, s * 0.005, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(52, 211, 153, ${al})`;
+                    ctx.fill();
+                }
+            }
+
             // ── Animation loop ────────────────────────────────
             function drawOrb() {
                 const t = performance.now();
-                if (worlds[currentIndex].id === 'build') drawVoxel(t);
+                const wId = worlds[currentIndex].id;
+                if (wId === 'build') drawVoxel(t);
+                else if (wId === 'github') drawGitHub(t);
                 else drawData(t);
                 requestAnimationFrame(drawOrb);
             }
