@@ -11,270 +11,345 @@
 </head>
 
 <body>
-    <div class="lobby-wrapper">
+    <!-- Subtle dot-grid background (same feel as index.html bgCanvas) -->
+    <canvas id="lobbyCanvas"></canvas>
 
-        <!-- ═══════════════════════════════
-             NAVIGATION
-        ═══════════════════════════════ -->
-        <nav class="lobby-nav">
-            <a href="index.html" class="back-link" id="backLink">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round">
-                    <line x1="19" y1="12" x2="5" y2="12" />
-                    <polyline points="12 19 5 12 12 5" />
-                </svg>
-                Back
-            </a>
-            <span class="greeting">Hello, <strong id="displayName">Explorer</strong></span>
-        </nav>
+    <!-- ── Fixed Nav ── -->
+    <nav class="lobby-nav">
+        <a href="index.html" class="back-link" id="backLink">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12" />
+                <polyline points="12 19 5 12 12 5" />
+            </svg>
+            Back
+        </a>
+        <span class="greeting">Hello, <strong id="displayName">Explorer</strong></span>
+    </nav>
 
-        <!-- ═══════════════════════════════
-             MAIN CONTENT
-        ═══════════════════════════════ -->
-        <main class="lobby-main">
+    <!-- ═══════════════════════════════
+         STEP 1 — Choose Your Path
+    ═══════════════════════════════ -->
+    <div class="step step--active" id="step1">
+        <p class="step1-eyebrow">GitHub Explorer</p>
+        <h1 class="step1-title">Analyze <em>together.</em></h1>
+        <p class="step1-sub">Create a new collaborative session or join an existing room<br>to explore repository metrics in immersive 3D.</p>
 
-            <header class="lobby-header">
-                <p class="lobby-eyebrow">GitHub Explorer</p>
-                <h1 class="lobby-title">Analyze <em>together.</em></h1>
-                <p class="lobby-subtitle">Create a room to explore GitHub repository metrics collaboratively in immersive 3D, or join an existing session.</p>
-            </header>
+        <div class="cmd-options">
+            <button class="cmd-option" id="chooseCreate">
+                <span class="cmd-prompt">> create</span>
+                <span class="cmd-label">Start a new session</span>
+            </button>
 
-            <!-- ─── Two Panel Layout ──────────────────────────── -->
-            <div class="lobby-panels">
+            <span class="cmd-divider">or</span>
 
-                <!-- Panel 1: Create Room -->
-                <div class="panel-card" id="createPanel">
-                    <div class="panel-icon create">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10" />
-                            <line x1="12" y1="8" x2="12" y2="16" />
-                            <line x1="8" y1="12" x2="16" y2="12" />
-                        </svg>
-                    </div>
-                    <span class="panel-label">New Session</span>
-                    <h2 class="panel-title">Create a Room</h2>
-                    <p class="panel-desc">Start a new collaborative session. You'll be the host and can select a GitHub repository to analyze.</p>
-
-                    <button class="btn btn-primary" id="createRoomBtn">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 5v14M5 12h14" />
-                        </svg>
-                        Create Room
-                    </button>
-
-                    <!-- Room Created Info -->
-                    <div class="room-info" id="createRoomInfo">
-                        <div class="room-id-display">
-                            <span class="room-id-badge" id="createdRoomId">—</span>
-                            <button class="copy-btn" id="copyRoomId">Copy</button>
-                        </div>
-                        <span class="room-id-hint">Share this code with others to join your room.</span>
-
-                        <!-- Repo Input (host only) -->
-                        <div class="input-group">
-                            <label class="input-label">Select Repository</label>
-                            <div class="input-row">
-                                <input type="text" class="text-input" id="repoInput"
-                                    placeholder="owner/repo or GitHub URL" autocomplete="off" spellcheck="false">
-                                <button class="btn btn-primary" id="setRepoBtn">
-                                    Confirm
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Status -->
-                        <div class="status-msg" id="repoStatus"></div>
-
-                        <!-- Repo Display -->
-                        <div class="repo-display" id="repoDisplay">
-                            <div class="repo-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
-                                </svg>
-                            </div>
-                            <div class="repo-text">
-                                <span class="repo-name" id="repoName">—</span>
-                                <span class="repo-status">Repository loaded ✓</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Panel 2: Join Room -->
-                <div class="panel-card" id="joinPanel">
-                    <div class="panel-icon join">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-                            <polyline points="10 17 15 12 10 7" />
-                            <line x1="15" y1="12" x2="3" y2="12" />
-                        </svg>
-                    </div>
-                    <span class="panel-label">Existing Session</span>
-                    <h2 class="panel-title">Join a Room</h2>
-                    <p class="panel-desc">Enter a room code shared by the host to join their collaborative analysis session.</p>
-
-                    <div class="input-group">
-                        <label class="input-label">Room Code</label>
-                        <div class="input-row">
-                            <input type="text" class="text-input" id="joinRoomInput" placeholder="e.g. a1b2c3"
-                                autocomplete="off" spellcheck="false" maxlength="12">
-                            <button class="btn btn-ghost" id="joinRoomBtn">
-                                Join
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Status -->
-                    <div class="status-msg" id="joinStatus"></div>
-
-                    <!-- Joined Room Info -->
-                    <div class="room-info" id="joinRoomInfo">
-                        <span class="room-id-hint">Connected to room:</span>
-                        <span class="room-id-badge" id="joinedRoomId">—</span>
-
-                        <!-- Repo Display (read-only for non-host) -->
-                        <div class="repo-display" id="joinRepoDisplay">
-                            <div class="repo-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
-                                </svg>
-                            </div>
-                            <div class="repo-text">
-                                <span class="repo-name" id="joinRepoName">Waiting for host...</span>
-                                <span class="repo-status" id="joinRepoStatus">No repository selected yet</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ─── Enter Scene Button ────────────────────────── -->
-            <div class="enter-section" id="enterSection">
-                <div class="divider"></div>
-                <button class="btn btn-primary btn-lg" id="enterSceneBtn">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <polygon points="5 3 19 12 5 21 5 3" />
-                    </svg>
-                    Enter Scene
-                </button>
-            </div>
-        </main>
-
-        <footer class="lobby-footer">A-Frame · Networked-Aframe · GitHub API · BabiaXR</footer>
+            <button class="cmd-option" id="chooseJoin">
+                <span class="cmd-prompt">> join</span>
+                <span class="cmd-label">Enter an existing room</span>
+            </button>
+        </div>
     </div>
 
+    <!-- ═══════════════════════════════
+         STEP 2A — Create Room
+    ═══════════════════════════════ -->
+    <div class="step step--hidden" id="step2create">
+        <div class="step2-content">
+            <button class="step2-back" id="backFromCreate">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" />
+                </svg>
+                Back
+            </button>
+
+            <p class="step2-label">New Session</p>
+            <h2 class="step2-title">Your Room</h2>
+            <p class="step2-desc">Share the room code below, then select a GitHub repository to analyze.</p>
+
+            <!-- Room Code -->
+            <div class="room-code-display" id="roomCodeDisplay">
+                <span class="room-code-big" id="roomCodeBig">------</span>
+                <div class="room-code-actions">
+                    <button class="copy-btn" id="copyRoomId">Copy</button>
+                    <span class="room-code-hint">Share this code with others</span>
+                </div>
+            </div>
+
+            <!-- Terminal Card (matches index.html terminal exactly) -->
+            <div class="terminal-card" id="repoTerminal" style="display:none">
+                <div class="tc-titlebar">
+                    <div class="tc-dots">
+                        <span class="tc-dot tc-dot-red"></span>
+                        <span class="tc-dot tc-dot-yellow"></span>
+                        <span class="tc-dot tc-dot-green"></span>
+                    </div>
+                    <span class="tc-name">repository</span>
+                    <span></span>
+                </div>
+                <div class="tc-body">
+                    <span class="tc-prompt">repo ~$</span>
+                    <input type="text" class="tc-input" id="repoInput" placeholder="owner/repo or GitHub URL" autocomplete="off" spellcheck="false">
+                    <button class="tc-action" id="setRepoBtn">run</button>
+                </div>
+            </div>
+
+            <div class="status-msg" id="repoStatus"></div>
+
+            <div class="repo-badge" id="repoDisplay">
+                <div class="rb-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+                    </svg>
+                </div>
+                <div class="rb-text">
+                    <span class="rb-name" id="repoName">—</span>
+                    <span class="rb-status">Repository loaded ✓</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════
+         STEP 2B — Join Room
+    ═══════════════════════════════ -->
+    <div class="step step--hidden" id="step2join">
+        <div class="step2-content">
+            <button class="step2-back" id="backFromJoin">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" />
+                </svg>
+                Back
+            </button>
+
+            <p class="step2-label">Join Session</p>
+            <h2 class="step2-title">Enter Room Code</h2>
+            <p class="step2-desc">Type the room code shared by the host to join their analysis session.</p>
+
+            <div class="terminal-card" id="joinTerminal">
+                <div class="tc-titlebar">
+                    <div class="tc-dots">
+                        <span class="tc-dot tc-dot-red"></span>
+                        <span class="tc-dot tc-dot-yellow"></span>
+                        <span class="tc-dot tc-dot-green"></span>
+                    </div>
+                    <span class="tc-name">connect</span>
+                    <span></span>
+                </div>
+                <div class="tc-body">
+                    <span class="tc-prompt">join ~$</span>
+                    <input type="text" class="tc-input" id="joinRoomInput" placeholder="room code" autocomplete="off" spellcheck="false" maxlength="12">
+                    <button class="tc-action" id="joinRoomBtn">connect</button>
+                </div>
+            </div>
+
+            <div class="status-msg" id="joinStatus"></div>
+
+            <div class="room-code-display" id="joinCodeDisplay">
+                <span class="room-code-big" id="joinedRoomCode">------</span>
+                <span class="room-code-hint">Connected</span>
+            </div>
+
+            <div class="repo-badge" id="joinRepoDisplay">
+                <div class="rb-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+                    </svg>
+                </div>
+                <div class="rb-text">
+                    <span class="rb-name" id="joinRepoName">Waiting for host...</span>
+                    <span class="rb-status" id="joinRepoStatus">No repository selected yet</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════
+         STEP 3 — Launch Pad (mirrors world selector)
+    ═══════════════════════════════ -->
+    <div class="step step--hidden" id="step3">
+        <div class="launch-pad">
+            <!-- Orb — same structure as index.html world selector -->
+            <div class="launch-orb">
+                <div class="launch-orb-glow"></div>
+                <div class="launch-orb-shell">
+                    <canvas id="launchOrbCanvas" width="440" height="440"></canvas>
+                </div>
+                <div class="launch-orb-ring"></div>
+            </div>
+
+            <!-- Spotlight Info — same pattern as index.html -->
+            <div class="launch-info">
+                <div class="launch-meta">
+                    <span class="launch-tag">Analysis</span>
+                    <span class="launch-room-tag" id="portalRoom">—</span>
+                </div>
+                <h3 class="launch-name" id="portalRepo">—</h3>
+                <p class="launch-desc">Explore repository metrics collaboratively in an immersive 3D environment.</p>
+                <button class="launch-enter-btn" id="enterSceneBtn">
+                    <span>Enter World</span>
+                    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="4" y1="10" x2="16" y2="10" />
+                        <polyline points="11 5 16 10 11 15" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="lobby-footer">A-Frame · Networked-Aframe · GitHub API · BabiaXR</footer>
+
+    <!-- ═══════════════════════════════
+         SCRIPTS
+    ═══════════════════════════════ -->
     <script>
+        // ─── Subtle Background (matches index.html aesthetic) ────
+        (function () {
+            const canvas = document.getElementById('lobbyCanvas');
+            const ctx = canvas.getContext('2d');
+            let w, h, mouse = {};
+
+            function resize() { w = canvas.width = innerWidth; h = canvas.height = innerHeight; }
+
+            function draw() {
+                ctx.clearRect(0, 0, w, h);
+
+                // Soft radial gradient
+                const bg = ctx.createRadialGradient(w * 0.3, h * 0.2, 0, w * 0.5, h * 0.5, w * 0.8);
+                bg.addColorStop(0, 'rgba(5, 150, 105, 0.018)');
+                bg.addColorStop(0.4, 'rgba(5, 150, 105, 0.005)');
+                bg.addColorStop(1, 'transparent');
+                ctx.fillStyle = bg;
+                ctx.fillRect(0, 0, w, h);
+
+                // Subtle floating dots (very muted)
+                const t = performance.now() * 0.0004;
+                for (let i = 0; i < 20; i++) {
+                    const x = (w * 0.1) + (w * 0.8) * ((Math.sin(t + i * 1.7) + 1) / 2);
+                    const y = (h * 0.1) + (h * 0.8) * ((Math.cos(t * 0.7 + i * 2.3) + 1) / 2);
+                    const alpha = 0.04 + Math.sin(t * 2 + i * 3) * 0.02;
+                    const r = 1.5 + Math.sin(t + i) * 0.5;
+
+                    ctx.beginPath();
+                    ctx.arc(x, y, r, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(5, 150, 105, ${alpha})`;
+                    ctx.fill();
+                }
+
+                requestAnimationFrame(draw);
+            }
+
+            addEventListener('resize', resize);
+            resize();
+            draw();
+        })();
+
         // ─── State ───────────────────────────────────────────────
-        const urlParams = new URLSearchParams(window.location.search);
+        const urlParams = new URLSearchParams(location.search);
         const username = urlParams.get('username') || 'Explorer';
-        let currentRoomId = null;
-        let hostToken = null; // Only set for the host
-        let currentRepo = null;
+        let currentRoomId = null, hostToken = null, currentRepo = null;
 
-        // ─── DOM References ──────────────────────────────────────
-        const displayName = document.getElementById('displayName');
-        const createRoomBtn = document.getElementById('createRoomBtn');
-        const createRoomInfo = document.getElementById('createRoomInfo');
-        const createdRoomId = document.getElementById('createdRoomId');
-        const copyRoomId = document.getElementById('copyRoomId');
-        const repoInput = document.getElementById('repoInput');
-        const setRepoBtn = document.getElementById('setRepoBtn');
-        const repoStatus = document.getElementById('repoStatus');
-        const repoDisplay = document.getElementById('repoDisplay');
-        const repoName = document.getElementById('repoName');
+        document.getElementById('displayName').textContent = username;
 
-        const joinRoomInput = document.getElementById('joinRoomInput');
-        const joinRoomBtn = document.getElementById('joinRoomBtn');
-        const joinStatus = document.getElementById('joinStatus');
-        const joinRoomInfo = document.getElementById('joinRoomInfo');
-        const joinedRoomId = document.getElementById('joinedRoomId');
-        const joinRepoDisplay = document.getElementById('joinRepoDisplay');
-        const joinRepoName = document.getElementById('joinRepoName');
-        const joinRepoStatus = document.getElementById('joinRepoStatus');
+        // ─── Step Transitions ────────────────────────────────────
+        function goToStep(fromId, toId) {
+            const from = document.getElementById(fromId);
+            const to = document.getElementById(toId);
+            from.classList.remove('step--active');
+            from.classList.add('step--exit');
+            setTimeout(() => {
+                from.classList.remove('step--exit');
+                from.classList.add('step--hidden');
+                to.classList.remove('step--hidden');
+                to.classList.add('step--active');
+            }, 400);
+        }
 
-        const enterSection = document.getElementById('enterSection');
-        const enterSceneBtn = document.getElementById('enterSceneBtn');
+        function goBackToStep1(fromId) {
+            const from = document.getElementById(fromId);
+            const to = document.getElementById('step1');
+            from.classList.remove('step--active');
+            from.classList.add('step--hidden');
+            to.classList.remove('step--hidden', 'step--exit');
+            to.classList.add('step--active');
+        }
 
-        const createPanel = document.getElementById('createPanel');
-        const joinPanel = document.getElementById('joinPanel');
-
-        // ─── Init ────────────────────────────────────────────────
-        displayName.textContent = username;
+        // ─── Decode Animation ────────────────────────────────────
+        function decodeText(el, text, duration = 800) {
+            const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+            const len = text.length;
+            const start = performance.now();
+            function frame() {
+                const progress = Math.min((performance.now() - start) / duration, 1);
+                let result = '';
+                for (let i = 0; i < len; i++) {
+                    if (i / len < progress) result += text[i];
+                    else result += chars[Math.floor(Math.random() * chars.length)];
+                }
+                el.textContent = result;
+                if (progress < 1) requestAnimationFrame(frame);
+            }
+            frame();
+        }
 
         // ─── Helpers ─────────────────────────────────────────────
         function showStatus(el, msg, type = 'error') {
-            el.textContent = msg;
-            el.className = `status-msg visible ${type}`;
+            el.textContent = msg; el.className = `status-msg visible ${type}`;
         }
+        function hideStatus(el) { el.className = 'status-msg'; }
 
-        function hideStatus(el) {
-            el.className = 'status-msg';
-        }
-
-        function showEnterButton() {
-            enterSection.classList.add('visible');
-        }
-
-        // ─── Create Room ─────────────────────────────────────────
-        createRoomBtn.addEventListener('click', async () => {
-            createRoomBtn.disabled = true;
-            createRoomBtn.innerHTML = '<span class="spinner"></span> Creating...';
+        // ─── Step 1: Choose Path ─────────────────────────────────
+        document.getElementById('chooseCreate').addEventListener('click', async () => {
+            goToStep('step1', 'step2create');
 
             try {
                 const res = await fetch('/api/rooms', { method: 'POST' });
                 const data = await res.json();
-
-                if (!res.ok) throw new Error(data.error || 'Failed to create room');
+                if (!res.ok) throw new Error(data.error);
 
                 currentRoomId = data.roomId;
                 hostToken = data.hostToken;
-
-                // Save host token to session
                 sessionStorage.setItem(`host_${currentRoomId}`, hostToken);
 
-                createdRoomId.textContent = currentRoomId;
-                createRoomInfo.classList.add('visible');
-                createPanel.classList.add('active');
+                document.getElementById('roomCodeDisplay').classList.add('visible');
+                decodeText(document.getElementById('roomCodeBig'), currentRoomId, 900);
 
-                // Disable join panel
-                joinPanel.style.opacity = '0.4';
-                joinPanel.style.pointerEvents = 'none';
-
-                createRoomBtn.style.display = 'none';
-
+                setTimeout(() => {
+                    document.getElementById('repoTerminal').style.display = 'block';
+                    document.getElementById('repoInput').focus();
+                }, 1000);
             } catch (err) {
-                showStatus(repoStatus, err.message, 'error');
-                createRoomBtn.disabled = false;
-                createRoomBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg> Create Room`;
+                showStatus(document.getElementById('repoStatus'), err.message, 'error');
             }
         });
 
-        // ─── Copy Room ID ────────────────────────────────────────
-        copyRoomId.addEventListener('click', () => {
+        document.getElementById('chooseJoin').addEventListener('click', () => {
+            goToStep('step1', 'step2join');
+            setTimeout(() => document.getElementById('joinRoomInput').focus(), 500);
+        });
+
+        // ─── Back buttons ────────────────────────────────────────
+        document.getElementById('backFromCreate').addEventListener('click', () => goBackToStep1('step2create'));
+        document.getElementById('backFromJoin').addEventListener('click', () => goBackToStep1('step2join'));
+
+        // ─── Copy ────────────────────────────────────────────────
+        document.getElementById('copyRoomId').addEventListener('click', () => {
             navigator.clipboard.writeText(currentRoomId).then(() => {
-                const original = copyRoomId.textContent;
-                copyRoomId.textContent = 'Copied!';
-                setTimeout(() => { copyRoomId.textContent = original; }, 1500);
+                const btn = document.getElementById('copyRoomId');
+                const orig = btn.textContent;
+                btn.textContent = 'Copied!';
+                setTimeout(() => { btn.textContent = orig; }, 1500);
             });
         });
 
-        // ─── Set Repository (host only) ──────────────────────────
+        // ─── Set Repository ──────────────────────────────────────
+        const setRepoBtn = document.getElementById('setRepoBtn');
+        const repoInput = document.getElementById('repoInput');
+        const repoStatus = document.getElementById('repoStatus');
+
         setRepoBtn.addEventListener('click', async () => {
             const repo = repoInput.value.trim();
-            if (!repo) {
-                showStatus(repoStatus, 'Please enter a repository.', 'error');
-                return;
-            }
-
+            if (!repo) { showStatus(repoStatus, 'Please enter a repository.', 'error'); return; }
             hideStatus(repoStatus);
-            setRepoBtn.disabled = true;
-            setRepoBtn.innerHTML = '<span class="spinner"></span>';
+            setRepoBtn.disabled = true; setRepoBtn.innerHTML = '<span class="spinner"></span>';
 
             try {
                 const res = await fetch(`/api/rooms/${currentRoomId}/repo`, {
@@ -283,84 +358,63 @@
                     body: JSON.stringify({ repo, hostToken }),
                 });
                 const data = await res.json();
-
-                if (!res.ok) throw new Error(data.error || 'Failed to set repository');
+                if (!res.ok) throw new Error(data.error);
 
                 currentRepo = data.repo;
-                repoName.textContent = currentRepo;
-                repoDisplay.classList.add('visible');
+                document.getElementById('repoName').textContent = currentRepo;
+                document.getElementById('repoDisplay').classList.add('visible');
                 showStatus(repoStatus, `Repository "${currentRepo}" loaded successfully.`, 'success');
-                showEnterButton();
 
+                setTimeout(() => showPortal(), 1200);
             } catch (err) {
                 showStatus(repoStatus, err.message, 'error');
             } finally {
-                setRepoBtn.disabled = false;
-                setRepoBtn.textContent = 'Confirm';
+                setRepoBtn.disabled = false; setRepoBtn.textContent = 'run';
             }
         });
 
-        // Allow Enter key to submit repo
-        repoInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') setRepoBtn.click();
-        });
+        repoInput.addEventListener('keydown', e => { if (e.key === 'Enter') setRepoBtn.click(); });
 
         // ─── Join Room ───────────────────────────────────────────
+        const joinRoomBtn = document.getElementById('joinRoomBtn');
+        const joinRoomInput = document.getElementById('joinRoomInput');
+        const joinStatus = document.getElementById('joinStatus');
+
         joinRoomBtn.addEventListener('click', async () => {
             const roomId = joinRoomInput.value.trim();
-            if (!roomId) {
-                showStatus(joinStatus, 'Please enter a room code.', 'error');
-                return;
-            }
-
+            if (!roomId) { showStatus(joinStatus, 'Please enter a room code.', 'error'); return; }
             hideStatus(joinStatus);
-            joinRoomBtn.disabled = true;
-            joinRoomBtn.textContent = 'Joining...';
+            joinRoomBtn.disabled = true; joinRoomBtn.textContent = '...';
 
             try {
                 const res = await fetch(`/api/rooms/${roomId}`);
                 const data = await res.json();
-
-                if (!res.ok) throw new Error(data.error || 'Room not found');
+                if (!res.ok) throw new Error(data.error);
 
                 currentRoomId = data.roomId;
-                joinedRoomId.textContent = currentRoomId;
-                joinRoomInfo.classList.add('visible');
-                joinPanel.classList.add('active');
-
-                // Disable create panel
-                createPanel.style.opacity = '0.4';
-                createPanel.style.pointerEvents = 'none';
+                document.getElementById('joinCodeDisplay').classList.add('visible');
+                decodeText(document.getElementById('joinedRoomCode'), currentRoomId, 800);
+                document.getElementById('joinTerminal').style.display = 'none';
 
                 if (data.hasRepo) {
-                    joinRepoName.textContent = data.repo;
-                    joinRepoStatus.textContent = 'Repository loaded ✓';
                     currentRepo = data.repo;
-                    showEnterButton();
+                    document.getElementById('joinRepoName').textContent = data.repo;
+                    document.getElementById('joinRepoStatus').textContent = 'Repository loaded ✓';
+                    document.getElementById('joinRepoDisplay').classList.add('visible');
+                    setTimeout(() => showPortal(), 1200);
                 } else {
-                    joinRepoName.textContent = 'Waiting for host...';
-                    joinRepoStatus.textContent = 'No repository selected yet';
-                    // Poll for repo updates
+                    document.getElementById('joinRepoDisplay').classList.add('visible');
                     startRepoPoll(roomId);
-                    showEnterButton();
                 }
-
-                joinRepoDisplay.classList.add('visible');
-                joinRoomBtn.style.display = 'none';
-
             } catch (err) {
                 showStatus(joinStatus, err.message, 'error');
-                joinRoomBtn.disabled = false;
-                joinRoomBtn.textContent = 'Join';
+                joinRoomBtn.disabled = false; joinRoomBtn.textContent = 'connect';
             }
         });
 
-        // Allow Enter key to submit join
-        joinRoomInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') joinRoomBtn.click();
-        });
+        joinRoomInput.addEventListener('keydown', e => { if (e.key === 'Enter') joinRoomBtn.click(); });
 
-        // ─── Repo Polling (for non-host users) ──────────────────
+        // ─── Polling ─────────────────────────────────────────────
         let pollInterval = null;
         function startRepoPoll(roomId) {
             pollInterval = setInterval(async () => {
@@ -368,20 +422,133 @@
                     const res = await fetch(`/api/rooms/${roomId}`);
                     const data = await res.json();
                     if (data.hasRepo) {
-                        joinRepoName.textContent = data.repo;
-                        joinRepoStatus.textContent = 'Repository loaded ✓';
                         currentRepo = data.repo;
+                        document.getElementById('joinRepoName').textContent = data.repo;
+                        document.getElementById('joinRepoStatus').textContent = 'Repository loaded ✓';
                         clearInterval(pollInterval);
+                        setTimeout(() => showPortal(), 800);
                     }
-                } catch (e) { /* silent */ }
+                } catch (e) { }
             }, 3000);
         }
 
+        // ─── Launch Orb Animation (GitHub network graph) ────────
+        let orbAnim = null;
+        function startOrbAnimation() {
+            const canvas = document.getElementById('launchOrbCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width, h = canvas.height;
+            const cx = w / 2, cy = h / 2;
+
+            // Generate network nodes
+            const nodes = [];
+            for (let i = 0; i < 18; i++) {
+                const angle = (i / 18) * Math.PI * 2 + Math.random() * 0.4;
+                const radius = 40 + Math.random() * 120;
+                nodes.push({
+                    x: cx + Math.cos(angle) * radius,
+                    y: cy + Math.sin(angle) * radius,
+                    r: 3 + Math.random() * 5,
+                    phase: Math.random() * Math.PI * 2,
+                });
+            }
+            // Central node
+            nodes.push({ x: cx, y: cy, r: 10, phase: 0 });
+
+            // Edges (random connections + central hub)
+            const edges = [];
+            const central = nodes.length - 1;
+            for (let i = 0; i < central; i++) {
+                edges.push([central, i]);
+                if (Math.random() > 0.5 && i > 0) edges.push([i, i - 1]);
+                if (Math.random() > 0.7 && i > 2) edges.push([i, Math.floor(Math.random() * i)]);
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, w, h);
+
+                // Dark bg
+                ctx.fillStyle = '#0D1117';
+                ctx.fillRect(0, 0, w, h);
+
+                // Subtle radial gradient
+                const bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, w * 0.4);
+                bg.addColorStop(0, 'rgba(5, 150, 105, 0.06)');
+                bg.addColorStop(1, 'transparent');
+                ctx.fillStyle = bg;
+                ctx.fillRect(0, 0, w, h);
+
+                const t = performance.now() * 0.001;
+
+                // Draw edges
+                ctx.lineWidth = 1;
+                edges.forEach(([a, b]) => {
+                    const na = nodes[a], nb = nodes[b];
+                    const alpha = 0.08 + Math.sin(t + a + b) * 0.04;
+                    ctx.strokeStyle = `rgba(126, 231, 135, ${alpha})`;
+                    ctx.beginPath();
+                    ctx.moveTo(na.x, na.y);
+                    ctx.lineTo(nb.x, nb.y);
+                    ctx.stroke();
+                });
+
+                // Draw nodes
+                nodes.forEach((n, i) => {
+                    const pulse = 0.6 + Math.sin(t * 1.2 + n.phase) * 0.3;
+                    const isCentral = (i === central);
+
+                    // Glow
+                    const glow = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r * 4);
+                    glow.addColorStop(0, `rgba(126, 231, 135, ${pulse * (isCentral ? 0.12 : 0.06)})`);
+                    glow.addColorStop(1, 'transparent');
+                    ctx.fillStyle = glow;
+                    ctx.beginPath();
+                    ctx.arc(n.x, n.y, n.r * 4, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Core
+                    ctx.beginPath();
+                    ctx.arc(n.x, n.y, n.r * (isCentral ? 1 : 0.8), 0, Math.PI * 2);
+                    ctx.fillStyle = isCentral
+                        ? `rgba(126, 231, 135, ${pulse})`
+                        : `rgba(126, 231, 135, ${pulse * 0.5})`;
+                    ctx.fill();
+                });
+
+                orbAnim = requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        // ─── Portal ──────────────────────────────────────────────
+        function showPortal() {
+            document.getElementById('portalRoom').textContent = currentRoomId;
+
+            // Show repo name cleanly (remove owner/ prefix for cleaner display)
+            const displayRepo = currentRepo || 'Pending...';
+            document.getElementById('portalRepo').textContent = displayRepo;
+
+            const fromCreate = document.getElementById('step2create').classList.contains('step--active');
+            const fromId = fromCreate ? 'step2create' : 'step2join';
+            goToStep(fromId, 'step3');
+
+            // Start orb animation after transition
+            setTimeout(() => startOrbAnimation(), 500);
+        }
+
         // ─── Enter Scene ─────────────────────────────────────────
-        enterSceneBtn.addEventListener('click', () => {
+        document.getElementById('enterSceneBtn').addEventListener('click', () => {
             if (!currentRoomId) return;
-            const url = `scenes/github-scene.html?room=${encodeURIComponent(currentRoomId)}&username=${encodeURIComponent(username)}`;
-            window.location.href = url;
+            if (orbAnim) cancelAnimationFrame(orbAnim);
+            location.href = `scenes/github-scene.html?room=${encodeURIComponent(currentRoomId)}&username=${encodeURIComponent(username)}`;
+        });
+
+        // Enter key shortcut on step 3
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Enter' && document.getElementById('step3').classList.contains('step--active')) {
+                document.getElementById('enterSceneBtn').click();
+            }
         });
     </script>
 </body>
