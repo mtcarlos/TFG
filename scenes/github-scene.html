@@ -4,14 +4,19 @@
 <head>
     <meta charset="utf-8">
     <title>GitHub Explorer — Collaborative VR</title>
-    <meta name="description" content="Immersive collaborative GitHub repository analysis in VR">
+    <meta name="description" content="Immersive collaborative GitHub repository analysis with BabiaXR charts in VR">
     <link rel="icon" type="image/png" href="../assets/images/MiLogoVR.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- A-Frame -->
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+
+    <!-- WORKAROUND: Remove built-in A-Frame 1.5+ grabbable to avoid
+         conflict with superhands' grabbable component -->
+    <script>delete AFRAME.components["grabbable"];</script>
 
     <!-- Networking -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.min.js"></script>
@@ -19,163 +24,35 @@
     <script src="/js/networked-aframe.js"></script>
     <script src="/js/easyrtc-patch.js"></script>
 
-    <!-- Extras -->
-    <script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"></script>
+    <!-- BabiaXR -->
+    <script src="https://unpkg.com/aframe-babia-components/dist/aframe-babia-components.min.js"></script>
+
+    <!-- A-Frame extras (sphere-collider, etc.) -->
     <script
         src="https://cdn.jsdelivr.net/npm/aframe-environment-component@1.3.7/dist/aframe-environment-component.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.5.0/dist/aframe-extras.min.js"></script>
+    <script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"></script>
 
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+    <!-- Superhands — Natural VR interaction -->
+    <script src="https://unpkg.com/super-hands@^3.0.6/dist/super-hands.min.js"></script>
 
-        body {
-            font-family: 'Inter', sans-serif;
-            overflow: hidden;
-            background: #0a0a0a;
-        }
-
-        /* ── Repo Info HUD (HTML overlay, top-left) ── */
-        #repo-hud {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            border-radius: 16px;
-            padding: 20px 24px;
-            max-width: 340px;
-            z-index: 20;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-            transition: opacity 0.4s ease, transform 0.4s ease;
-        }
-
-        #repo-hud.hidden {
-            opacity: 0;
-            transform: translateY(-10px);
-            pointer-events: none;
-        }
-
-        .hud-eyebrow {
-            font-size: 0.68rem;
-            font-weight: 600;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: #059669;
-            margin-bottom: 6px;
-        }
-
-        .hud-repo-name {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #1D1D1F;
-            letter-spacing: -0.02em;
-            margin-bottom: 4px;
-            word-break: break-all;
-        }
-
-        .hud-desc {
-            font-size: 0.82rem;
-            color: #6E6E73;
-            line-height: 1.5;
-            margin-bottom: 12px;
-        }
-
-        .hud-stats {
-            display: flex;
-            gap: 16px;
-        }
-
-        .hud-stat {
-            text-align: center;
-        }
-
-        .hud-stat-value {
-            font-size: 1.05rem;
-            font-weight: 700;
-            color: #059669;
-        }
-
-        .hud-stat-label {
-            font-size: 0.68rem;
-            color: #A1A1A6;
-            font-weight: 500;
-        }
-
-        /* ── Room Badge (top-right) ── */
-        #room-badge {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            border-radius: 12px;
-            padding: 10px 16px;
-            z-index: 20;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.78rem;
-            color: #6E6E73;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-        }
-
-        .room-dot {
-            width: 8px;
-            height: 8px;
-            background: #059669;
-            border-radius: 50%;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
-        }
-
-        .room-code {
-            font-family: 'Fira Code', monospace;
-            font-weight: 600;
-            color: #1D1D1F;
-            letter-spacing: 0.05em;
-        }
-
-        /* ── Back to Lobby ── */
-        #back-lobby {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            border-radius: 10px;
-            padding: 8px 16px;
-            z-index: 20;
-            font-size: 0.82rem;
-            font-weight: 500;
-            color: #6E6E73;
-            text-decoration: none;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        #back-lobby:hover {
-            color: #1D1D1F;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-    </style>
+    <link rel="stylesheet" href="../css/github-scene.css">
 </head>
 
 <body>
 
-    <!-- ══════ HTML HUD Overlays ══════ -->
+    <!-- ══════════════════════════════════════════
+         LOADING OVERLAY
+         ══════════════════════════════════════════ -->
+    <div id="loading-overlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Fetching repository data…</div>
+        <div class="loading-repo" id="loading-repo-name"></div>
+    </div>
 
+    <!-- ══════════════════════════════════════════
+         REPO INFO PANEL (HUD — top left)
+         ══════════════════════════════════════════ -->
     <div id="repo-hud" class="hidden">
         <div class="hud-eyebrow">GitHub Explorer</div>
         <div class="hud-repo-name" id="hud-repo-name">Loading...</div>
@@ -200,20 +77,69 @@
         </div>
     </div>
 
-    <div id="room-badge">
-        <div class="room-dot"></div>
-        Room: <span class="room-code" id="room-code">—</span>
+    <!-- ══════════════════════════════════════════
+         SESSION BADGE (HUD — top right)
+         ══════════════════════════════════════════ -->
+    <div id="session-badge">
+        <div class="badge-room" id="badge-room">—</div>
+        <div class="badge-time" id="badge-time">--:--</div>
+        <div class="badge-date" id="badge-date">Loading...</div>
+        <div class="badge-session">
+            <span class="session-dot"></span>
+            Session: <span id="badge-session">0:00</span>
+        </div>
     </div>
 
+    <!-- ══════════════════════════════════════════
+         DATA DASHBOARD — Right side panel
+         ══════════════════════════════════════════ -->
+    <div id="data-dashboard" class="hidden">
+        <!-- Languages Breakdown -->
+        <div class="dash-section">
+            <div class="dash-section-header">
+                <span class="dash-icon">⟨/⟩</span>
+                <span class="dash-title">Languages</span>
+            </div>
+            <div id="dash-languages" class="dash-lang-list">
+                <div class="dash-placeholder">Loading…</div>
+            </div>
+        </div>
+
+        <!-- Top Contributors -->
+        <div class="dash-section">
+            <div class="dash-section-header">
+                <span class="dash-icon">👥</span>
+                <span class="dash-title">Top Contributors</span>
+            </div>
+            <div id="dash-contributors" class="dash-contrib-list">
+                <div class="dash-placeholder">Loading…</div>
+            </div>
+        </div>
+
+        <!-- Key Metrics -->
+        <div class="dash-section">
+            <div class="dash-section-header">
+                <span class="dash-icon">📈</span>
+                <span class="dash-title">Metrics</span>
+            </div>
+            <div id="dash-metrics" class="dash-metrics-grid">
+                <div class="dash-placeholder">Loading…</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to Lobby -->
     <a id="back-lobby" href="javascript:void(0)">
         ← Back to Lobby
     </a>
 
-    <!-- ══════ A-FRAME SCENE ══════ -->
-
+    <!-- ══════════════════════════════════════════
+         A-FRAME SCENE
+         ══════════════════════════════════════════ -->
     <a-scene id="github-scene">
 
         <a-assets>
+            <!-- Avatar template -->
             <template id="avatar-template">
                 <a-entity class="avatar">
                     <a-entity class="player-cam" networked-audio-source>
@@ -221,167 +147,312 @@
                             animation="property: position; dir: alternate; dur: 2000; easing: easeInOutSine; loop: true; to: 0 0.1 0">
                             <a-sphere class="head" scale="0.3 0.3 0.3"></a-sphere>
                             <a-entity class="face" position="0 0.05 0">
-                                <a-sphere class="eye" color="#efefef" position="0.1 0.1 -0.2"
-                                    scale="0.08 0.08 0.08">
+                                <a-sphere class="eye" color="#efefef" position="0.1 0.1 -0.2" scale="0.08 0.08 0.08">
                                     <a-sphere class="pupil" color="#000" position="0 0 -1"
                                         scale="0.2 0.2 0.2"></a-sphere>
                                 </a-sphere>
-                                <a-sphere class="eye" color="#efefef" position="-0.1 0.1 -0.2"
-                                    scale="0.08 0.08 0.08">
+                                <a-sphere class="eye" color="#efefef" position="-0.1 0.1 -0.2" scale="0.08 0.08 0.08">
                                     <a-sphere class="pupil" color="#000" position="0 0 -1"
                                         scale="0.2 0.2 0.2"></a-sphere>
                                 </a-sphere>
                             </a-entity>
                         </a-entity>
-                        <a-entity class="nametag-container" position="0 0.6 0" face-camera="" rotation="0 180 0">
-                            <a-text class="nametag" value="Anonymous" color="white" align="center"
-                                scale="1.5 1.5 1.5" rotation="0 180 0" side="double"></a-text>
+                        <a-entity class="nametag-container" position="0 0.6 0" look-at="[camera]">
+                            <a-text class="nametag" value="Anonymous" color="white" align="center" scale="1.5 1.5 1.5"
+                                side="double"></a-text>
                         </a-entity>
                     </a-entity>
                 </a-entity>
             </template>
         </a-assets>
 
-        <!-- ── Environment ── -->
+        <!-- ==================== ENVIRONMENT ==================== -->
+
+        <!-- Sky & Ground — Dark Developer Aesthetic -->
         <a-sky color="#0f172a"></a-sky>
+        <a-plane position="0 -0.02 0" rotation="-90 0 0" width="200" height="200"
+            material="shader: flat; color: #1e293b; opacity: 1; transparent: false; side: double">
+        </a-plane>
 
-        <!-- Ground: Dark with subtle grid -->
-        <a-plane position="0 0 0" rotation="-90 0 0" width="100" height="100"
-            material="color: #1e293b; opacity: 0.95; roughness: 0.9"></a-plane>
-
-        <!-- Grid lines -->
+        <!-- Grid Lines (generated by JS) -->
         <a-entity id="grid-lines"></a-entity>
 
-        <!-- Central platform -->
-        <a-cylinder position="0 0.01 0" radius="12" height="0.02"
-            material="color: #059669; opacity: 0.08; transparent: true"></a-cylinder>
-        <a-ring position="0 0.02 0" rotation="-90 0 0" radius-inner="11.8" radius-outer="12"
-            material="color: #059669; opacity: 0.2; transparent: true"></a-ring>
+        <!-- Central Platform -->
+        <a-cylinder position="0 -0.01 0" radius="25" height="0.02"
+            material="color: #0f172a; roughness: 0.9; metalness: 0"></a-cylinder>
+        <a-ring position="0 0 0" rotation="-90 0 0" radius-inner="24.6" radius-outer="25.2"
+            material="color: #059669; opacity: 0.15; transparent: true"></a-ring>
+        <!-- Inner decorative rings -->
+        <a-ring position="0 0.005 0" rotation="-90 0 0" radius-inner="12" radius-outer="12.1"
+            material="color: #059669; opacity: 0.08; transparent: true"></a-ring>
+        <a-ring position="0 0.005 0" rotation="-90 0 0" radius-inner="18" radius-outer="18.08"
+            material="color: #059669; opacity: 0.06; transparent: true"></a-ring>
 
-        <!-- ── Repo Info Panel (3D, in-scene) ── -->
-        <a-entity id="repo-panel" position="0 3.5 -8" repo-info-panel></a-entity>
+        <!-- ==================== LIGHTING ==================== -->
 
-        <!-- ── Welcome text ── -->
-        <a-entity position="0 6 -8">
-            <a-text value="GitHub Explorer" align="center" color="#059669" width="8"
-                font="https://cdn.aframe.io/fonts/Exo2Bold.fnt" opacity="0.8"></a-text>
-        </a-entity>
+        <!-- Ambient & Directional -->
+        <a-light type="ambient" intensity="0.65" color="#e2e8f0"></a-light>
+        <a-light type="directional" intensity="0.4" position="5 20 10" color="#ffffff" castShadow="false"></a-light>
 
-        <!-- ── Player Rig ── -->
-        <a-entity id="rig" networked="template:#avatar-template;attachTemplateToLocal:false;"
-            position="0 0 0" spawn-in-circle="radius:3" player-info>
+        <!-- Accent Spots for the 3 Exhibits -->
+        <a-light type="spot" intensity="0.7" color="#059669" position="0 14 -14" target="#exhibit-languages" angle="40"
+            penumbra="1" distance="28" decay="1.2"></a-light>
+        <a-light type="spot" intensity="0.7" color="#059669" position="-14 14 8" target="#exhibit-contributors"
+            angle="40" penumbra="1" distance="28" decay="1.2"></a-light>
+        <a-light type="spot" intensity="0.7" color="#059669" position="14 14 8" target="#exhibit-metrics" angle="40"
+            penumbra="1" distance="28" decay="1.2"></a-light>
 
-            <a-entity id="player" class="player-cam" camera position="0 1.6 0"
-                wasd-controls="fly: true"
-                look-controls="pointerLockEnabled: false">
-                <a-cursor raycaster="objects: .clickable" color="#059669" fuse="false"></a-cursor>
-                <a-sphere class="head" visible="false" simple-random-color></a-sphere>
-                <a-text class="nametag" visible="false"></a-text>
+        <!-- ==================== DATA SOURCES ==================== -->
+        <!-- These will have their `url` set dynamically by JS once roomId is known -->
+        <a-entity id="languages-data"></a-entity>
+        <a-entity id="contributors-data"></a-entity>
+        <a-entity id="summary-data"></a-entity>
+
+        <!-- ==================== EXHIBIT 1: LANGUAGES (Center-front) ==================== -->
+        <a-entity id="exhibit-languages" position="0 0 -14">
+            <!-- Pedestal -->
+            <a-cylinder position="0 0.4 0" radius="8.5" height="0.8"
+                material="color: #1e293b; opacity: 0.95"></a-cylinder>
+            <a-cylinder position="0 0.81 0" radius="8.3" height="0.02"
+                material="color: #059669; opacity: 0.2; transparent: true"></a-cylinder>
+            <!-- Glow ring -->
+            <a-ring position="0 0.015 0" rotation="-90 0 0" radius-inner="8.4" radius-outer="8.8"
+                material="color: #059669; emissive: #059669; emissiveIntensity: 0.3; opacity: 0.1; transparent: true; side: double"
+                animation="property: material.opacity; from: 0.06; to: 0.14; dir: alternate; dur: 3000; easing: easeInOutSine; loop: true"></a-ring>
+
+            <!-- Floating Labels -->
+            <a-text value="Repository Languages" position="0 1.6 8.8" rotation="-15 0 0" align="center" color="#f1f5f9"
+                width="8" font="https://cdn.aframe.io/fonts/Exo2Bold.fnt" opacity="0.9"></a-text>
+            <a-text value="Distribution by Percentage" position="0 1.2 8.8" rotation="-15 0 0" align="center"
+                color="#94a3b8" width="6" opacity="0.8"></a-text>
+
+            <!-- Chart Wrapper (hoverable, grabbable) -->
+            <a-entity id="chart-langs-wrapper" position="0 0.82 0" hoverable grabbable stretchable draggable hover-glow
+                grab-visual chart-sync="syncId: gh-langs" ownership-lock>
+                <a-box class="sh-hitbox" position="0 -0.25 0" width="17" height="0.5" depth="17"
+                    material="opacity: 0; transparent: true; side: double"></a-box>
+                <a-entity id="chart-langs" scale="0.01 0.01 0.01"
+                    animation="property: scale; from: 0 0 0; to: 0.5 0.5 0.5; dur: 1200; easing: easeOutElastic; delay: 400">
+                </a-entity>
+            </a-entity>
+
+            <!-- Metric Plaque -->
+            <a-entity id="metric-languages" position="0 0.4 5.6" hoverable grabbable hover-glow grab-visual
+                chart-sync="syncId: metric-langs" ownership-lock
+                animation="property: position; to: 0 0.42 5.6; dir: alternate; dur: 4000; easing: easeInOutSine; loop: true">
+                <a-box class="sh-hitbox" width="2.4" height="1" depth="0.1"
+                    material="opacity: 0; transparent: true; side: double"></a-box>
+                <a-plane width="2.2" height="0.85"
+                    material="color: #1e293b; opacity: 0.92; transparent: true"></a-plane>
+                <a-plane width="2.22" height="0.87" position="0 0 -0.001"
+                    material="color: #059669; opacity: 0.15; transparent: true"></a-plane>
+                <a-text value="Total Languages" position="0 0.16 0.01" align="center" color="#94a3b8"
+                    width="2.8"></a-text>
+                <a-text id="metric-langs-value" value="—" position="0 -0.12 0.01" align="center" color="#34d399"
+                    width="4" font="https://cdn.aframe.io/fonts/Exo2Bold.fnt"></a-text>
             </a-entity>
         </a-entity>
 
-        <!-- ── Lighting ── -->
-        <a-light type="ambient" intensity="0.6" color="#ffffff"></a-light>
-        <a-light type="directional" intensity="0.5" position="5 15 10" color="#ffffff"></a-light>
-        <a-light type="point" intensity="0.4" position="0 8 -8" color="#059669" distance="20"
-            decay="1.5"></a-light>
+        <!-- ==================== EXHIBIT 2: CONTRIBUTORS (Left, rotated 120°) ==================== -->
+        <a-entity id="exhibit-contributors" position="-14 0 8" rotation="0 120 0" scale="0.5 0.5 0.5">
+            <!-- Pedestal -->
+            <a-cylinder position="0 0.4 0" radius="7.5" height="0.8"
+                material="color: #1e293b; opacity: 0.95"></a-cylinder>
+            <a-cylinder position="0 0.81 0" radius="7.3" height="0.02"
+                material="color: #059669; opacity: 0.2; transparent: true"></a-cylinder>
+            <!-- Glow ring -->
+            <a-ring position="0 0.015 0" rotation="-90 0 0" radius-inner="7.4" radius-outer="7.8"
+                material="color: #059669; emissive: #059669; emissiveIntensity: 0.3; opacity: 0.1; transparent: true; side: double"
+                animation="property: material.opacity; from: 0.06; to: 0.14; dir: alternate; dur: 3500; easing: easeInOutSine; loop: true"></a-ring>
+
+            <!-- Floating Labels -->
+            <a-text value="Top Contributors" position="0 1.6 7.8" rotation="-15 0 0" align="center" color="#f1f5f9"
+                width="8" font="https://cdn.aframe.io/fonts/Exo2Bold.fnt" opacity="0.9"></a-text>
+            <a-text value="Commit Distribution" position="0 1.2 7.8" rotation="-15 0 0" align="center" color="#94a3b8"
+                width="6" opacity="0.8"></a-text>
+
+            <!-- Chart Wrapper -->
+            <a-entity id="chart-contribs-wrapper" position="0 4 0" hoverable grabbable stretchable draggable hover-glow
+                grab-visual chart-sync="syncId: gh-contribs" ownership-lock>
+                <a-box class="sh-hitbox" position="0 -1.8 0" width="15" height="0.5" depth="15"
+                    material="opacity: 0; transparent: true; side: double"></a-box>
+                <a-entity id="chart-contribs" rotation="90 0 0" scale="0.01 0.01 0.01"
+                    animation="property: scale; from: 0 0 0; to: 3.0 3.0 3.0; dur: 1000; easing: easeOutElastic; delay: 700">
+                </a-entity>
+            </a-entity>
+
+            <!-- Metric Plaque -->
+            <a-entity id="metric-contributors" position="0 0.4 4.6" hoverable grabbable hover-glow grab-visual
+                chart-sync="syncId: metric-contribs" ownership-lock
+                animation="property: position; to: 0 0.42 4.6; dir: alternate; dur: 3500; easing: easeInOutSine; loop: true">
+                <a-box class="sh-hitbox" width="2.4" height="1" depth="0.1"
+                    material="opacity: 0; transparent: true; side: double"></a-box>
+                <a-plane width="2.2" height="0.85"
+                    material="color: #1e293b; opacity: 0.92; transparent: true"></a-plane>
+                <a-plane width="2.22" height="0.87" position="0 0 -0.001"
+                    material="color: #059669; opacity: 0.15; transparent: true"></a-plane>
+                <a-text value="Contributors" position="0 0.16 0.01" align="center" color="#94a3b8" width="2.8"></a-text>
+                <a-text id="metric-contribs-value" value="—" position="0 -0.12 0.01" align="center" color="#34d399"
+                    width="4" font="https://cdn.aframe.io/fonts/Exo2Bold.fnt"></a-text>
+            </a-entity>
+        </a-entity>
+
+        <!-- ==================== EXHIBIT 3: METRICS (Right, rotated -120°) ==================== -->
+        <a-entity id="exhibit-metrics" position="14 0 8" rotation="0 -120 0">
+            <!-- Pedestal -->
+            <a-cylinder position="0 0.4 0" radius="7.5" height="0.8"
+                material="color: #1e293b; opacity: 0.95"></a-cylinder>
+            <a-cylinder position="0 0.81 0" radius="7.3" height="0.02"
+                material="color: #059669; opacity: 0.2; transparent: true"></a-cylinder>
+            <!-- Glow ring -->
+            <a-ring position="0 0.015 0" rotation="-90 0 0" radius-inner="7.4" radius-outer="7.8"
+                material="color: #059669; emissive: #059669; emissiveIntensity: 0.3; opacity: 0.1; transparent: true; side: double"
+                animation="property: material.opacity; from: 0.06; to: 0.14; dir: alternate; dur: 4000; easing: easeInOutSine; loop: true"></a-ring>
+
+            <!-- Floating Labels -->
+            <a-text value="Repository Metrics" position="0 1.6 7.8" rotation="-15 0 0" align="center" color="#f1f5f9"
+                width="8" font="https://cdn.aframe.io/fonts/Exo2Bold.fnt" opacity="0.9"></a-text>
+            <a-text value="Overview Stats" position="0 1.2 7.8" rotation="-15 0 0" align="center" color="#94a3b8"
+                width="6" opacity="0.8"></a-text>
+
+            <!-- Chart Wrapper -->
+            <a-entity id="chart-metrics-wrapper" position="0 0.82 0" hoverable grabbable stretchable draggable
+                hover-glow grab-visual chart-sync="syncId: gh-metrics" ownership-lock>
+                <a-box class="sh-hitbox" position="0 -0.25 0" width="15" height="0.5" depth="15"
+                    material="opacity: 0; transparent: true; side: double"></a-box>
+                <a-entity id="chart-metrics" scale="0.01 0.01 0.01"
+                    animation="property: scale; from: 0 0 0; to: 0.1 0.1 0.1; dur: 1000; easing: easeOutElastic; delay: 1000">
+                </a-entity>
+            </a-entity>
+
+            <!-- Metric Plaque -->
+            <a-entity id="metric-summary" position="0 0.4 4.6" hoverable grabbable hover-glow grab-visual
+                chart-sync="syncId: metric-summary" ownership-lock
+                animation="property: position; to: 0 0.42 4.6; dir: alternate; dur: 4500; easing: easeInOutSine; loop: true">
+                <a-box class="sh-hitbox" width="2.4" height="1" depth="0.1"
+                    material="opacity: 0; transparent: true; side: double"></a-box>
+                <a-plane width="2.2" height="0.85"
+                    material="color: #1e293b; opacity: 0.92; transparent: true"></a-plane>
+                <a-plane width="2.22" height="0.87" position="0 0 -0.001"
+                    material="color: #059669; opacity: 0.15; transparent: true"></a-plane>
+                <a-text value="Total Stars" position="0 0.16 0.01" align="center" color="#94a3b8" width="2.8"></a-text>
+                <a-text id="metric-stars-value" value="—" position="0 -0.12 0.01" align="center" color="#34d399"
+                    width="4" font="https://cdn.aframe.io/fonts/Exo2Bold.fnt"></a-text>
+            </a-entity>
+        </a-entity>
+
+        <!-- ==================== 3D WELCOME & REPO TITLE ==================== -->
+        <a-entity id="scene-title" position="0 8 -14">
+            <a-text value="GitHub Explorer" position="0 0.9 0" align="center" color="#059669" width="14"
+                font="https://cdn.aframe.io/fonts/Exo2Bold.fnt" opacity="0.8"></a-text>
+            <a-text id="scene-repo-name" value="" position="0 0.1 0" align="center" color="#f1f5f9" width="10"
+                font="https://cdn.aframe.io/fonts/Exo2Bold.fnt" opacity="0.9"></a-text>
+            <a-text id="scene-clock-time" value="--:--" position="0 -0.5 0" align="center" color="#34d399" width="6"
+                opacity="0.6"></a-text>
+        </a-entity>
+
+        <!-- ==================== FLOATING PARTICLES ==================== -->
+        <a-entity id="floating-particles">
+            <a-sphere position="-3 4 -8" radius="0.04"
+                material="color: #34d399; emissive: #34d399; emissiveIntensity: 0.8; opacity: 0.6; transparent: true"
+                animation="property: position; to: -3 5.5 -8; dir: alternate; dur: 5000; easing: easeInOutSine; loop: true"
+                animation__fade="property: material.opacity; from: 0.3; to: 0.7; dir: alternate; dur: 3000; loop: true"></a-sphere>
+            <a-sphere position="5 3.5 -10" radius="0.035"
+                material="color: #059669; emissive: #059669; emissiveIntensity: 0.6; opacity: 0.5; transparent: true"
+                animation="property: position; to: 5 5 -10; dir: alternate; dur: 6000; easing: easeInOutSine; loop: true"
+                animation__fade="property: material.opacity; from: 0.2; to: 0.6; dir: alternate; dur: 4000; loop: true"></a-sphere>
+            <a-sphere position="-8 5 -5" radius="0.05"
+                material="color: #34d399; emissive: #34d399; emissiveIntensity: 0.7; opacity: 0.4; transparent: true"
+                animation="property: position; to: -8 6.5 -5; dir: alternate; dur: 7000; easing: easeInOutSine; loop: true"
+                animation__fade="property: material.opacity; from: 0.2; to: 0.5; dir: alternate; dur: 3500; loop: true"></a-sphere>
+            <a-sphere position="7 4.5 -3" radius="0.03"
+                material="color: #059669; emissive: #059669; emissiveIntensity: 0.9; opacity: 0.5; transparent: true"
+                animation="property: position; to: 7 6 -3; dir: alternate; dur: 4500; easing: easeInOutSine; loop: true"
+                animation__fade="property: material.opacity; from: 0.3; to: 0.6; dir: alternate; dur: 2800; loop: true"></a-sphere>
+            <a-sphere position="-12 3 2" radius="0.045"
+                material="color: #34d399; emissive: #34d399; emissiveIntensity: 0.7; opacity: 0.4; transparent: true"
+                animation="property: position; to: -12 5 2; dir: alternate; dur: 5500; easing: easeInOutSine; loop: true"
+                animation__fade="property: material.opacity; from: 0.2; to: 0.55; dir: alternate; dur: 3200; loop: true"></a-sphere>
+            <a-sphere position="10 5 5" radius="0.04"
+                material="color: #059669; emissive: #059669; emissiveIntensity: 0.8; opacity: 0.3; transparent: true"
+                animation="property: position; to: 10 7 5; dir: alternate; dur: 6500; easing: easeInOutSine; loop: true"
+                animation__fade="property: material.opacity; from: 0.15; to: 0.45; dir: alternate; dur: 4200; loop: true"></a-sphere>
+            <a-sphere position="0 6 -6" radius="0.06"
+                material="color: #34d399; emissive: #34d399; emissiveIntensity: 0.5; opacity: 0.3; transparent: true"
+                animation="property: position; to: 0 7.5 -6; dir: alternate; dur: 8000; easing: easeInOutSine; loop: true"
+                animation__fade="property: material.opacity; from: 0.15; to: 0.4; dir: alternate; dur: 5000; loop: true"></a-sphere>
+            <a-sphere position="-6 3 -15" radius="0.035"
+                material="color: #059669; emissive: #059669; emissiveIntensity: 0.9; opacity: 0.5; transparent: true"
+                animation="property: position; to: -6 4.5 -15; dir: alternate; dur: 4000; easing: easeInOutSine; loop: true"
+                animation__fade="property: material.opacity; from: 0.25; to: 0.6; dir: alternate; dur: 2500; loop: true"></a-sphere>
+        </a-entity>
+
+
+        <!-- ==================== PLAYER RIG ==================== -->
+        <a-entity id="rig" networked="template:#avatar-template;attachTemplateToLocal:false;" position="0 0 5"
+            spawn-in-circle="radius:3" player-info pointer-sync>
+
+            <a-entity id="player" class="player-cam" camera position="0 1.6 0" wasd-controls="fly: true"
+                look-controls="pointerLockEnabled: false">
+                <!-- Desktop cursor -->
+                <a-cursor raycaster="objects: .babia-bar, .babia-slice, .babia-cyl, .sh-hitbox" color="#059669"
+                    fuse="false"></a-cursor>
+                <a-sphere class="head" visible="false" random-color></a-sphere>
+                <a-text class="nametag" visible="false"></a-text>
+            </a-entity>
+
+            <!-- ══════ VR CONTROLLERS — Superhands + Laser Pointer ══════ -->
+
+            <!-- Left Controller: Locomotion (thumbstick) + Grab (trigger/grip) -->
+            <a-entity id="left-controller" laser-controls="hand: left; model: true"
+                cursor="fuse: false; rayOrigin: entity;"
+                raycaster="objects: .sh-hitbox, .babia-bar, .babia-slice, .babia-cyl; far: 15; showLine: true; lineColor: #059669; lineOpacity: 0.35"
+                super-hands="colliderEvent: raycaster-intersection;
+                             colliderEventProperty: els;
+                             colliderEndEvent: raycaster-intersection-cleared;
+                             colliderEndEventProperty: clearedEls;
+                             grabStartButtons: selectstart,triggerdown,gripdown;
+                             grabEndButtons: selectend,triggerup,gripup;
+                             stretchStartButtons: selectstart,triggerdown,gripdown;
+                             stretchEndButtons: selectend,triggerup,gripup;
+                             dragDropStartButtons: selectstart,triggerdown,gripdown;
+                             dragDropEndButtons: selectend,triggerup,gripup" thumbstick-move="speed: 2.5">
+            </a-entity>
+
+            <!-- Right Controller: Snap Turn (thumbstick) + Grab (trigger/grip) -->
+            <a-entity id="right-controller" laser-controls="hand: right; model: true"
+                cursor="fuse: false; rayOrigin: entity;"
+                raycaster="objects: .sh-hitbox, .babia-bar, .babia-slice, .babia-cyl; far: 15; showLine: true; lineColor: #059669; lineOpacity: 0.35"
+                super-hands="colliderEvent: raycaster-intersection;
+                             colliderEventProperty: els;
+                             colliderEndEvent: raycaster-intersection-cleared;
+                             colliderEndEventProperty: clearedEls;
+                             grabStartButtons: selectstart,triggerdown,gripdown;
+                             grabEndButtons: selectend,triggerup,gripup;
+                             stretchStartButtons: selectstart,triggerdown,gripdown;
+                             stretchEndButtons: selectend,triggerup,gripup;
+                             dragDropStartButtons: selectstart,triggerdown,gripdown;
+                             dragDropEndButtons: selectend,triggerup,gripup" thumbstick-turn="snapAngle: 45">
+            </a-entity>
+
+            <!-- ══════ HAND TRACKING FALLBACK (Quest 3 bare hands) ══════ -->
+
+            <a-entity id="left-hand-tracking"
+                hand-tracking-controls="hand: left; modelColor: #059669; modelOpacity: 0.3"
+                sphere-collider="objects: .sh-hitbox; radius: 0.04" super-hands>
+            </a-entity>
+
+            <a-entity id="right-hand-tracking"
+                hand-tracking-controls="hand: right; modelColor: #059669; modelOpacity: 0.3"
+                sphere-collider="objects: .sh-hitbox; radius: 0.04" super-hands>
+            </a-entity>
+
+        </a-entity>
 
     </a-scene>
 
     <!-- Scene Logic -->
     <script src="/js/github-scene-logic.js"></script>
-
-    <script>
-        (function () {
-            const params = new URLSearchParams(window.location.search);
-            const roomId = params.get('room');
-            const username = params.get('username') || 'Explorer';
-
-            // ── Set room badge ──
-            document.getElementById('room-code').textContent = roomId || 'N/A';
-
-            // ── Back to lobby ──
-            document.getElementById('back-lobby').href = `../lobby.html?username=${encodeURIComponent(username)}`;
-
-            // ── Configure NAF with dynamic room name ──
-            const scene = document.getElementById('github-scene');
-            const nafRoom = roomId ? `github-${roomId}` : 'github-default';
-
-            scene.setAttribute('networked-scene', {
-                room: nafRoom,
-                debug: true,
-                adapter: 'easyrtc',
-                audio: true,
-                serverURL: '/',
-            });
-
-            // ── Set roomId on the panel component ──
-            const panel = document.getElementById('repo-panel');
-            if (roomId) {
-                panel.setAttribute('repo-info-panel', `roomId: ${roomId}`);
-            }
-
-            // ── Fetch and display repo data in HTML HUD ──
-            async function loadHUD() {
-                if (!roomId) return;
-                try {
-                    const res = await fetch(`/api/rooms/${roomId}/repo-data`);
-                    if (!res.ok) {
-                        if (res.status === 404) {
-                            setTimeout(loadHUD, 5000);
-                            return;
-                        }
-                        return;
-                    }
-                    const data = await res.json();
-
-                    document.getElementById('hud-repo-name').textContent = data.fullName || 'Unknown';
-                    document.getElementById('hud-desc').textContent = (data.description || 'No description.').substring(0, 120);
-                    document.getElementById('hud-stars').textContent = formatNum(data.stars);
-                    document.getElementById('hud-forks').textContent = formatNum(data.forks);
-                    document.getElementById('hud-issues').textContent = formatNum(data.openIssues);
-                    document.getElementById('hud-lang').textContent = data.mainLanguage || '—';
-
-                    document.getElementById('repo-hud').classList.remove('hidden');
-                } catch (e) {
-                    setTimeout(loadHUD, 8000);
-                }
-            }
-
-            function formatNum(n) {
-                if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
-                if (n >= 1000) return (n / 1000).toFixed(1) + 'K';
-                return String(n || 0);
-            }
-
-            // Load HUD after scene is ready
-            scene.addEventListener('loaded', () => {
-                setTimeout(loadHUD, 1000);
-            });
-
-            // ── Generate grid lines ──
-            const gridEl = document.getElementById('grid-lines');
-            for (let i = -50; i <= 50; i += 5) {
-                // X lines
-                const lineX = document.createElement('a-plane');
-                lineX.setAttribute('position', `0 0.01 ${i}`);
-                lineX.setAttribute('rotation', '-90 0 0');
-                lineX.setAttribute('width', '100');
-                lineX.setAttribute('height', '0.02');
-                lineX.setAttribute('material', 'color: #334155; opacity: 0.3; transparent: true');
-                gridEl.appendChild(lineX);
-
-                // Z lines
-                const lineZ = document.createElement('a-plane');
-                lineZ.setAttribute('position', `${i} 0.01 0`);
-                lineZ.setAttribute('rotation', '-90 90 0');
-                lineZ.setAttribute('width', '100');
-                lineZ.setAttribute('height', '0.02');
-                lineZ.setAttribute('material', 'color: #334155; opacity: 0.3; transparent: true');
-                gridEl.appendChild(lineZ);
-            }
-        })();
-    </script>
 
 </body>
 

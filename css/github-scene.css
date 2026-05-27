@@ -1,0 +1,613 @@
+/* =============================================
+   GITHUB EXPLORER — Scene HUD Styles
+   Dark Mode · Premium Developer Aesthetic
+   Glassmorphism · Neon Accents · Micro-animations
+   ============================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* ─── Design Tokens ─────────────────────────── */
+:root {
+    --gh-bg: #0f172a;
+    --gh-surface: rgba(255, 255, 255, 0.04);
+    --gh-surface-hover: rgba(255, 255, 255, 0.08);
+    --gh-text: #f1f5f9;
+    --gh-text-secondary: #94a3b8;
+    --gh-text-tertiary: #64748b;
+    --gh-accent: #059669;
+    --gh-accent-soft: rgba(5, 150, 105, 0.15);
+    --gh-accent-glow: rgba(5, 150, 105, 0.35);
+    --gh-accent-bright: #34d399;
+    --gh-border: rgba(255, 255, 255, 0.06);
+    --gh-border-accent: rgba(5, 150, 105, 0.25);
+    --gh-glass: rgba(15, 23, 42, 0.78);
+    --gh-glass-heavy: rgba(15, 23, 42, 0.92);
+    --gh-radius: 16px;
+    --gh-radius-sm: 10px;
+    --gh-radius-pill: 100px;
+    --gh-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2);
+    --gh-shadow-lg: 0 16px 64px rgba(0, 0, 0, 0.4), 0 4px 16px rgba(0, 0, 0, 0.25);
+    --gh-transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --gh-transition-spring: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ─── Reset ─────────────────────────────────── */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    overflow: hidden;
+    background: var(--gh-bg);
+    color: var(--gh-text);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* =============================================
+   REPO INFO PANEL — Top-left HUD
+   ============================================= */
+#repo-hud {
+    position: fixed;
+    top: 24px;
+    left: 24px;
+    background: var(--gh-glass);
+    backdrop-filter: blur(40px) saturate(1.8);
+    -webkit-backdrop-filter: blur(40px) saturate(1.8);
+    border: 1px solid var(--gh-border);
+    border-radius: 20px;
+    padding: 20px 24px;
+    max-width: 340px;
+    z-index: 50;
+    box-shadow: var(--gh-shadow),
+                inset 0 0.5px 0 rgba(255, 255, 255, 0.04);
+    transition: opacity var(--gh-transition), transform var(--gh-transition);
+}
+
+#repo-hud.hidden {
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+}
+
+.hud-eyebrow {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gh-accent-bright);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.hud-eyebrow::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--gh-accent);
+    box-shadow: 0 0 10px var(--gh-accent-glow);
+    animation: gh-dot-pulse 2.5s ease-in-out infinite;
+}
+
+@keyframes gh-dot-pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 10px var(--gh-accent-glow); }
+    50%      { opacity: 0.5; box-shadow: 0 0 4px var(--gh-accent-glow); }
+}
+
+.hud-repo-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--gh-text);
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+    word-break: break-all;
+}
+
+.hud-desc {
+    font-size: 0.78rem;
+    color: var(--gh-text-secondary);
+    line-height: 1.55;
+    margin-bottom: 14px;
+}
+
+.hud-stats {
+    display: flex;
+    gap: 16px;
+}
+
+.hud-stat {
+    text-align: center;
+    flex: 1;
+}
+
+.hud-stat-value {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--gh-accent-bright);
+    font-variant-numeric: tabular-nums;
+}
+
+.hud-stat-label {
+    font-size: 0.62rem;
+    color: var(--gh-text-tertiary);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 2px;
+}
+
+/* =============================================
+   SESSION BADGE — Top-right HUD
+   ============================================= */
+#session-badge {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    background: var(--gh-glass);
+    backdrop-filter: blur(40px) saturate(1.8);
+    -webkit-backdrop-filter: blur(40px) saturate(1.8);
+    border: 1px solid var(--gh-border);
+    border-radius: var(--gh-radius);
+    padding: 14px 18px;
+    z-index: 50;
+    pointer-events: none;
+    box-shadow: var(--gh-shadow),
+                inset 0 0.5px 0 rgba(255, 255, 255, 0.04);
+    text-align: right;
+}
+
+#session-badge .badge-room {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--gh-accent-bright);
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+}
+
+#session-badge .badge-time {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--gh-text);
+    letter-spacing: -0.01em;
+    font-variant-numeric: tabular-nums;
+}
+
+#session-badge .badge-date {
+    font-size: 0.62rem;
+    font-weight: 400;
+    color: var(--gh-text-secondary);
+    margin-top: 2px;
+}
+
+#session-badge .badge-session {
+    font-size: 0.58rem;
+    font-weight: 500;
+    color: var(--gh-text-tertiary);
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px solid var(--gh-border);
+    font-variant-numeric: tabular-nums;
+}
+
+.badge-session .session-dot {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    background: var(--gh-accent);
+    border-radius: 50%;
+    margin-right: 5px;
+    vertical-align: middle;
+    animation: gh-dot-pulse 2s ease-in-out infinite;
+}
+
+/* =============================================
+   DATA DASHBOARD — Right side panel
+   ============================================= */
+#data-dashboard {
+    position: fixed;
+    top: 140px;
+    right: 24px;
+    width: 280px;
+    max-height: calc(100vh - 180px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-right: 4px;
+
+    /* Entry animation */
+    opacity: 1;
+    transform: translateX(0);
+    transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+#data-dashboard.hidden {
+    opacity: 0;
+    transform: translateX(20px);
+    pointer-events: none;
+}
+
+/* Custom scrollbar */
+#data-dashboard::-webkit-scrollbar {
+    width: 3px;
+}
+
+#data-dashboard::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#data-dashboard::-webkit-scrollbar-thumb {
+    background: var(--gh-border-accent);
+    border-radius: 10px;
+}
+
+/* ─── Dashboard Section ────────────────────── */
+.dash-section {
+    background: var(--gh-glass);
+    backdrop-filter: blur(40px) saturate(1.8);
+    -webkit-backdrop-filter: blur(40px) saturate(1.8);
+    border: 1px solid var(--gh-border);
+    border-radius: 14px;
+    padding: 16px;
+    box-shadow: var(--gh-shadow),
+                inset 0 0.5px 0 rgba(255, 255, 255, 0.04);
+    transition: border-color var(--gh-transition);
+}
+
+.dash-section:hover {
+    border-color: var(--gh-border-accent);
+}
+
+.dash-section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--gh-border);
+}
+
+.dash-icon {
+    font-size: 0.85rem;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--gh-accent-soft);
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
+.dash-title {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--gh-text-secondary);
+}
+
+/* ─── Placeholder / Loading ────────────────── */
+.dash-placeholder {
+    font-size: 0.72rem;
+    color: var(--gh-text-tertiary);
+    text-align: center;
+    padding: 12px 0;
+    background: linear-gradient(90deg, transparent, var(--gh-surface), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 2s ease-in-out infinite;
+    border-radius: 6px;
+}
+
+@keyframes shimmer {
+    0%   { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+/* ─── Languages List ───────────────────────── */
+.dash-lang-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.dash-lang-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.dash-lang-color {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    flex-shrink: 0;
+    box-shadow: 0 0 6px currentColor;
+}
+
+.dash-lang-name {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--gh-text);
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dash-lang-pct {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--gh-accent-bright);
+    font-variant-numeric: tabular-nums;
+    font-family: 'JetBrains Mono', monospace;
+    flex-shrink: 0;
+    min-width: 40px;
+    text-align: right;
+}
+
+.dash-lang-bar-track {
+    flex: 1;
+    height: 4px;
+    background: var(--gh-surface);
+    border-radius: 2px;
+    overflow: hidden;
+    min-width: 40px;
+    max-width: 80px;
+}
+
+.dash-lang-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* ─── Contributors List ────────────────────── */
+.dash-contrib-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.dash-contrib-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    transition: background var(--gh-transition);
+}
+
+.dash-contrib-row:hover {
+    background: var(--gh-surface-hover);
+}
+
+.dash-contrib-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gh-accent-soft), var(--gh-surface));
+    border: 1.5px solid var(--gh-border-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--gh-accent-bright);
+    text-transform: uppercase;
+    overflow: hidden;
+}
+
+.dash-contrib-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.dash-contrib-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.dash-contrib-name {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--gh-text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dash-contrib-commits {
+    font-size: 0.62rem;
+    color: var(--gh-text-tertiary);
+    font-variant-numeric: tabular-nums;
+}
+
+.dash-contrib-bar {
+    width: 50px;
+    height: 3px;
+    background: var(--gh-surface);
+    border-radius: 2px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.dash-contrib-bar-fill {
+    height: 100%;
+    background: var(--gh-accent);
+    border-radius: 2px;
+    transition: width 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* ─── Metrics Grid ─────────────────────────── */
+.dash-metrics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.dash-metric-card {
+    background: var(--gh-surface);
+    border: 1px solid var(--gh-border);
+    border-radius: 10px;
+    padding: 12px 10px;
+    text-align: center;
+    transition: all var(--gh-transition);
+}
+
+.dash-metric-card:hover {
+    border-color: var(--gh-border-accent);
+    background: var(--gh-surface-hover);
+    transform: translateY(-1px);
+}
+
+.dash-metric-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--gh-accent-bright);
+    font-variant-numeric: tabular-nums;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: -0.02em;
+    margin-bottom: 2px;
+}
+
+.dash-metric-label {
+    font-size: 0.58rem;
+    font-weight: 500;
+    color: var(--gh-text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.dash-metric-icon {
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+    display: block;
+    opacity: 0.7;
+}
+
+/* =============================================
+   BACK TO LOBBY BUTTON
+   ============================================= */
+#back-lobby {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: var(--gh-glass);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--gh-border);
+    border-radius: var(--gh-radius-sm);
+    padding: 8px 16px;
+    z-index: 50;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--gh-text-tertiary);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: inherit;
+}
+
+#back-lobby:hover {
+    color: var(--gh-text);
+    border-color: var(--gh-border-accent);
+    box-shadow: 0 4px 16px rgba(5, 150, 105, 0.1);
+}
+
+/* =============================================
+   LOADING OVERLAY
+   ============================================= */
+#loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--gh-bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    transition: opacity 0.8s ease;
+}
+
+#loading-overlay.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--gh-border);
+    border-top-color: var(--gh-accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 16px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loading-text {
+    font-size: 0.82rem;
+    color: var(--gh-text-secondary);
+    font-weight: 400;
+}
+
+.loading-repo {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--gh-accent-bright);
+    margin-top: 6px;
+    font-weight: 500;
+}
+
+/* =============================================
+   RESPONSIVE
+   ============================================= */
+@media (max-width: 640px) {
+    #repo-hud {
+        top: 16px;
+        left: 16px;
+        max-width: 260px;
+        padding: 14px 18px;
+        border-radius: 16px;
+    }
+
+    .hud-repo-name {
+        font-size: 0.95rem;
+    }
+
+    #data-dashboard {
+        top: auto;
+        bottom: 60px;
+        right: 16px;
+        left: 16px;
+        width: auto;
+        max-height: 40vh;
+    }
+
+    #session-badge {
+        top: 16px;
+        right: 16px;
+        padding: 10px 14px;
+    }
+}

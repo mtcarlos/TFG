@@ -128,6 +128,29 @@ app.get("/api/rooms/:roomId/repo-data", (req, res) => {
   res.json(data);
 });
 
+// ─── Individual BabiaXR Dataset Endpoints ───────────────────
+// These serve each dataset array directly so babia-queryjson can fetch them.
+
+app.get("/api/rooms/:roomId/dataset/:datasetName", (req, res) => {
+  const room = rooms.getRoom(req.params.roomId);
+  if (!room) return res.status(404).json({ error: "Room not found" });
+  if (!room.hasRepo) return res.status(404).json({ error: "No repository selected" });
+
+  const data = rooms.getRepoData(req.params.roomId);
+  if (!data || !data.babiaDatasets) return res.status(404).json({ error: "Dataset not available yet" });
+
+  const datasetMap = {
+    languages: data.babiaDatasets.languagesDataset,
+    contributors: data.babiaDatasets.contributorsDataset,
+    summary: data.babiaDatasets.summaryDataset,
+  };
+
+  const dataset = datasetMap[req.params.datasetName];
+  if (!dataset) return res.status(404).json({ error: `Unknown dataset: ${req.params.datasetName}` });
+
+  res.json(dataset);
+});
+
 // Serve the files from the project root
 app.use(express.static(path.resolve(__dirname, "..")));
 
