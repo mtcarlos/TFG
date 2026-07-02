@@ -297,16 +297,54 @@ easyrtc.events.on("roomJoin", (connectionObj, roomName, roomParameter, callback)
   easyrtc.events.defaultListeners.roomJoin(connectionObj, roomName, roomParameter, callback);
 });
 
-// Intercept Room Leave to update Presence Tracker
+// Intercept Room Leave to update Presence Tracker and cleanup repo if room is empty
 easyrtc.events.on("roomLeave", (connectionObj, roomName, callback) => {
-  delete activeRoomsTracker[connectionObj.getEasyrtcid()];
-  console.log(`[${connectionObj.getEasyrtcid()}] left ${roomName}`);
-  easyrtc.events.defaultListeners.roomLeave(connectionObj, roomName, callback);
+  const easyrtcid = connectionObj.getEasyrtcid();
+  delete activeRoomsTracker[easyrtcid];
+  console.log(`[${easyrtcid}] left ${roomName}`);
+  
+  easyrtc.events.defaultListeners.roomLeave(connectionObj, roomName, (err) => {
+    if (roomName.startsWith("github-")) {
+      const roomId = roomName.replace("github-", "");
+      const remainingUsers = Object.values(activeRoomsTracker).filter(u => u.roomName === roomName).length;
+      if (remainingUsers === 0) {
+        console.log(`[CodeCity] Room ${roomId} is empty. Cleaning up repository...`);
+        try {
+          repoAnalyzer.cleanupRepo(roomId);
+        } catch (cleanupErr) {
+          console.error(`[CodeCity] Cleanup error on roomLeave:`, cleanupErr);
+        }
+      }
+    }
+    callback(err);
+  });
 });
 
-// Intercept Disconnect cleans up Presence Tracker
+// Intercept Disconnect cleans up Presence Tracker and cleanup repo if room is empty
 easyrtc.events.on("disconnect", (connectionObj, next) => {
-  delete activeRoomsTracker[connectionObj.getEasyrtcid()];
+  const easyrtcid = connectionObj.getEasyrtcid();
+  const trackerInfo = activeRoomsTracker[easyrtcid];
+  
+  if (trackerInfo) {
+    const roomName = trackerInfo.roomName;
+    delete activeRoomsTracker[easyrtcid];
+    
+    if (roomName && roomName.startsWith("github-")) {
+      const roomId = roomName.replace("github-", "");
+      const remainingUsers = Object.values(activeRoomsTracker).filter(u => u.roomName === roomName).length;
+      if (remainingUsers === 0) {
+        console.log(`[CodeCity] Room ${roomId} is empty on disconnect. Cleaning up repository...`);
+        try {
+          repoAnalyzer.cleanupRepo(roomId);
+        } catch (cleanupErr) {
+          console.error(`[CodeCity] Cleanup error on disconnect:`, cleanupErr);
+        }
+      }
+    }
+  } else {
+    delete activeRoomsTracker[easyrtcid];
+  }
+  
   easyrtc.events.defaultListeners.disconnect(connectionObj, next);
 });
 
