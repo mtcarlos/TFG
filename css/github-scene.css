@@ -65,7 +65,7 @@ body {
     max-width: 340px;
     z-index: 50;
     box-shadow: var(--gh-shadow),
-                inset 0 0.5px 0 rgba(255, 255, 255, 0.04);
+        inset 0 0.5px 0 rgba(255, 255, 255, 0.04);
     transition: opacity var(--gh-transition), transform var(--gh-transition);
 }
 
@@ -98,8 +98,17 @@ body {
 }
 
 @keyframes gh-dot-pulse {
-    0%, 100% { opacity: 1; box-shadow: 0 0 10px var(--gh-accent-glow); }
-    50%      { opacity: 0.5; box-shadow: 0 0 4px var(--gh-accent-glow); }
+
+    0%,
+    100% {
+        opacity: 1;
+        box-shadow: 0 0 10px var(--gh-accent-glow);
+    }
+
+    50% {
+        opacity: 0.5;
+        box-shadow: 0 0 4px var(--gh-accent-glow);
+    }
 }
 
 .hud-repo-name {
@@ -160,7 +169,7 @@ body {
     z-index: 50;
     pointer-events: none;
     box-shadow: var(--gh-shadow),
-                inset 0 0.5px 0 rgba(255, 255, 255, 0.04);
+        inset 0 0.5px 0 rgba(255, 255, 255, 0.04);
     text-align: right;
 }
 
@@ -226,16 +235,22 @@ body {
     gap: 12px;
     padding-right: 4px;
 
-    /* Entry animation */
+    /* Slide animation */
     opacity: 1;
     transform: translateX(0);
-    transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-                transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 #data-dashboard.hidden {
     opacity: 0;
     transform: translateX(20px);
+    pointer-events: none;
+}
+
+#data-dashboard.dash-collapsed {
+    transform: translateX(calc(100% + 40px));
+    opacity: 0;
     pointer-events: none;
 }
 
@@ -253,6 +268,120 @@ body {
     border-radius: 10px;
 }
 
+/* ─── Dashboard Toggle Button ─────────────── */
+.dashboard-toggle {
+    position: fixed;
+    top: 140px;
+    right: 24px;
+    z-index: 55;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: var(--gh-glass);
+    backdrop-filter: blur(40px) saturate(1.8);
+    -webkit-backdrop-filter: blur(40px) saturate(1.8);
+    border: 1px solid var(--gh-border);
+    border-radius: var(--gh-radius-pill);
+    color: var(--gh-text-secondary);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    box-shadow: var(--gh-shadow),
+        inset 0 0.5px 0 rgba(255, 255, 255, 0.04);
+    transition: all var(--gh-transition);
+    outline: none;
+}
+
+.dashboard-toggle:hover {
+    color: var(--gh-text);
+    border-color: var(--gh-border-accent);
+    box-shadow: var(--gh-shadow),
+        0 0 20px rgba(5, 150, 105, 0.12),
+        inset 0 0.5px 0 rgba(255, 255, 255, 0.06);
+    transform: translateY(-1px);
+}
+
+.dashboard-toggle:active {
+    transform: translateY(0) scale(0.97);
+}
+
+/* Hide floating toggle when dashboard is open */
+.dashboard-toggle.dash-active {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(20px);
+}
+
+.toggle-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    transition: transform var(--gh-transition-spring);
+}
+
+.dashboard-toggle:hover .toggle-icon {
+    transform: scale(1.15);
+}
+
+.toggle-label {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+/* ─── Dashboard Header ────────────────────── */
+.dash-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--gh-glass);
+    backdrop-filter: blur(40px) saturate(1.8);
+    -webkit-backdrop-filter: blur(40px) saturate(1.8);
+    border: 1px solid var(--gh-border);
+    border-radius: 14px;
+    box-shadow: var(--gh-shadow),
+        inset 0 0.5px 0 rgba(255, 255, 255, 0.04);
+}
+
+.dash-header-title {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--gh-accent-bright);
+}
+
+.dash-close-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--gh-border);
+    background: var(--gh-surface);
+    color: var(--gh-text-tertiary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: all var(--gh-transition);
+    outline: none;
+}
+
+.dash-close-btn:hover {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: #fca5a5;
+    transform: scale(1.1);
+}
+
+.dash-close-btn svg {
+    width: 14px;
+    height: 14px;
+}
+
 /* ─── Dashboard Section ────────────────────── */
 .dash-section {
     background: var(--gh-glass);
@@ -262,7 +391,7 @@ body {
     border-radius: 14px;
     padding: 16px;
     box-shadow: var(--gh-shadow),
-                inset 0 0.5px 0 rgba(255, 255, 255, 0.04);
+        inset 0 0.5px 0 rgba(255, 255, 255, 0.04);
     transition: border-color var(--gh-transition);
 }
 
@@ -280,7 +409,6 @@ body {
 }
 
 .dash-icon {
-    font-size: 0.85rem;
     width: 26px;
     height: 26px;
     display: flex;
@@ -289,6 +417,12 @@ body {
     background: var(--gh-accent-soft);
     border-radius: 6px;
     flex-shrink: 0;
+    color: var(--gh-accent-bright);
+}
+
+.dash-icon svg {
+    width: 14px;
+    height: 14px;
 }
 
 .dash-title {
@@ -297,6 +431,7 @@ body {
     text-transform: uppercase;
     letter-spacing: 0.1em;
     color: var(--gh-text-secondary);
+    flex: 1;
 }
 
 /* ─── Placeholder / Loading ────────────────── */
@@ -312,8 +447,13 @@ body {
 }
 
 @keyframes shimmer {
-    0%   { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
 }
 
 /* ─── Languages List ───────────────────────── */
@@ -563,7 +703,9 @@ body {
 }
 
 @keyframes spin {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .loading-text {
@@ -603,6 +745,21 @@ body {
         left: 16px;
         width: auto;
         max-height: 40vh;
+    }
+
+    #data-dashboard.dash-collapsed {
+        transform: translateY(calc(100% + 40px));
+    }
+
+    .dashboard-toggle {
+        top: auto;
+        bottom: 16px;
+        right: 16px;
+        left: auto;
+    }
+
+    .toggle-label {
+        display: none;
     }
 
     #session-badge {

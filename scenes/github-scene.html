@@ -91,13 +91,44 @@
     </div>
 
     <!-- ══════════════════════════════════════════
+         DASHBOARD TOGGLE BUTTON
+         ══════════════════════════════════════════ -->
+    <button id="dashboard-toggle" class="dashboard-toggle" title="Toggle statistics panel">
+        <svg class="toggle-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor"
+            stroke-width="1.5" stroke-linecap="round">
+            <rect x="1" y="9" width="3" height="6" rx="0.5" />
+            <rect x="6.5" y="5" width="3" height="10" rx="0.5" />
+            <rect x="12" y="1" width="3" height="14" rx="0.5" />
+        </svg>
+        <span class="toggle-label">Stats</span>
+    </button>
+
+    <!-- ══════════════════════════════════════════
          DATA DASHBOARD — Right side panel
          ══════════════════════════════════════════ -->
-    <div id="data-dashboard" class="hidden">
+    <div id="data-dashboard" class="hidden dash-collapsed">
+        <!-- Dashboard Header -->
+        <div class="dash-header">
+            <span class="dash-header-title">Repository Stats</span>
+            <button id="dashboard-close" class="dash-close-btn" title="Close panel">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8"
+                    stroke-linecap="round">
+                    <line x1="3" y1="3" x2="11" y2="11" />
+                    <line x1="11" y1="3" x2="3" y2="11" />
+                </svg>
+            </button>
+        </div>
+
         <!-- Languages Breakdown -->
         <div class="dash-section">
             <div class="dash-section-header">
-                <span class="dash-icon">⟨/⟩</span>
+                <span class="dash-icon">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="4.5,1.5 1,7 4.5,12.5" />
+                        <polyline points="9.5,1.5 13,7 9.5,12.5" />
+                    </svg>
+                </span>
                 <span class="dash-title">Languages</span>
             </div>
             <div id="dash-languages" class="dash-lang-list">
@@ -108,7 +139,15 @@
         <!-- Top Contributors -->
         <div class="dash-section">
             <div class="dash-section-header">
-                <span class="dash-icon">👥</span>
+                <span class="dash-icon">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="5" cy="4" r="2.2" />
+                        <path d="M1,13 C1,10.2 2.8,8 5,8 C7.2,8 9,10.2 9,13" />
+                        <circle cx="10.5" cy="4.5" r="1.7" />
+                        <path d="M10.5,8.5 C12,8.5 13,10 13,12" />
+                    </svg>
+                </span>
                 <span class="dash-title">Top Contributors</span>
             </div>
             <div id="dash-contributors" class="dash-contrib-list">
@@ -119,7 +158,13 @@
         <!-- Key Metrics -->
         <div class="dash-section">
             <div class="dash-section-header">
-                <span class="dash-icon">📈</span>
+                <span class="dash-icon">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="1,11 4.5,7 7.5,9 13,3" />
+                        <polyline points="9,3 13,3 13,7" />
+                    </svg>
+                </span>
                 <span class="dash-title">Metrics</span>
             </div>
             <div id="dash-metrics" class="dash-metrics-grid">
@@ -251,6 +296,41 @@
                 <a-text id="metric-langs-value" value="—" position="0 -0.12 0.01" align="center" color="#34d399"
                     width="4" font="https://cdn.aframe.io/fonts/Exo2Bold.fnt"></a-text>
             </a-entity>
+
+            <!-- 3D Info Panel Toggle -->
+            <a-entity id="info-toggle-langs" class="info-toggle-3d" position="7 1.8 7"
+                info-panel-toggle="panel: #info-panel-langs"
+                animation="property: position; to: 7 2.0 7; dir: alternate; dur: 3000; easing: easeInOutSine; loop: true">
+                <!-- Invisible Hitbox for Raycaster -->
+                <a-cylinder class="sh-hitbox" radius="0.4" height="0.2" rotation="90 0 0"
+                    material="opacity: 0; transparent: true"></a-cylinder>
+
+                <a-cylinder radius="0.3" height="0.06" rotation="90 0 0"
+                    material="color: #1e293b; opacity: 0.92; transparent: true; side: double"></a-cylinder>
+                <a-ring radius-inner="0.22" radius-outer="0.3" rotation="90 0 0" position="0 0 0.001"
+                    material="color: #059669; opacity: 0.3; transparent: true; side: double"
+                    animation="property: material.opacity; from: 0.2; to: 0.5; dir: alternate; dur: 2000; easing: easeInOutSine; loop: true"></a-ring>
+                <a-text value="i" position="0 0.02 0.04" rotation="0 0 0" align="center" color="#34d399" width="2.5"
+                    font="https://cdn.aframe.io/fonts/Exo2Bold.fnt" side="double"></a-text>
+            </a-entity>
+
+            <!-- 3D Info Panel (hidden by default) -->
+            <a-entity id="info-panel-langs" position="5.5 3 5" rotation="0 -30 0" visible="false" look-at="[camera]">
+                <a-plane width="4.5" height="2.2"
+                    material="color: #0f172a; opacity: 0.93; transparent: true; side: double"></a-plane>
+                <a-plane width="4.52" height="2.22" position="0 0 -0.002"
+                    material="color: #059669; opacity: 0.12; transparent: true; side: double"></a-plane>
+                <a-plane width="0.04" height="1.8" position="-2.1 0 0.003"
+                    material="color: #059669; opacity: 0.6; transparent: true; side: double"></a-plane>
+                <a-text value="Languages Chart" position="0 0.7 0.01" align="center" color="#34d399" width="4"
+                    font="https://cdn.aframe.io/fonts/Exo2Bold.fnt"></a-text>
+                <a-text
+                    value="Shows the distribution of programming\nlanguages in this repository by bytes\nof source code. Each bar represents a\nlanguage; height is proportional to\nthe amount of code written in it."
+                    position="0 0 0.01" align="center" color="#94a3b8" width="3.6" baseline="center"
+                    wrap-count="42"></a-text>
+                <a-text value="Drag to move  |  Pinch to resize" position="0 -0.85 0.01" align="center" color="#64748b"
+                    width="2.8"></a-text>
+            </a-entity>
         </a-entity>
 
         <!-- ==================== EXHIBIT 2: CONTRIBUTORS (Left, rotated 120°) ==================== -->
@@ -295,6 +375,41 @@
                 <a-text id="metric-contribs-value" value="—" position="0 -0.12 0.01" align="center" color="#34d399"
                     width="4" font="https://cdn.aframe.io/fonts/Exo2Bold.fnt"></a-text>
             </a-entity>
+
+            <!-- 3D Info Panel Toggle -->
+            <a-entity id="info-toggle-contribs" class="info-toggle-3d" position="6 1.8 6"
+                info-panel-toggle="panel: #info-panel-contribs"
+                animation="property: position; to: 6 2.0 6; dir: alternate; dur: 3500; easing: easeInOutSine; loop: true">
+                <!-- Invisible Hitbox for Raycaster -->
+                <a-cylinder class="sh-hitbox" radius="0.4" height="0.2" rotation="90 0 0"
+                    material="opacity: 0; transparent: true"></a-cylinder>
+
+                <a-cylinder radius="0.3" height="0.06" rotation="90 0 0"
+                    material="color: #1e293b; opacity: 0.92; transparent: true; side: double"></a-cylinder>
+                <a-ring radius-inner="0.22" radius-outer="0.3" rotation="90 0 0" position="0 0 0.001"
+                    material="color: #059669; opacity: 0.3; transparent: true; side: double"
+                    animation="property: material.opacity; from: 0.2; to: 0.5; dir: alternate; dur: 2000; easing: easeInOutSine; loop: true"></a-ring>
+                <a-text value="i" position="0 0.02 0.04" rotation="0 0 0" align="center" color="#34d399" width="2.5"
+                    font="https://cdn.aframe.io/fonts/Exo2Bold.fnt" side="double"></a-text>
+            </a-entity>
+
+            <!-- 3D Info Panel (hidden by default) -->
+            <a-entity id="info-panel-contribs" position="5 3 4" rotation="0 -25 0" visible="false" look-at="[camera]">
+                <a-plane width="4.5" height="2.2"
+                    material="color: #0f172a; opacity: 0.93; transparent: true; side: double"></a-plane>
+                <a-plane width="4.52" height="2.22" position="0 0 -0.002"
+                    material="color: #059669; opacity: 0.12; transparent: true; side: double"></a-plane>
+                <a-plane width="0.04" height="1.8" position="-2.1 0 0.003"
+                    material="color: #059669; opacity: 0.6; transparent: true; side: double"></a-plane>
+                <a-text value="Contributors Chart" position="0 0.7 0.01" align="center" color="#34d399" width="4"
+                    font="https://cdn.aframe.io/fonts/Exo2Bold.fnt"></a-text>
+                <a-text
+                    value="Displays the top contributors ranked\nby number of commits. The pie chart\nshows each contributor's share of\ntotal commits. Point at slices in\nVR for individual statistics."
+                    position="0 0 0.01" align="center" color="#94a3b8" width="3.6" baseline="center"
+                    wrap-count="42"></a-text>
+                <a-text value="Drag to move  |  Pinch to resize" position="0 -0.85 0.01" align="center" color="#64748b"
+                    width="2.8"></a-text>
+            </a-entity>
         </a-entity>
 
         <!-- ==================== EXHIBIT 3: METRICS (Right, rotated -120°) ==================== -->
@@ -338,6 +453,41 @@
                 <a-text value="Total Stars" position="0 0.16 0.01" align="center" color="#94a3b8" width="2.8"></a-text>
                 <a-text id="metric-stars-value" value="—" position="0 -0.12 0.01" align="center" color="#34d399"
                     width="4" font="https://cdn.aframe.io/fonts/Exo2Bold.fnt"></a-text>
+            </a-entity>
+
+            <!-- 3D Info Panel Toggle -->
+            <a-entity id="info-toggle-metrics" class="info-toggle-3d" position="6 1.8 6"
+                info-panel-toggle="panel: #info-panel-metrics"
+                animation="property: position; to: 6 2.0 6; dir: alternate; dur: 4000; easing: easeInOutSine; loop: true">
+                <!-- Invisible Hitbox for Raycaster -->
+                <a-cylinder class="sh-hitbox" radius="0.4" height="0.2" rotation="90 0 0"
+                    material="opacity: 0; transparent: true"></a-cylinder>
+
+                <a-cylinder radius="0.3" height="0.06" rotation="90 0 0"
+                    material="color: #1e293b; opacity: 0.92; transparent: true; side: double"></a-cylinder>
+                <a-ring radius-inner="0.22" radius-outer="0.3" rotation="90 0 0" position="0 0 0.001"
+                    material="color: #059669; opacity: 0.3; transparent: true; side: double"
+                    animation="property: material.opacity; from: 0.2; to: 0.5; dir: alternate; dur: 2000; easing: easeInOutSine; loop: true"></a-ring>
+                <a-text value="i" position="0 0.02 0.04" rotation="0 0 0" align="center" color="#34d399" width="2.5"
+                    font="https://cdn.aframe.io/fonts/Exo2Bold.fnt" side="double"></a-text>
+            </a-entity>
+
+            <!-- 3D Info Panel (hidden by default) -->
+            <a-entity id="info-panel-metrics" position="5 3 4" rotation="0 -25 0" visible="false" look-at="[camera]">
+                <a-plane width="4.5" height="2.2"
+                    material="color: #0f172a; opacity: 0.93; transparent: true; side: double"></a-plane>
+                <a-plane width="4.52" height="2.22" position="0 0 -0.002"
+                    material="color: #059669; opacity: 0.12; transparent: true; side: double"></a-plane>
+                <a-plane width="0.04" height="1.8" position="-2.1 0 0.003"
+                    material="color: #059669; opacity: 0.6; transparent: true; side: double"></a-plane>
+                <a-text value="Metrics Chart" position="0 0.7 0.01" align="center" color="#34d399" width="4"
+                    font="https://cdn.aframe.io/fonts/Exo2Bold.fnt"></a-text>
+                <a-text
+                    value="Key health indicators: stars (community\ninterest), forks (derivative projects),\nopen issues (pending work), contributors,\nrepository size, and language count.\nBars allow quick visual comparison."
+                    position="0 0 0.01" align="center" color="#94a3b8" width="3.6" baseline="center"
+                    wrap-count="42"></a-text>
+                <a-text value="Drag to move  |  Pinch to resize" position="0 -0.85 0.01" align="center" color="#64748b"
+                    width="2.8"></a-text>
             </a-entity>
         </a-entity>
 
@@ -385,6 +535,11 @@
                 material="color: #059669; emissive: #059669; emissiveIntensity: 0.9; opacity: 0.5; transparent: true"
                 animation="property: position; to: -6 4.5 -15; dir: alternate; dur: 4000; easing: easeInOutSine; loop: true"
                 animation__fade="property: material.opacity; from: 0.25; to: 0.6; dir: alternate; dur: 2500; loop: true"></a-sphere>
+        </a-entity>
+
+        <!-- ==================== CODE CITY — Software Visualization ==================== -->
+        <a-entity id="code-city" position="0 0.03 0">
+            <!-- Buildings and districts are generated dynamically by js/code-city.js -->
         </a-entity>
 
 
@@ -452,6 +607,7 @@
     </a-scene>
 
     <!-- Scene Logic -->
+    <script src="/js/code-city.js"></script>
     <script src="/js/github-scene-logic.js"></script>
 
 </body>

@@ -73,22 +73,24 @@
     const badgeRoom = document.getElementById('badge-room');
     const loadingOverlay = document.getElementById('loading-overlay');
     const loadingRepoName = document.getElementById('loading-repo-name');
+    const dashboardToggle = document.getElementById('dashboard-toggle');
+    const dataDashboard = document.getElementById('data-dashboard');
 
     // ─────────────────────────────────────────────
     // GITHUB LANGUAGE COLORS
     // ─────────────────────────────────────────────
     const LANGUAGE_COLORS = {
-        'JavaScript':  '#f1e05a', 'TypeScript': '#3178c6', 'Python':     '#3572A5',
-        'Java':        '#b07219', 'C#':        '#178600', 'C++':        '#f34b7d',
-        'C':           '#555555', 'PHP':       '#4F5D95', 'Ruby':       '#701516',
-        'Go':          '#00ADD8', 'Rust':      '#dea584', 'Swift':      '#F05138',
-        'Kotlin':      '#A97BFF', 'Dart':      '#00B4AB', 'Scala':      '#c22d40',
-        'Shell':       '#89e051', 'HTML':      '#e34c26', 'CSS':        '#563d7c',
-        'SCSS':        '#c6538c', 'Vue':       '#41b883', 'Svelte':     '#ff3e00',
-        'Lua':         '#000080', 'R':         '#198CE7', 'MATLAB':     '#e16737',
+        'JavaScript': '#f1e05a', 'TypeScript': '#3178c6', 'Python': '#3572A5',
+        'Java': '#b07219', 'C#': '#178600', 'C++': '#f34b7d',
+        'C': '#555555', 'PHP': '#4F5D95', 'Ruby': '#701516',
+        'Go': '#00ADD8', 'Rust': '#dea584', 'Swift': '#F05138',
+        'Kotlin': '#A97BFF', 'Dart': '#00B4AB', 'Scala': '#c22d40',
+        'Shell': '#89e051', 'HTML': '#e34c26', 'CSS': '#563d7c',
+        'SCSS': '#c6538c', 'Vue': '#41b883', 'Svelte': '#ff3e00',
+        'Lua': '#000080', 'R': '#198CE7', 'MATLAB': '#e16737',
         'Jupyter Notebook': '#DA5B0B', 'Dockerfile': '#384d54', 'Makefile': '#427819',
-        'Perl':        '#0298c3', 'Haskell':   '#5e5086', 'Elixir':     '#6e4a7e',
-        'Clojure':     '#db5855', 'Erlang':    '#B83998', 'Objective-C':'#438eff'
+        'Perl': '#0298c3', 'Haskell': '#5e5086', 'Elixir': '#6e4a7e',
+        'Clojure': '#db5855', 'Erlang': '#B83998', 'Objective-C': '#438eff'
     };
 
     // ─────────────────────────────────────────────
@@ -96,7 +98,7 @@
     // ─────────────────────────────────────────────
     const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June',
-                    'July', 'August', 'September', 'October', 'November', 'December'];
+        'July', 'August', 'September', 'October', 'November', 'December'];
 
     function updateClockHUD() {
         const now = new Date();
@@ -125,6 +127,34 @@
     // Set room badge
     if (badgeRoom) {
         badgeRoom.textContent = roomId ? `Room: ${roomId}` : 'Local';
+    }
+
+    // ─────────────────────────────────────────────
+    // DASHBOARD TOGGLE — Show / Hide stats panel
+    // ─────────────────────────────────────────────
+    function openDashboard() {
+        if (dataDashboard) dataDashboard.classList.remove('dash-collapsed');
+        if (dashboardToggle) dashboardToggle.classList.add('dash-active');
+    }
+
+    function closeDashboard() {
+        if (dataDashboard) dataDashboard.classList.add('dash-collapsed');
+        if (dashboardToggle) dashboardToggle.classList.remove('dash-active');
+    }
+
+    if (dashboardToggle) {
+        dashboardToggle.addEventListener('click', function () {
+            if (dataDashboard && dataDashboard.classList.contains('dash-collapsed')) {
+                openDashboard();
+            } else {
+                closeDashboard();
+            }
+        });
+    }
+
+    const dashboardClose = document.getElementById('dashboard-close');
+    if (dashboardClose) {
+        dashboardClose.addEventListener('click', closeDashboard);
     }
 
 
@@ -252,6 +282,11 @@
 
             console.log('[GitHubScene] Repo data loaded:', data.fullName);
 
+            // ── Initialize Code City (polls until layout is ready) ──
+            if (window.CodeCity) {
+                CodeCity.init(roomId);
+            }
+
         } catch (e) {
             console.error('[GitHubScene] Failed to load repo data:', e);
             setTimeout(loadRepoData, 8000);
@@ -377,13 +412,20 @@
         if (metricsContainer) {
             metricsContainer.innerHTML = '';
 
+            const svgStar = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"><polygon points="8,1.5 9.8,5.8 14.5,6.2 10.9,9.3 12,14 8,11.5 4,14 5.1,9.3 1.5,6.2 6.2,5.8"/></svg>';
+            const svgFork = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="3.5" r="1.8"/><circle cx="11" cy="3.5" r="1.8"/><circle cx="8" cy="12.5" r="1.8"/><path d="M5,5.3 L5,7 C5,8.5 6.5,9 8,9 C9.5,9 11,8.5 11,7 L11,5.3"/><line x1="8" y1="9" x2="8" y2="10.7"/></svg>';
+            const svgIssue = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><circle cx="8" cy="8" r="6.5"/><line x1="8" y1="5" x2="8" y2="8.5"/><circle cx="8" cy="11" r="0.5" fill="currentColor"/></svg>';
+            const svgPeople = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="5" r="2.2"/><path d="M1.5,14.5 C1.5,11 3.5,9 6,9 C8.5,9 10.5,11 10.5,14.5"/><circle cx="12" cy="5.5" r="1.7"/><path d="M12,9 C13.5,9 14.5,10.5 14.5,13"/></svg>';
+            const svgBox = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"><path d="M2,5 L8,2 L14,5 L14,11 L8,14 L2,11 Z"/><line x1="8" y1="8" x2="8" y2="14"/><polyline points="2,5 8,8 14,5"/></svg>';
+            const svgCode = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="5,3 1.5,8 5,13"/><polyline points="11,3 14.5,8 11,13"/></svg>';
+
             const metrics = [
-                { icon: '⭐', label: 'Stars',   value: formatNum(data.stars || 0) },
-                { icon: '🍴', label: 'Forks',   value: formatNum(data.forks || 0) },
-                { icon: '⚠️', label: 'Issues',  value: formatNum(data.openIssues || 0) },
-                { icon: '👥', label: 'Contribs', value: formatNum(data.contributors ? data.contributors.length : 0) },
-                { icon: '📦', label: 'Size',    value: data.size ? (data.size > 1024 ? (data.size / 1024).toFixed(1) + ' MB' : data.size + ' KB') : '—' },
-                { icon: '⟨/⟩', label: 'Languages', value: String(data.languages ? data.languages.length : 0) }
+                { icon: svgStar, label: 'Stars', value: formatNum(data.stars || 0) },
+                { icon: svgFork, label: 'Forks', value: formatNum(data.forks || 0) },
+                { icon: svgIssue, label: 'Issues', value: formatNum(data.openIssues || 0) },
+                { icon: svgPeople, label: 'Contribs', value: formatNum(data.contributors ? data.contributors.length : 0) },
+                { icon: svgBox, label: 'Size', value: data.size ? (data.size > 1024 ? (data.size / 1024).toFixed(1) + ' MB' : data.size + ' KB') : '—' },
+                { icon: svgCode, label: 'Languages', value: String(data.languages ? data.languages.length : 0) }
             ];
 
             metrics.forEach(m => {
@@ -398,13 +440,43 @@
             });
         }
 
-        // ── Reveal dashboard ──
+        // ── Reveal dashboard (remove initial hidden, but keep collapsed) ──
         dashboard.classList.remove('hidden');
+        // Dashboard starts collapsed; user opens via toggle button
     }
 
     // ═════════════════════════════════════════════
     //  A-FRAME COMPONENTS
     // ═════════════════════════════════════════════
+
+    // ─── info-panel-toggle — 3D clickable info button ─
+    if (!AFRAME.components['info-panel-toggle']) {
+        AFRAME.registerComponent('info-panel-toggle', {
+            schema: {
+                panel: { type: 'selector', default: null }
+            },
+            init: function () {
+                this.el.addEventListener('click', this.onToggle.bind(this));
+            },
+            onToggle: function () {
+                const panel = this.data.panel;
+                if (!panel) return;
+
+                const isVisible = panel.getAttribute('visible');
+                if (isVisible === true || isVisible === 'true') {
+                    panel.setAttribute('visible', false);
+                    // Shrink ring glow
+                    const ring = this.el.querySelector('a-ring');
+                    if (ring) ring.setAttribute('material', 'opacity', 0.3);
+                } else {
+                    panel.setAttribute('visible', true);
+                    // Brighten ring glow
+                    const ring = this.el.querySelector('a-ring');
+                    if (ring) ring.setAttribute('material', 'opacity', 0.7);
+                }
+            }
+        });
+    }
 
     // ─── player-info ─────────────────────────────
     if (!AFRAME.components['player-info']) {

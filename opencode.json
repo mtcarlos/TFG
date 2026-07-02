@@ -1,0 +1,23 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "openrouter": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "OpenRouter",
+      "options": {
+        "baseURL": "https://openrouter.ai/api/v1"
+      },
+      "models": {
+        "deepseek-free": {
+          "name": "deepseek/deepseek-chat:free"
+        },
+        "deepseek-r1-free": {
+          "name": "deepseek/deepseek-r1:free"
+        },
+        "free-router": {
+          "name": "openrouter/free"
+        }
+      }
+    }
+  }
+}

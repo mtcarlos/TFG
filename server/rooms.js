@@ -29,6 +29,9 @@ function createRoom() {
     hostToken,
     repo: null,       // "owner/repo" string
     repoData: null,    // Processed GitHub data
+    clonePath: null,   // Path to locally cloned repository
+    cloneStatus: null, // 'cloning' | 'analyzing' | 'ready' | 'error'
+    cityLayout: null,  // Code City layout data (buildings + districts)
     createdAt: new Date().toISOString(),
   });
 
@@ -100,6 +103,41 @@ function isHost(roomId, hostToken) {
   return room && room.hostToken === hostToken;
 }
 
+// ─── Code City Fields ────────────────────────────
+
+function setCloneStatus(roomId, status) {
+  const room = rooms.get(roomId);
+  if (!room) return;
+  room.cloneStatus = status;
+}
+
+function getCloneStatus(roomId) {
+  const room = rooms.get(roomId);
+  return room ? room.cloneStatus : null;
+}
+
+function setClonePath(roomId, clonePath) {
+  const room = rooms.get(roomId);
+  if (!room) return;
+  room.clonePath = clonePath;
+}
+
+function getClonePath(roomId) {
+  const room = rooms.get(roomId);
+  return room ? room.clonePath : null;
+}
+
+function setCityLayout(roomId, layout) {
+  const room = rooms.get(roomId);
+  if (!room) return;
+  room.cityLayout = layout;
+}
+
+function getCityLayout(roomId) {
+  const room = rooms.get(roomId);
+  return room ? room.cityLayout : null;
+}
+
 module.exports = {
   createRoom,
   getRoom,
@@ -107,4 +145,10 @@ module.exports = {
   setRepoData,
   getRepoData,
   isHost,
+  setCloneStatus,
+  getCloneStatus,
+  setClonePath,
+  getClonePath,
+  setCityLayout,
+  getCityLayout,
 };
