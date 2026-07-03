@@ -7,6 +7,7 @@
   },
   "author": "Carlos Malagón Tenorio",
   "dependencies": {
+    "dotenv": "^17.4.2",
     "networked-aframe": "^0.14.0",
     "simple-git": "^3.36.0"
   }

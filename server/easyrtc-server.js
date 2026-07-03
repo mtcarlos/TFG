@@ -1,9 +1,12 @@
 // Load required modules
+require("dotenv").config();                    // load .env variables
 const http = require("http");                 // http server core module
 const path = require("path");
+const fs = require("fs");                     // filesystem for reading code files
 const express = require("express");           // web framework external module
 const socketIo = require("socket.io");        // web socket external module
 const easyrtc = require("open-easyrtc");      // EasyRTC external module
+const { exec } = require("child_process");    // for running CLI commands
 // To generate a certificate for local development with https, you can use
 // npx webpack serve --server-type https
 // and stop it with ctrl+c, it will generate the file node_modules/.cache/webpack-dev-server/server.pem
@@ -241,6 +244,80 @@ app.get("/api/rooms/:roomId/city-layout", (req, res) => {
   if (!layout) return res.status(404).json({ error: "Layout not available" });
 
   res.json(layout);
+});
+
+// POST /api/rooms/:roomId/oracle/ask — Ask the Oracle (direct OpenRouter API)
+app.post("/api/rooms/:roomId/oracle/ask", async (req, res) => {
+  const { question, filePath } = req.body;
+  if (!question) {
+    return res.status(400).json({ error: "Question is required" });
+  }
+
+  const clonePath = rooms.getClonePath(req.params.roomId);
+  if (!clonePath) {
+    return res.status(400).json({ error: "Repository is not cloned yet. Wait for the city to be built." });
+  }
+
+  const apiKey = process.env.OPENROUTER_API_KEY;
+  if (!apiKey) {
+    console.error("[Oracle] OPENROUTER_API_KEY not set in .env");
+    return res.status(500).json({ error: "API key not configured on the server." });
+  }
+
+  console.log(`[Oracle] Preguntando: "${question}" sobre ${filePath || 'Global'} (Room: ${req.params.roomId})`);
+
+  // Build the prompt with file context if a specific file is selected
+  let systemPrompt = "Eres un asistente experto en código. Responde de forma concisa y clara en español. No uses markdown excesivo, mantén la respuesta breve (máximo 300 palabras).";
+  let userPrompt = question;
+
+  if (filePath) {
+    try {
+      const absoluteFilePath = path.join(clonePath, filePath);
+      const fileContent = fs.readFileSync(absoluteFilePath, 'utf-8');
+      // Truncate very large files to avoid token limits
+      const truncated = fileContent.length > 8000 ? fileContent.substring(0, 8000) + '\n... (fichero truncado)' : fileContent;
+      userPrompt = `Fichero: ${filePath}\n\n\`\`\`\n${truncated}\n\`\`\`\n\nPregunta: ${question}`;
+      console.log(`[Oracle] Fichero adjuntado: ${filePath} (${fileContent.length} chars)`);
+    } catch (err) {
+      console.warn(`[Oracle] No se pudo leer el fichero ${filePath}:`, err.message);
+      userPrompt = `Sobre el fichero ${filePath}: ${question}`;
+    }
+  }
+
+  try {
+    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': 'http://localhost:8080',
+        'X-Title': 'VR Code City Oracle'
+      },
+      body: JSON.stringify({
+        model: 'google/gemma-4-31b-it:free',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userPrompt }
+        ],
+        max_tokens: 1024
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error('[Oracle] API error:', JSON.stringify(data));
+      return res.status(response.status).json({ error: data.error?.message || 'Error de la API de OpenRouter' });
+    }
+
+    const answer = data.choices?.[0]?.message?.content || 'Sin respuesta del modelo.';
+    console.log(`[Oracle] Respuesta recibida (${answer.length} chars)`);
+    res.json({ answer });
+
+  } catch (err) {
+    console.error('[Oracle] Fetch error:', err.message);
+    res.status(500).json({ error: 'Error de conexión con OpenRouter.' });
+  }
 });
 
 // Serve the files from the project root

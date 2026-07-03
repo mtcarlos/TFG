@@ -556,6 +556,10 @@
                 <a-text class="nametag" visible="false"></a-text>
             </a-entity>
 
+            <!-- ══════ ORACLE AI PANEL (Floating Gadget) ══════ -->
+            <!-- Positioned dynamically in JS when toggled -->
+            <a-entity id="oracle-panel" oracle-panel visible="false"></a-entity>
+
             <!-- ══════ VR CONTROLLERS — Superhands + Laser Pointer ══════ -->
 
             <!-- Left Controller: Locomotion (thumbstick) + Grab (trigger/grip) -->
@@ -608,6 +612,7 @@
 
     <!-- Scene Logic -->
     <script src="/js/code-city.js"></script>
+    <script src="/js/oracle-panel.js"></script>
     <script src="/js/github-scene-logic.js"></script>
 
 </body>
