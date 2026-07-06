@@ -297,25 +297,7 @@
     // GRID LINES GENERATION
     // ─────────────────────────────────────────────
     function generateGrid() {
-        const gridEl = document.getElementById('grid-lines');
-        if (!gridEl) return;
-        for (let i = -50; i <= 50; i += 5) {
-            const lineX = document.createElement('a-plane');
-            lineX.setAttribute('position', `0 0.01 ${i}`);
-            lineX.setAttribute('rotation', '-90 0 0');
-            lineX.setAttribute('width', '100');
-            lineX.setAttribute('height', '0.02');
-            lineX.setAttribute('material', 'color: #334155; opacity: 0.2; transparent: true');
-            gridEl.appendChild(lineX);
-
-            const lineZ = document.createElement('a-plane');
-            lineZ.setAttribute('position', `${i} 0.01 0`);
-            lineZ.setAttribute('rotation', '-90 90 0');
-            lineZ.setAttribute('width', '100');
-            lineZ.setAttribute('height', '0.02');
-            lineZ.setAttribute('material', 'color: #334155; opacity: 0.2; transparent: true');
-            gridEl.appendChild(lineZ);
-        }
+        // Grid removed — meadow aesthetic doesn't use tech grid lines
     }
 
     // ─────────────────────────────────────────────

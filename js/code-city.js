@@ -95,7 +95,7 @@
             const bg = document.createElement('a-plane');
             bg.setAttribute('width', '3.5');
             bg.setAttribute('height', '1.2');
-            bg.setAttribute('material', 'color: #0f172a; opacity: 0.95; transparent: true; side: double');
+            bg.setAttribute('material', 'color: #f5f0e6; opacity: 0.95; transparent: true; side: double');
             this.tooltip.appendChild(bg);
 
             // Border glow
@@ -103,7 +103,7 @@
             border.setAttribute('width', '3.54');
             border.setAttribute('height', '1.24');
             border.setAttribute('position', '0 0 -0.002');
-            border.setAttribute('material', 'color: #059669; opacity: 0.2; transparent: true; side: double');
+            border.setAttribute('material', 'color: #d4a853; opacity: 0.2; transparent: true; side: double');
             this.tooltip.appendChild(border);
 
             // Left accent bar
@@ -111,7 +111,7 @@
             accent.setAttribute('width', '0.04');
             accent.setAttribute('height', '1.0');
             accent.setAttribute('position', '-1.7 0 0.003');
-            accent.setAttribute('material', 'color: #34d399; opacity: 0.8; transparent: true');
+            accent.setAttribute('material', 'color: #8b6914; opacity: 0.8; transparent: true');
             this.tooltip.appendChild(accent);
 
             // File name text
@@ -120,7 +120,7 @@
             nameText.setAttribute('value', '');
             nameText.setAttribute('position', '0 0.3 0.01');
             nameText.setAttribute('align', 'center');
-            nameText.setAttribute('color', '#34d399');
+            nameText.setAttribute('color', '#8b6914');
             nameText.setAttribute('width', '3.2');
             nameText.setAttribute('font', 'https://cdn.aframe.io/fonts/Exo2Bold.fnt');
             this.tooltip.appendChild(nameText);
@@ -131,7 +131,7 @@
             detailText.setAttribute('value', '');
             detailText.setAttribute('position', '0 -0.15 0.01');
             detailText.setAttribute('align', 'center');
-            detailText.setAttribute('color', '#94a3b8');
+            detailText.setAttribute('color', '#5a6b5c');
             detailText.setAttribute('width', '2.8');
             detailText.setAttribute('wrap-count', '40');
             this.tooltip.appendChild(detailText);
@@ -160,7 +160,7 @@
                     el.setAttribute('rotation', '-90 0 0');
                     el.setAttribute('width', d.width);
                     el.setAttribute('height', d.depth);
-                    el.setAttribute('material', `color: ${d.color || '#1e293b'}; opacity: 0.4; transparent: true; side: double`);
+                    el.setAttribute('material', `color: ${d.color || '#c9b99a'}; opacity: 0.4; transparent: true; side: double`);
                     container.appendChild(el);
 
                     // District label (only for larger districts)
@@ -169,7 +169,7 @@
                         label.setAttribute('value', d.name);
                         label.setAttribute('position', `${d.x} 0.05 ${d.z + d.depth / 2 + 0.2}`);
                         label.setAttribute('align', 'center');
-                        label.setAttribute('color', '#475569');
+                        label.setAttribute('color', '#5a6b5c');
                         label.setAttribute('width', Math.min(d.width * 1.5, 4));
                         label.setAttribute('side', 'double');
                         container.appendChild(label);
@@ -273,7 +273,7 @@
 
             // Select new building
             this.selectedBuilding = el;
-            el.setAttribute('material', 'emissive', '#34d399');
+            el.setAttribute('material', 'emissive', '#d4a853');
             el.setAttribute('material', 'emissiveIntensity', 0.5);
 
             // Dispatch custom event for Oracle or other systems to pick up
