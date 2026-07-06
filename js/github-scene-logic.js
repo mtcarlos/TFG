@@ -986,6 +986,59 @@
     }
 
     // ─────────────────────────────────────────────
+    // VISUAL SETTINGS SLIDERS LOGIC
+    // ─────────────────────────────────────────────
+    function initVisualSettings() {
+        const cityScaleSlider = document.getElementById('setting-city-scale');
+        const heightScaleSlider = document.getElementById('setting-building-height');
+        const thicknessScaleSlider = document.getElementById('setting-building-thickness');
+
+        const valCityScale = document.getElementById('val-city-scale');
+        const valHeightScale = document.getElementById('val-building-height');
+        const valThicknessScale = document.getElementById('val-building-thickness');
+
+        if (!cityScaleSlider || !heightScaleSlider || !thicknessScaleSlider) {
+            console.warn('[VisualSettings] Sliders not found in DOM');
+            return;
+        }
+
+        // Helper to update labels and apply A-Frame scaling
+        function applyScaling() {
+            const cityScale = parseFloat(cityScaleSlider.value);
+            const heightScale = parseFloat(heightScaleSlider.value);
+            const thicknessScale = parseFloat(thicknessScaleSlider.value);
+
+            // Update text readouts
+            if (valCityScale) valCityScale.textContent = `${cityScale.toFixed(1)}x`;
+            if (valHeightScale) valHeightScale.textContent = `${heightScale.toFixed(2)}x`;
+            if (valThicknessScale) valThicknessScale.textContent = `${thicknessScale.toFixed(2)}x`;
+
+            const cityEl = document.getElementById('code-city');
+            if (cityEl) {
+                // Scale container (X and Z = city layout size, Y = building height)
+                cityEl.setAttribute('scale', `${cityScale} ${heightScale} ${cityScale}`);
+
+                // Scale individual building widths/depths (X/Z) relative to their base positions
+                const buildings = cityEl.querySelectorAll('.code-building');
+                buildings.forEach(b => {
+                    b.setAttribute('scale', `${thicknessScale} 1 ${thicknessScale}`);
+                });
+            }
+        }
+
+        // Attach listeners
+        cityScaleSlider.addEventListener('input', applyScaling);
+        heightScaleSlider.addEventListener('input', applyScaling);
+        thicknessScaleSlider.addEventListener('input', applyScaling);
+
+        // Expose applyScaling globally so code-city.js can run it after rendering layout
+        window.applyVisualSettings = applyScaling;
+
+        // Run initial update
+        applyScaling();
+    }
+
+    // ─────────────────────────────────────────────
     // SCENE INITIALIZATION
     // ─────────────────────────────────────────────
     const scene = document.getElementById('github-scene');
@@ -1010,6 +1063,9 @@
 
     scene.addEventListener('loaded', function () {
         console.log('[GitHubScene] Scene loaded ✨');
+
+        // Initialize visual settings HUD sliders
+        initVisualSettings();
 
         // Set username on avatar
         const nametag = document.querySelector('#rig .nametag');

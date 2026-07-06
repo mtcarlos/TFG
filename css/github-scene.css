@@ -723,6 +723,79 @@ body {
 }
 
 /* =============================================
+   VISUAL SETTINGS SLIDERS
+   ============================================= */
+.dash-settings-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 4px;
+}
+
+.dash-setting-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.dash-setting-row label {
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--gh-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.setting-slider-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.setting-slider-container input[type="range"] {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--gh-surface);
+    outline: none;
+    border: 1px solid var(--gh-border);
+    transition: all var(--gh-transition);
+}
+
+.setting-slider-container input[type="range"]:hover {
+    border-color: var(--gh-border-accent);
+    background: var(--gh-surface-hover);
+}
+
+.setting-slider-container input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--gh-accent-bright);
+    box-shadow: 0 0 6px var(--gh-accent-glow);
+    cursor: pointer;
+    transition: transform 0.15s ease;
+}
+
+.setting-slider-container input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.25);
+    box-shadow: 0 0 10px var(--gh-accent-bright);
+}
+
+.setting-slider-container span {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: var(--gh-accent-bright);
+    min-width: 32px;
+    text-align: right;
+}
+
+/* =============================================
    RESPONSIVE
    ============================================= */
 @media (max-width: 640px) {

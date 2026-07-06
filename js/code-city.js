@@ -38,6 +38,11 @@
             this._renderCity();
             this._updateRaycasters();
 
+            // Apply active visual settings scales to the newly rendered city
+            if (typeof window.applyVisualSettings === 'function') {
+                window.applyVisualSettings();
+            }
+
             console.log(`[CodeCity] City rendered: ${layout.stats.totalFiles} files, ${layout.stats.totalLOC} LOC`);
         },
 
@@ -214,13 +219,22 @@
             el.setAttribute('material', 'emissive', buildingData.color);
             el.setAttribute('material', 'emissiveIntensity', 0.3);
 
-            // Position tooltip above the building
+            // Position tooltip above the building (accounting for code-city scale)
             const pos = el.getAttribute('position');
             if (this.tooltip) {
+                const cityEl = document.getElementById('code-city');
+                let scaleX = 1, scaleY = 1, scaleZ = 1;
+                if (cityEl) {
+                    const scale = cityEl.getAttribute('scale') || { x: 1, y: 1, z: 1 };
+                    scaleX = scale.x;
+                    scaleY = scale.y;
+                    scaleZ = scale.z;
+                }
+
                 this.tooltip.setAttribute('position', {
-                    x: pos.x,
-                    y: pos.y + buildingData.height / 2 + 1.5,
-                    z: pos.z
+                    x: pos.x * scaleX,
+                    y: (pos.y + buildingData.height / 2) * scaleY + 1.5,
+                    z: pos.z * scaleZ
                 });
 
                 const nameEl = this.tooltip.querySelector('#city-tooltip-name');

@@ -49,7 +49,7 @@ const DISTRICT_COLOR = "rgba(30, 30, 46, 0.35)";
 
 /** @type {CityLayoutOptions} */
 const DEFAULT_OPTIONS = {
-  maxHeight: 15,
+  maxHeight: 8,
   minHeight: 0.3,
   padding: 0.3,
   totalSize: 40,
@@ -500,6 +500,10 @@ function generateCityLayout(fileTree, opts) {
     const ext = node.extension || path.extname(node.name) || "";
     const height = locToHeight(loc, maxLOC, minHeight, maxHeight);
 
+    // Limit building width and depth so they don't form giant monolithic blocks in small repos
+    const buildingWidth = Math.max(Math.min(inner.w, 2.0), 0.05);
+    const buildingDepth = Math.max(Math.min(inner.h, 2.0), 0.05);
+
     buildings.push({
       type: "building",
       fileName: node.name,
@@ -510,8 +514,8 @@ function generateCityLayout(fileTree, opts) {
       x: inner.x + inner.w / 2,
       y: height / 2,
       z: inner.z + inner.h / 2,
-      width: Math.max(inner.w, 0.05),
-      depth: Math.max(inner.h, 0.05),
+      width: buildingWidth,
+      depth: buildingDepth,
       height,
       color: colorForExtension(ext),
     });
