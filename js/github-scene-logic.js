@@ -426,6 +426,62 @@
         dashboard.classList.remove('hidden');
         // Dashboard starts collapsed; user opens via toggle button
     }
+    
+    // ─────────────────────────────────────────────
+    // POPULATE FILE TYPES (Code City Legend)
+    // ─────────────────────────────────────────────
+    window.populateFileTypesDashboard = function(buildings, totalLOC) {
+        const container = document.getElementById('dash-file-types');
+        if (!container) return;
+
+        if (!buildings || buildings.length === 0) {
+            container.innerHTML = '<div class="dash-placeholder">No files found.</div>';
+            return;
+        }
+
+        container.innerHTML = '';
+        const extStats = {};
+
+        // Aggregate LOC and colors by extension
+        buildings.forEach(b => {
+            const ext = b.extension || 'None';
+            if (!extStats[ext]) {
+                extStats[ext] = { loc: 0, color: b.color };
+            }
+            extStats[ext].loc += (b.loc || 0);
+        });
+
+        // Convert to array and sort by LOC descending
+        const extArray = Object.keys(extStats).map(ext => ({
+            name: ext,
+            loc: extStats[ext].loc,
+            color: extStats[ext].color
+        })).sort((a, b) => b.loc - a.loc);
+
+        // Populate UI
+        extArray.forEach(stat => {
+            const pct = totalLOC > 0 ? ((stat.loc / totalLOC) * 100) : 0;
+            const color = stat.color || '#64748b';
+
+            const row = document.createElement('div');
+            row.className = 'dash-lang-row';
+            row.innerHTML = `
+                <span class="dash-lang-color" style="background: ${color}; color: ${color}"></span>
+                <span class="dash-lang-name">${stat.name}</span>
+                <div class="dash-lang-bar-track">
+                    <div class="dash-lang-bar-fill" style="width: 0%; background: ${color}"></div>
+                </div>
+                <span class="dash-lang-pct">${pct.toFixed(1)}%</span>
+            `;
+            container.appendChild(row);
+
+            // Animate bar fill
+            requestAnimationFrame(() => {
+                const fill = row.querySelector('.dash-lang-bar-fill');
+                if (fill) fill.style.width = `${Math.min(pct, 100)}%`;
+            });
+        });
+    };
 
     // ═════════════════════════════════════════════
     //  A-FRAME COMPONENTS

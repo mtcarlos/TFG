@@ -43,6 +43,10 @@
                 window.applyVisualSettings();
             }
 
+            if (typeof window.populateFileTypesDashboard === 'function') {
+                window.populateFileTypesDashboard(layout.buildings, layout.stats.totalLOC);
+            }
+
             console.log(`[CodeCity] City rendered: ${layout.stats.totalFiles} files, ${layout.stats.totalLOC} LOC`);
         },
 
@@ -122,7 +126,8 @@
             nameText.setAttribute('align', 'center');
             nameText.setAttribute('color', '#8b6914');
             nameText.setAttribute('width', '3.2');
-            nameText.setAttribute('font', 'https://cdn.aframe.io/fonts/Exo2Bold.fnt');
+            nameText.setAttribute('font', '/assets/fonts/custom-msdf.json');
+            nameText.setAttribute('negate', false);
             this.tooltip.appendChild(nameText);
 
             // Details text (LOC, extension, directory)
@@ -134,6 +139,8 @@
             detailText.setAttribute('color', '#5a6b5c');
             detailText.setAttribute('width', '2.8');
             detailText.setAttribute('wrap-count', '40');
+            detailText.setAttribute('font', '/assets/fonts/custom-msdf.json');
+            detailText.setAttribute('negate', false);
             this.tooltip.appendChild(detailText);
 
             scene.appendChild(this.tooltip);
@@ -219,22 +226,27 @@
             el.setAttribute('material', 'emissive', buildingData.color);
             el.setAttribute('material', 'emissiveIntensity', 0.3);
 
-            // Position tooltip above the building (accounting for code-city scale)
+            // Position tooltip above the building (local → world space)
             const pos = el.getAttribute('position');
             if (this.tooltip) {
                 const cityEl = document.getElementById('code-city');
                 let scaleX = 1, scaleY = 1, scaleZ = 1;
+                let offsetX = 0, offsetY = 0, offsetZ = 0;
                 if (cityEl) {
                     const scale = cityEl.getAttribute('scale') || { x: 1, y: 1, z: 1 };
                     scaleX = scale.x;
                     scaleY = scale.y;
                     scaleZ = scale.z;
+                    const cityPos = cityEl.getAttribute('position') || { x: 0, y: 0, z: 0 };
+                    offsetX = cityPos.x;
+                    offsetY = cityPos.y;
+                    offsetZ = cityPos.z;
                 }
 
                 this.tooltip.setAttribute('position', {
-                    x: pos.x * scaleX,
-                    y: (pos.y + buildingData.height / 2) * scaleY + 1.5,
-                    z: pos.z * scaleZ
+                    x: pos.x * scaleX + offsetX,
+                    y: (pos.y + buildingData.height / 2) * scaleY + offsetY + 1.5,
+                    z: pos.z * scaleZ + offsetZ
                 });
 
                 const nameEl = this.tooltip.querySelector('#city-tooltip-name');

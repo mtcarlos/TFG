@@ -92,7 +92,8 @@ AFRAME.registerComponent('oracle-panel', {
         title.setAttribute('position', `0 ${H / 2 - 0.09} 0.005`);
         title.setAttribute('align', 'center');
         title.setAttribute('color', '#e0e7ff');
-        title.setAttribute('font', 'https://cdn.aframe.io/fonts/Exo2Bold.fnt');
+        title.setAttribute('font', '/assets/fonts/custom-msdf.json');
+        title.setAttribute('negate', false);
         title.setAttribute('scale', '0.35 0.35 0.35');
         this.container.appendChild(title);
 
@@ -110,6 +111,8 @@ AFRAME.registerComponent('oracle-panel', {
         this.contextLabel.setAttribute('align', 'center');
         this.contextLabel.setAttribute('color', '#34d399');
         this.contextLabel.setAttribute('scale', '0.18 0.18 0.18');
+        this.contextLabel.setAttribute('font', '/assets/fonts/custom-msdf.json');
+        this.contextLabel.setAttribute('negate', false);
         this.container.appendChild(this.contextLabel);
 
         // ── Separator line ──
@@ -131,6 +134,8 @@ AFRAME.registerComponent('oracle-panel', {
         this.responseArea.setAttribute('wrap-count', 70);
         this.responseArea.setAttribute('baseline', 'top');
         this.responseArea.setAttribute('anchor', 'left');
+        this.responseArea.setAttribute('font', '/assets/fonts/custom-msdf.json');
+        this.responseArea.setAttribute('negate', false);
         this.container.appendChild(this.responseArea);
 
         // ── Separator line before buttons ──
@@ -191,6 +196,8 @@ AFRAME.registerComponent('oracle-panel', {
             text.setAttribute('color', textColor);
             text.setAttribute('scale', '0.16 0.16 0.16');
             text.setAttribute('position', '0 0 0.003');
+            text.setAttribute('font', '/assets/fonts/custom-msdf.json');
+            text.setAttribute('negate', false);
             btn.appendChild(text);
 
             // Hover effects

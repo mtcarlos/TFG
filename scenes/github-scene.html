@@ -194,6 +194,24 @@
             </div>
         </div>
 
+        <!-- File Types Legend -->
+        <div class="dash-section">
+            <div class="dash-section-header">
+                <span class="dash-icon">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"
+                        stroke-linejoin="round">
+                        <path d="M2,5 L8,2 L14,5 L14,11 L8,14 L2,11 Z" />
+                        <line x1="8" y1="8" x2="8" y2="14" />
+                        <polyline points="2,5 8,8 14,5" />
+                    </svg>
+                </span>
+                <span class="dash-title">File Types (Code City)</span>
+            </div>
+            <div id="dash-file-types" class="dash-lang-list">
+                <div class="dash-placeholder">Waiting for Code City…</div>
+            </div>
+        </div>
+
         <!-- Key Metrics -->
         <div class="dash-section">
             <div class="dash-section-header">
@@ -399,7 +417,7 @@
 
             <!-- Floating Labels -->
             <a-text value="Repository Languages" position="0 1.6 8.8" rotation="-15 0 0" align="center" color="#2d3a2e"
-                width="8" font="https://cdn.aframe.io/fonts/Exo2Bold.fnt" opacity="0.9"></a-text>
+                width="8" font="/assets/fonts/custom-msdf.json" negate="false" opacity="0.9"></a-text>
             <a-text value="Distribution by Percentage" position="0 1.2 8.8" rotation="-15 0 0" align="center"
                 color="#5a6b5c" width="6" opacity="0.8"></a-text>
 
@@ -426,7 +444,7 @@
                 <a-text value="Total Languages" position="0 0.16 0.01" align="center" color="#5a6b5c"
                     width="2.8"></a-text>
                 <a-text id="metric-langs-value" value="—" position="0 -0.12 0.01" align="center" color="#8b6914"
-                    width="4" font="https://cdn.aframe.io/fonts/Exo2Bold.fnt"></a-text>
+                    width="4" font="/assets/fonts/custom-msdf.json" negate="false"></a-text>
             </a-entity>
 
             <!-- 3D Info Panel Toggle -->
@@ -441,7 +459,7 @@
                     material="color: #d4a853; opacity: 0.3; transparent: true; side: double"
                     animation="property: material.opacity; from: 0.2; to: 0.5; dir: alternate; dur: 2000; easing: easeInOutSine; loop: true"></a-ring>
                 <a-text value="i" position="0 0.02 0.04" rotation="0 0 0" align="center" color="#8b6914" width="2.5"
-                    font="https://cdn.aframe.io/fonts/Exo2Bold.fnt" side="double"></a-text>
+                    font="/assets/fonts/custom-msdf.json" negate="false" side="double"></a-text>
             </a-entity>
 
             <!-- 3D Info Panel (hidden by default) -->
@@ -453,7 +471,7 @@
                 <a-plane width="0.04" height="1.8" position="-2.1 0 0.003"
                     material="color: #d4a853; opacity: 0.6; transparent: true; side: double"></a-plane>
                 <a-text value="Languages Chart" position="0 0.7 0.01" align="center" color="#8b6914" width="4"
-                    font="https://cdn.aframe.io/fonts/Exo2Bold.fnt"></a-text>
+                    font="/assets/fonts/custom-msdf.json" negate="false"></a-text>
                 <a-text
                     value="Shows the distribution of programming\nlanguages in this repository by bytes\nof source code. Each bar represents a\nlanguage; height is proportional to\nthe amount of code written in it."
                     position="0 0 0.01" align="center" color="#5a6b5c" width="3.6" baseline="center"
@@ -477,7 +495,7 @@
 
             <!-- Floating Labels -->
             <a-text value="Top Contributors" position="0 1.6 7.8" rotation="-15 0 0" align="center" color="#2d3a2e"
-                width="8" font="https://cdn.aframe.io/fonts/Exo2Bold.fnt" opacity="0.9"></a-text>
+                width="8" font="/assets/fonts/custom-msdf.json" negate="false" opacity="0.9"></a-text>
             <a-text value="Commit Distribution" position="0 1.2 7.8" rotation="-15 0 0" align="center" color="#5a6b5c"
                 width="6" opacity="0.8"></a-text>
 
@@ -503,7 +521,7 @@
                     material="color: #d4a853; opacity: 0.15; transparent: true"></a-plane>
                 <a-text value="Contributors" position="0 0.16 0.01" align="center" color="#5a6b5c" width="2.8"></a-text>
                 <a-text id="metric-contribs-value" value="—" position="0 -0.12 0.01" align="center" color="#8b6914"
-                    width="4" font="https://cdn.aframe.io/fonts/Exo2Bold.fnt"></a-text>
+                    width="4" font="/assets/fonts/custom-msdf.json" negate="false"></a-text>
             </a-entity>
 
             <!-- 3D Info Panel Toggle -->
@@ -518,7 +536,7 @@
                     material="color: #d4a853; opacity: 0.3; transparent: true; side: double"
                     animation="property: material.opacity; from: 0.2; to: 0.5; dir: alternate; dur: 2000; easing: easeInOutSine; loop: true"></a-ring>
                 <a-text value="i" position="0 0.02 0.04" rotation="0 0 0" align="center" color="#8b6914" width="2.5"
-                    font="https://cdn.aframe.io/fonts/Exo2Bold.fnt" side="double"></a-text>
+                    font="/assets/fonts/custom-msdf.json" negate="false" side="double"></a-text>
             </a-entity>
 
             <!-- 3D Info Panel (hidden by default) -->
@@ -530,7 +548,7 @@
                 <a-plane width="0.04" height="1.8" position="-2.1 0 0.003"
                     material="color: #d4a853; opacity: 0.6; transparent: true; side: double"></a-plane>
                 <a-text value="Contributors Chart" position="0 0.7 0.01" align="center" color="#8b6914" width="4"
-                    font="https://cdn.aframe.io/fonts/Exo2Bold.fnt"></a-text>
+                    font="/assets/fonts/custom-msdf.json" negate="false"></a-text>
                 <a-text
                     value="Displays the top contributors ranked\nby number of commits. The pie chart\nshows each contributor's share of\ntotal commits. Point at slices in\nVR for individual statistics."
                     position="0 0 0.01" align="center" color="#5a6b5c" width="3.6" baseline="center"
@@ -554,7 +572,7 @@
 
             <!-- Floating Labels -->
             <a-text value="Repository Metrics" position="0 1.6 7.8" rotation="-15 0 0" align="center" color="#2d3a2e"
-                width="8" font="https://cdn.aframe.io/fonts/Exo2Bold.fnt" opacity="0.9"></a-text>
+                width="8" font="/assets/fonts/custom-msdf.json" negate="false" opacity="0.9"></a-text>
             <a-text value="Overview Stats" position="0 1.2 7.8" rotation="-15 0 0" align="center" color="#5a6b5c"
                 width="6" opacity="0.8"></a-text>
 
@@ -580,7 +598,7 @@
                     material="color: #d4a853; opacity: 0.15; transparent: true"></a-plane>
                 <a-text value="Total Stars" position="0 0.16 0.01" align="center" color="#5a6b5c" width="2.8"></a-text>
                 <a-text id="metric-stars-value" value="—" position="0 -0.12 0.01" align="center" color="#8b6914"
-                    width="4" font="https://cdn.aframe.io/fonts/Exo2Bold.fnt"></a-text>
+                    width="4" font="/assets/fonts/custom-msdf.json" negate="false"></a-text>
             </a-entity>
 
             <!-- 3D Info Panel Toggle -->
@@ -595,7 +613,7 @@
                     material="color: #d4a853; opacity: 0.3; transparent: true; side: double"
                     animation="property: material.opacity; from: 0.2; to: 0.5; dir: alternate; dur: 2000; easing: easeInOutSine; loop: true"></a-ring>
                 <a-text value="i" position="0 0.02 0.04" rotation="0 0 0" align="center" color="#8b6914" width="2.5"
-                    font="https://cdn.aframe.io/fonts/Exo2Bold.fnt" side="double"></a-text>
+                    font="/assets/fonts/custom-msdf.json" negate="false" side="double"></a-text>
             </a-entity>
 
             <!-- 3D Info Panel (hidden by default) -->
@@ -607,7 +625,7 @@
                 <a-plane width="0.04" height="1.8" position="-2.1 0 0.003"
                     material="color: #d4a853; opacity: 0.6; transparent: true; side: double"></a-plane>
                 <a-text value="Metrics Chart" position="0 0.7 0.01" align="center" color="#8b6914" width="4"
-                    font="https://cdn.aframe.io/fonts/Exo2Bold.fnt"></a-text>
+                    font="/assets/fonts/custom-msdf.json" negate="false"></a-text>
                 <a-text
                     value="Key health indicators: stars (community\ninterest), forks (derivative projects),\nopen issues (pending work), contributors,\nrepository size, and language count.\nBars allow quick visual comparison."
                     position="0 0 0.01" align="center" color="#5a6b5c" width="3.6" baseline="center"
@@ -620,9 +638,9 @@
         <!-- ==================== 3D WELCOME & REPO TITLE ==================== -->
         <a-entity id="scene-title" position="0 6 -10">
             <a-text value="GitHub Explorer" position="0 0.9 0" align="center" color="#4a8b3f" width="14"
-                font="https://cdn.aframe.io/fonts/Exo2Bold.fnt" opacity="0.9"></a-text>
+                font="/assets/fonts/custom-msdf.json" negate="false" opacity="0.9"></a-text>
             <a-text id="scene-repo-name" value="" position="0 0.1 0" align="center" color="#2d3a2e" width="10"
-                font="https://cdn.aframe.io/fonts/Exo2Bold.fnt" opacity="0.9"></a-text>
+                font="/assets/fonts/custom-msdf.json" negate="false" opacity="0.9"></a-text>
             <a-text id="scene-clock-time" value="--:--" position="0 -0.5 0" align="center" color="#d4a853" width="6"
                 opacity="0.7"></a-text>
         </a-entity>
@@ -674,7 +692,7 @@
             <a-plane position="0 2.2 -0.002" width="3.04" height="0.84"
                 material="color: #8B6914; opacity: 0.3; transparent: true; side: double"></a-plane>
             <a-text value="Pueblo de Código" position="0 2.35 0.01" align="center" color="#4a3510" width="3.5"
-                font="https://cdn.aframe.io/fonts/Exo2Bold.fnt" side="double"></a-text>
+                font="/assets/fonts/custom-msdf.json" negate="false" side="double"></a-text>
             <a-text value="Explora los ficheros del repositorio" position="0 2.05 0.01" align="center" color="#7d6b4f"
                 width="2.8" side="double"></a-text>
         </a-entity>
