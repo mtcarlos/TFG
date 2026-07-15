@@ -160,12 +160,48 @@
                     </div>
                 </div>
             </div>
+            <!-- Slide 4: GitHub Explorer -->
+            <div class="hud-slide" data-theme="emerald">
+                <div class="hud-content">
+                    <h2 class="hud-title"><span class="hud-accent-emerald">GitHub</span> Explorer</h2>
+
+                    <div class="hud-split">
+                        <div class="hud-text-block">
+                            <p>Visualize repositories as interactive cities. Search files instantly and ask the AI Oracle for deep codebase insights.</p>
+                        </div>
+                        <div class="hud-wireframe-display active-wireframe">
+                            <svg class="blueprint-svg city-blueprint" viewBox="0 0 200 150">
+                                <!-- Base Grid -->
+                                <path class="draw-base" d="M 100 120 L 180 80 L 100 40 L 20 80 Z" stroke="var(--text-3)" fill="none" stroke-width="1.5"/>
+                                <!-- Building 1 -->
+                                <path class="draw-bar hud-emerald-glow" d="M 60 70 L 60 30 L 80 20 L 80 60 Z" stroke="currentColor" fill="none" stroke-width="1.5"/>
+                                <path class="draw-bar hud-emerald-glow" d="M 60 30 L 80 20 L 100 30 L 80 40 Z" stroke="currentColor" fill="none" stroke-width="1.5"/>
+                                <path class="draw-bar hud-emerald-glow" d="M 80 60 L 80 40 L 100 30 L 100 50 Z" stroke="currentColor" fill="none" stroke-width="1.5"/>
+                                <!-- Building 2 -->
+                                <path class="draw-bar hud-emerald-glow" d="M 100 90 L 100 50 L 120 40 L 120 80 Z" stroke="currentColor" fill="none" stroke-width="1.5" style="animation-delay: 0.2s"/>
+                                <path class="draw-bar hud-emerald-glow" d="M 100 50 L 120 40 L 140 50 L 120 60 Z" stroke="currentColor" fill="none" stroke-width="1.5" style="animation-delay: 0.2s"/>
+                                <path class="draw-bar hud-emerald-glow" d="M 120 80 L 120 60 L 140 50 L 140 70 Z" stroke="currentColor" fill="none" stroke-width="1.5" style="animation-delay: 0.2s"/>
+                                <!-- Fly-to Path -->
+                                <path class="draw-trend" d="M 30 20 Q 70 0 110 35" stroke="currentColor" fill="none" stroke-width="2" stroke-dasharray="4 4" style="animation-delay: 0.5s"/>
+                                <circle class="draw-eye" cx="110" cy="35" r="3" fill="var(--text-1)" style="animation-delay: 0.8s"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="hud-legend">
+                        <div class="legend-item"><span class="legend-dot emerald-glow"></span> <strong>F:</strong> Search & Fly</div>
+                        <div class="legend-item"><span class="legend-dot emerald-glow"></span> <strong>O:</strong> AI Oracle</div>
+                        <div class="legend-item"><span class="legend-dot emerald-glow"></span> <strong>Click:</strong> Inspect File</div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="hud-dots" id="hudDots">
             <button class="h-dot active" aria-label="Slide 1"></button>
             <button class="h-dot" aria-label="Slide 2"></button>
             <button class="h-dot" aria-label="Slide 3"></button>
+            <button class="h-dot" aria-label="Slide 4"></button>
         </div>
     </div>
 

@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GitHub Explorer — Room Lobby</title>
-    <meta name="description" content="Create or join a collaborative room to analyze GitHub repositories in immersive 3D.">
+    <meta name="description"
+        content="Create or join a collaborative room to analyze GitHub repositories in immersive 3D.">
     <link rel="icon" type="image/png" href="assets/images/MiLogoVR.png">
     <link rel="stylesheet" href="css/lobby.css">
 </head>
@@ -17,7 +18,8 @@
     <!-- ── Fixed Nav ── -->
     <nav class="lobby-nav">
         <a href="index.html" class="back-link" id="backLink">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
                 <line x1="19" y1="12" x2="5" y2="12" />
                 <polyline points="12 19 5 12 12 5" />
             </svg>
@@ -32,7 +34,8 @@
     <div class="step step--active" id="step1">
         <p class="step1-eyebrow">GitHub Explorer</p>
         <h1 class="step1-title">Analyze <em>together.</em></h1>
-        <p class="step1-sub">Create a new collaborative session or join an existing room<br>to explore repository metrics in immersive 3D.</p>
+        <p class="step1-sub">Create a new collaborative session or join an existing room<br>to explore repository
+            metrics in immersive 3D.</p>
 
         <div class="cmd-options">
             <button class="cmd-option" id="chooseCreate">
@@ -55,8 +58,10 @@
     <div class="step step--hidden" id="step2create">
         <div class="step2-content">
             <button class="step2-back" id="backFromCreate">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" />
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12" />
+                    <polyline points="12 19 5 12 12 5" />
                 </svg>
                 Back
             </button>
@@ -87,7 +92,8 @@
                 </div>
                 <div class="tc-body">
                     <span class="tc-prompt">repo ~$</span>
-                    <input type="text" class="tc-input" id="repoInput" placeholder="owner/repo or GitHub URL" autocomplete="off" spellcheck="false">
+                    <input type="text" class="tc-input" id="repoInput" placeholder="owner/repo or GitHub URL"
+                        autocomplete="off" spellcheck="false">
                     <button class="tc-action" id="setRepoBtn">run</button>
                 </div>
             </div>
@@ -96,8 +102,10 @@
 
             <div class="repo-badge" id="repoDisplay">
                 <div class="rb-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path
+                            d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
                     </svg>
                 </div>
                 <div class="rb-text">
@@ -114,8 +122,10 @@
     <div class="step step--hidden" id="step2join">
         <div class="step2-content">
             <button class="step2-back" id="backFromJoin">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" />
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12" />
+                    <polyline points="12 19 5 12 12 5" />
                 </svg>
                 Back
             </button>
@@ -136,7 +146,8 @@
                 </div>
                 <div class="tc-body">
                     <span class="tc-prompt">join ~$</span>
-                    <input type="text" class="tc-input" id="joinRoomInput" placeholder="room code" autocomplete="off" spellcheck="false" maxlength="12">
+                    <input type="text" class="tc-input" id="joinRoomInput" placeholder="room code" autocomplete="off"
+                        spellcheck="false" maxlength="12">
                     <button class="tc-action" id="joinRoomBtn">connect</button>
                 </div>
             </div>
@@ -150,8 +161,10 @@
 
             <div class="repo-badge" id="joinRepoDisplay">
                 <div class="rb-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path
+                            d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
                     </svg>
                 </div>
                 <div class="rb-text">
@@ -184,18 +197,116 @@
                 </div>
                 <h3 class="launch-name" id="portalRepo">—</h3>
                 <p class="launch-desc">Explore repository metrics collaboratively in an immersive 3D environment.</p>
-                <button class="launch-enter-btn" id="enterSceneBtn">
-                    <span>Enter World</span>
-                    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="4" y1="10" x2="16" y2="10" />
-                        <polyline points="11 5 16 10 11 15" />
-                    </svg>
-                </button>
+                <div class="launch-actions">
+                    <button class="launch-tutorial-btn" id="openTutorialBtn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+
+                    </button>
+                    <button class="launch-enter-btn" id="enterSceneBtn">
+                        <span>Enter World</span>
+                        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="4" y1="10" x2="16" y2="10" />
+                            <polyline points="11 5 16 10 11 15" />
+                        </svg>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
     <footer class="lobby-footer">A-Frame · Networked-Aframe · GitHub API · BabiaXR</footer>
+
+    <!-- ═══════════════════════════════
+         TUTORIAL OVERLAY
+    ═══════════════════════════════ -->
+    <div class="art-overlay" id="artOverlay" role="dialog" aria-modal="true">
+        <button class="art-close" id="artClose" aria-label="Cerrar Galería">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+            <span>Return</span>
+        </button>
+
+        <!-- Right side visual canvas -->
+        <div class="art-canvas" id="artCanvas">
+            <!-- Dynamic CSS Sculptures injected here via CSS opacity -->
+            <div class="art-sculpture" id="sculpture-city">
+                <div class="sculpture-prism p1"></div>
+                <div class="sculpture-prism p2"></div>
+                <div class="sculpture-prism p3"></div>
+            </div>
+
+            <div class="art-sculpture" id="sculpture-search">
+                <div class="sculpture-ring r1"></div>
+                <div class="sculpture-ring r2"></div>
+                <div class="sculpture-core"></div>
+            </div>
+
+            <div class="art-sculpture" id="sculpture-oracle">
+                <div class="sculpture-orb"></div>
+                <div class="sculpture-aura"></div>
+            </div>
+
+            <div class="art-sculpture" id="sculpture-data">
+                <div class="sculpture-plane pl1"></div>
+                <div class="sculpture-plane pl2"></div>
+                <div class="sculpture-plane pl3"></div>
+            </div>
+        </div>
+
+        <!-- Left side scrolling text -->
+        <div class="art-scroll-container" id="artScroll">
+
+            <div class="art-section" data-sculpture="sculpture-city">
+                <p class="art-eyebrow">I. The Architecture</p>
+                <h2 class="art-title">Code<br>City</h2>
+                <div class="art-desc">
+                    <p>The repository blossoms into a procedural cityscape.</p>
+                    <p>Height reflects complexity. Color denotes syntax. Directories form sprawling neighborhoods.</p>
+                </div>
+            </div>
+
+            <div class="art-section" data-sculpture="sculpture-search">
+                <p class="art-eyebrow">II. The Navigation</p>
+                <h2 class="art-title">Focus<br>& Flight</h2>
+                <div class="art-desc">
+                    <p>Summon the search interface with a single keystroke (F).</p>
+                    <p>Find any structure instantly, and let the system gracefully fly you to its exact location in the
+                        city.</p>
+                </div>
+            </div>
+
+            <div class="art-section" data-sculpture="sculpture-oracle">
+                <p class="art-eyebrow">III. The Intelligence</p>
+                <h2 class="art-title">AI<br>Oracle</h2>
+                <div class="art-desc">
+                    <p>An omnipresent intelligence slumbers within the simulation.</p>
+                    <p>Invoke it (O) to decipher the global architecture, or select a specific building to unravel its
+                        internal logic.</p>
+                </div>
+            </div>
+
+            <div class="art-section" data-sculpture="sculpture-data">
+                <p class="art-eyebrow">IV. The Metrics</p>
+                <h2 class="art-title">Data<br>Museum</h2>
+                <div class="art-desc">
+                    <p>Beyond the city limits lie the walls of perspective.</p>
+                    <p>Immersive 3D charts project the rhythm of development—commits, contributors, and the flow of
+                        time.</p>
+                </div>
+            </div>
+
+            <!-- Empty spacer so the last section can be scrolled to the top -->
+            <div class="art-spacer"></div>
+        </div>
+    </div>
 
     <!-- ═══════════════════════════════
          SCRIPTS
@@ -248,6 +359,55 @@
         let currentRoomId = null, hostToken = null, currentRepo = null;
 
         document.getElementById('displayName').textContent = username;
+
+        // ─── Artistic Gallery Logic ──────────────────────────────
+        const artOverlay = document.getElementById('artOverlay');
+        const artClose = document.getElementById('artClose');
+        const openTutorialBtn = document.getElementById('openTutorialBtn');
+        const artSections = document.querySelectorAll('.art-section');
+        const artSculptures = document.querySelectorAll('.art-sculpture');
+        const artScroll = document.getElementById('artScroll');
+
+        if (openTutorialBtn) {
+            openTutorialBtn.addEventListener('click', () => {
+                artOverlay.classList.add('art--open');
+                // Scroll to top
+                if (artScroll) artScroll.scrollTop = 0;
+            });
+        }
+        if (artClose) {
+            artClose.addEventListener('click', () => {
+                artOverlay.classList.remove('art--open');
+            });
+        }
+
+        // Observer for scroll-driven animations
+        const artObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const sculptureId = entry.target.getAttribute('data-sculpture');
+
+                    // Add active to text section
+                    artSections.forEach(sec => sec.classList.remove('active'));
+                    entry.target.classList.add('active');
+
+                    // Show corresponding sculpture
+                    artSculptures.forEach(sculpture => {
+                        if (sculpture.id === sculptureId) {
+                            sculpture.classList.add('active');
+                        } else {
+                            sculpture.classList.remove('active');
+                        }
+                    });
+                }
+            });
+        }, {
+            root: artScroll,
+            rootMargin: '-30% 0px -50% 0px', // Trigger when section hits middle of screen
+            threshold: 0
+        });
+
+        artSections.forEach(sec => artObserver.observe(sec));
 
         // ─── Step Transitions ────────────────────────────────────
         function goToStep(fromId, toId) {

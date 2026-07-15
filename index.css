@@ -20,6 +20,7 @@
     --amber: #B45309;
     --amber-soft: rgba(180, 83, 9, 0.08);
     --amber-border: rgba(180, 83, 9, 0.16);
+    --emerald: #059669;
     --border: rgba(0, 0, 0, 0.07);
     --border-hover: rgba(0, 0, 0, 0.12);
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
@@ -1113,6 +1114,10 @@ body.glitch-mode .custom-cursor {
     color: var(--accent);
 }
 
+.hud-accent-emerald {
+    color: var(--emerald);
+}
+
 /* Layout Splits */
 .hud-split {
     display: grid;
@@ -1233,6 +1238,10 @@ body.glitch-mode .custom-cursor {
     animation: pulseStrokeIndigo 3s infinite;
 }
 
+.hud-slide.active .hud-emerald-glow {
+    animation: pulseStrokeEmerald 3s infinite;
+}
+
 @keyframes drawStroke {
     to {
         stroke-dashoffset: 0;
@@ -1282,6 +1291,18 @@ body.glitch-mode .custom-cursor {
 
     50% {
         fill: rgba(67, 56, 202, 0.2);
+    }
+}
+
+@keyframes pulseStrokeEmerald {
+
+    0%,
+    100% {
+        fill: transparent;
+    }
+
+    50% {
+        fill: rgba(5, 150, 105, 0.2);
     }
 }
 
@@ -1376,6 +1397,11 @@ body.glitch-mode .custom-cursor {
 .legend-dot.indigo-glow {
     background: var(--accent);
     box-shadow: 0 0 10px var(--accent);
+}
+
+.legend-dot.emerald-glow {
+    background: var(--emerald);
+    box-shadow: 0 0 10px var(--emerald);
 }
 
 /* Tech Pills inside HUD */
