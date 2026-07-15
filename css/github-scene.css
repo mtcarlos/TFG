@@ -797,6 +797,359 @@ body {
 }
 
 /* =============================================
+   FILE SEARCH PANEL
+   ============================================= */
+.file-search-toggle {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 55;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: var(--gh-glass);
+    backdrop-filter: blur(40px) saturate(1.8);
+    -webkit-backdrop-filter: blur(40px) saturate(1.8);
+    border: 1px solid var(--gh-border);
+    border-radius: var(--gh-radius-pill);
+    color: var(--gh-text-secondary);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    box-shadow: var(--gh-shadow);
+    transition: all var(--gh-transition);
+    outline: none;
+}
+
+.file-search-toggle:hover {
+    color: var(--gh-text);
+    border-color: var(--gh-border-accent);
+    box-shadow: var(--gh-shadow), 0 0 20px var(--gh-accent-glow);
+    transform: translateX(-50%) translateY(-2px);
+}
+
+.file-search-toggle:active {
+    transform: translateX(-50%) translateY(0) scale(0.97);
+}
+
+.file-search-toggle.search-active {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-50%) translateY(10px);
+}
+
+.file-search-panel {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 480px;
+    max-width: calc(100vw - 48px);
+    z-index: 60;
+    background: var(--gh-glass-heavy);
+    backdrop-filter: blur(40px) saturate(1.8);
+    -webkit-backdrop-filter: blur(40px) saturate(1.8);
+    border: 1px solid var(--gh-border);
+    border-radius: 18px;
+    box-shadow: var(--gh-shadow-lg), 0 0 40px rgba(212, 168, 83, 0.08);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.file-search-panel.hidden {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+    pointer-events: none;
+}
+
+.file-search-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--gh-border);
+}
+
+.file-search-icon {
+    color: var(--gh-accent-bright);
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+#file-search-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    outline: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--gh-text);
+    caret-color: var(--gh-accent-bright);
+}
+
+#file-search-input::placeholder {
+    color: var(--gh-text-tertiary);
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+}
+
+.file-search-close {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 1px solid var(--gh-border);
+    background: var(--gh-surface);
+    color: var(--gh-text-tertiary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: all var(--gh-transition);
+    outline: none;
+    flex-shrink: 0;
+}
+
+.file-search-close:hover {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+    transform: scale(1.1);
+}
+
+.file-search-results {
+    max-height: 240px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.file-search-results::-webkit-scrollbar {
+    width: 3px;
+}
+
+.file-search-results::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.file-search-results::-webkit-scrollbar-thumb {
+    background: var(--gh-border-accent);
+    border-radius: 10px;
+}
+
+.file-search-results:empty {
+    display: none;
+}
+
+.search-result-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    border-left: 3px solid transparent;
+}
+
+.search-result-item:hover,
+.search-result-item.active {
+    background: var(--gh-surface-hover);
+    border-left-color: var(--gh-accent-bright);
+}
+
+.search-result-color {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    flex-shrink: 0;
+    box-shadow: 0 0 4px currentColor;
+}
+
+.search-result-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.search-result-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--gh-text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.search-result-name mark {
+    background: rgba(212, 168, 83, 0.3);
+    color: var(--gh-accent-bright);
+    border-radius: 2px;
+    padding: 0 1px;
+}
+
+.search-result-path {
+    font-size: 0.65rem;
+    color: var(--gh-text-tertiary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.search-result-loc {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: var(--gh-text-tertiary);
+    flex-shrink: 0;
+    min-width: 50px;
+    text-align: right;
+}
+
+.search-no-results {
+    padding: 16px;
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--gh-text-tertiary);
+}
+
+.file-search-hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 8px 16px;
+    border-top: 1px solid var(--gh-border);
+    font-size: 0.62rem;
+    color: var(--gh-text-tertiary);
+    font-weight: 400;
+}
+
+.file-search-hint-key {
+    display: inline-flex;
+    align-items: center;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: var(--gh-surface);
+    border: 1px solid var(--gh-border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    font-weight: 600;
+    color: var(--gh-text-secondary);
+    margin-right: 3px;
+}
+
+/* =============================================
+   ORACLE FREE-TEXT INPUT OVERLAY
+   ============================================= */
+.oracle-input-overlay {
+    position: fixed;
+    bottom: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 420px;
+    max-width: calc(100vw - 48px);
+    z-index: 58;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.oracle-input-overlay.hidden {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+    pointer-events: none;
+}
+
+.oracle-input-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    background: rgba(10, 10, 15, 0.88);
+    backdrop-filter: blur(40px) saturate(1.5);
+    -webkit-backdrop-filter: blur(40px) saturate(1.5);
+    border: 1px solid rgba(99, 102, 241, 0.25);
+    border-radius: var(--gh-radius-pill);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 20px rgba(99, 102, 241, 0.08);
+}
+
+.oracle-input-icon {
+    color: #818cf8;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    animation: oracle-icon-glow 3s ease-in-out infinite;
+}
+
+@keyframes oracle-icon-glow {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+
+#oracle-free-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    outline: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: #e0e7ff;
+    caret-color: #818cf8;
+}
+
+#oracle-free-input::placeholder {
+    color: #6b7280;
+    font-weight: 400;
+}
+
+.oracle-send-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    background: rgba(99, 102, 241, 0.15);
+    color: #a5b4fc;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+.oracle-send-btn:hover {
+    background: rgba(99, 102, 241, 0.3);
+    border-color: rgba(99, 102, 241, 0.5);
+    color: #e0e7ff;
+    transform: scale(1.1);
+    box-shadow: 0 0 12px rgba(99, 102, 241, 0.3);
+}
+
+.oracle-send-btn:active {
+    transform: scale(0.95);
+}
+
+.oracle-input-hint {
+    text-align: center;
+    margin-top: 6px;
+    font-size: 0.6rem;
+    color: rgba(148, 163, 184, 0.5);
+    font-weight: 400;
+}
+
+#oracle-input-context {
+    color: #34d399;
+    font-weight: 600;
+}
+
+/* =============================================
    RESPONSIVE
    ============================================= */
 @media (max-width: 640px) {
@@ -840,5 +1193,13 @@ body {
         top: 16px;
         right: 16px;
         padding: 10px 14px;
+    }
+
+    .file-search-panel {
+        width: calc(100vw - 32px);
+    }
+
+    .oracle-input-overlay {
+        width: calc(100vw - 32px);
     }
 }

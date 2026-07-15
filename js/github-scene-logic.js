@@ -157,7 +157,138 @@
         dashboardClose.addEventListener('click', closeDashboard);
     }
 
+    // ─────────────────────────────────────────────
+    // FILE SEARCH PANEL — Search & fly-to buildings
+    // ─────────────────────────────────────────────
+    const searchToggle = document.getElementById('file-search-toggle');
+    const searchPanel = document.getElementById('file-search-panel');
+    const searchInput = document.getElementById('file-search-input');
+    const searchResults = document.getElementById('file-search-results');
+    const searchClose = document.getElementById('file-search-close');
+    let searchActiveIndex = -1;
+    let searchCurrentResults = [];
 
+    function openSearch() {
+        if (!searchPanel || !searchInput) return;
+        searchPanel.classList.remove('hidden');
+        if (searchToggle) searchToggle.classList.add('search-active');
+        searchInput.value = '';
+        searchResults.innerHTML = '';
+        searchActiveIndex = -1;
+        searchCurrentResults = [];
+        // Small delay so the panel animates in before focus
+        setTimeout(() => searchInput.focus(), 80);
+    }
+
+    function closeSearch() {
+        if (!searchPanel) return;
+        searchPanel.classList.add('hidden');
+        if (searchToggle) searchToggle.classList.remove('search-active');
+        searchInput.blur();
+    }
+
+    function highlightMatch(fileName, query) {
+        if (!query) return fileName;
+        const idx = fileName.toLowerCase().indexOf(query.toLowerCase());
+        if (idx === -1) return fileName;
+        const before = fileName.substring(0, idx);
+        const match = fileName.substring(idx, idx + query.length);
+        const after = fileName.substring(idx + query.length);
+        return `${before}<mark>${match}</mark>${after}`;
+    }
+
+    function renderSearchResults(query) {
+        if (!searchResults || !window.CodeCity) return;
+        searchResults.innerHTML = '';
+        searchActiveIndex = -1;
+
+        if (!query || !query.trim()) {
+            searchCurrentResults = [];
+            return;
+        }
+
+        const results = window.CodeCity.searchBuildings(query);
+        searchCurrentResults = results;
+
+        if (results.length === 0) {
+            searchResults.innerHTML = '<div class="search-no-results">No se encontraron ficheros</div>';
+            return;
+        }
+
+        results.forEach((b, idx) => {
+            const item = document.createElement('div');
+            item.className = 'search-result-item';
+            item.dataset.index = idx;
+            item.innerHTML = `
+                <span class="search-result-color" style="background: ${b.color}; color: ${b.color}"></span>
+                <div class="search-result-info">
+                    <div class="search-result-name">${highlightMatch(b.fileName, query)}</div>
+                    <div class="search-result-path">${b.directory || 'root'}</div>
+                </div>
+                <span class="search-result-loc">${b.loc} LOC</span>
+            `;
+            item.addEventListener('click', () => {
+                window.CodeCity.flyToBuilding(b);
+                closeSearch();
+            });
+            searchResults.appendChild(item);
+        });
+    }
+
+    function setActiveResult(index) {
+        const items = searchResults.querySelectorAll('.search-result-item');
+        items.forEach(i => i.classList.remove('active'));
+        if (index >= 0 && index < items.length) {
+            searchActiveIndex = index;
+            items[index].classList.add('active');
+            items[index].scrollIntoView({ block: 'nearest' });
+        }
+    }
+
+    if (searchToggle) {
+        searchToggle.addEventListener('click', openSearch);
+    }
+    if (searchClose) {
+        searchClose.addEventListener('click', closeSearch);
+    }
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            renderSearchResults(e.target.value);
+        });
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeSearch();
+                e.preventDefault();
+            } else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                const max = searchCurrentResults.length - 1;
+                setActiveResult(Math.min(searchActiveIndex + 1, max));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActiveResult(Math.max(searchActiveIndex - 1, 0));
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                if (searchActiveIndex >= 0 && searchActiveIndex < searchCurrentResults.length) {
+                    window.CodeCity.flyToBuilding(searchCurrentResults[searchActiveIndex]);
+                    closeSearch();
+                } else if (searchCurrentResults.length > 0) {
+                    // If no active selection, fly to first result
+                    window.CodeCity.flyToBuilding(searchCurrentResults[0]);
+                    closeSearch();
+                }
+            }
+        });
+    }
+
+    // Keyboard shortcut: 'F' to open search (only when not typing in an input)
+    window.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        if (e.key === 'f' || e.key === 'F') {
+            if (searchPanel && searchPanel.classList.contains('hidden')) {
+                openSearch();
+            }
+        }
+    });
 
     // ─────────────────────────────────────────────
     // FORMAT HELPERS

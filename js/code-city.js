@@ -324,6 +324,170 @@
                 extension: this.selectedBuilding.getAttribute('data-extension'),
                 directory: this.selectedBuilding.getAttribute('data-directory')
             };
+        },
+
+        /**
+         * Get all buildings data for search functionality.
+         * @returns {Array} Array of building objects from the layout
+         */
+        getBuildings() {
+            return this.layout ? this.layout.buildings : [];
+        },
+
+        /**
+         * Search buildings by file name (case-insensitive partial match).
+         * @param {string} query
+         * @returns {Array} Matching building objects sorted by relevance
+         */
+        searchBuildings(query) {
+            if (!this.layout || !query) return [];
+            const q = query.toLowerCase().trim();
+            if (!q) return [];
+
+            return this.layout.buildings
+                .filter(b => {
+                    const name = b.fileName.toLowerCase();
+                    const path = (b.filePath || '').toLowerCase();
+                    return name.includes(q) || path.includes(q);
+                })
+                .sort((a, b) => {
+                    const aName = a.fileName.toLowerCase();
+                    const bName = b.fileName.toLowerCase();
+                    // Prioritize exact name start matches
+                    const aStarts = aName.startsWith(q) ? 0 : 1;
+                    const bStarts = bName.startsWith(q) ? 0 : 1;
+                    if (aStarts !== bStarts) return aStarts - bStarts;
+                    // Then by name length (shorter = more relevant)
+                    return aName.length - bName.length;
+                })
+                .slice(0, 20); // Limit results
+        },
+
+        /**
+         * Fly the camera to a specific building, with smooth animation.
+         * @param {object} building - Building object from the layout
+         */
+        flyToBuilding(building) {
+            if (!building) return;
+
+            const rig = document.getElementById('rig');
+            const cityEl = document.getElementById('code-city');
+            if (!rig || !cityEl) return;
+
+            // Get city container transform
+            const cityPos = cityEl.getAttribute('position') || { x: 0, y: 0, z: 0 };
+            const cityScale = cityEl.getAttribute('scale') || { x: 1, y: 1, z: 1 };
+
+            // Compute world position of the building
+            const worldX = building.x * cityScale.x + cityPos.x;
+            const worldZ = building.z * cityScale.z + cityPos.z;
+            const worldY = 0; // Ground level for the rig
+
+            // Position the rig 3 units in front of the building (toward negative Z)
+            const targetPos = {
+                x: worldX,
+                y: worldY,
+                z: worldZ + 4
+            };
+
+            // Animate the rig to the target position
+            rig.setAttribute('animation__flyto', {
+                property: 'position',
+                to: `${targetPos.x} ${targetPos.y} ${targetPos.z}`,
+                dur: 1200,
+                easing: 'easeInOutCubic'
+            });
+
+            // Highlight the target building
+            this._highlightBuilding(building);
+
+            console.log(`[CodeCity] Flying to: ${building.fileName} at (${worldX.toFixed(1)}, ${worldZ.toFixed(1)})`);
+        },
+
+        /**
+         * Highlight a building with a pulsing golden glow.
+         * @param {object} building - Building object from the layout
+         */
+        _highlightBuilding(building) {
+            const container = document.getElementById('code-city');
+            if (!container) return;
+
+            // Find the matching DOM element
+            const buildings = container.querySelectorAll('.code-building');
+            let targetEl = null;
+
+            buildings.forEach(el => {
+                if (el.getAttribute('data-filepath') === building.filePath) {
+                    targetEl = el;
+                }
+            });
+
+            if (!targetEl) return;
+
+            // Clear previous highlight
+            if (this._highlightedEl && this._highlightedEl !== targetEl) {
+                this._highlightedEl.setAttribute('material', 'emissive', '#000000');
+                this._highlightedEl.setAttribute('material', 'emissiveIntensity', 0);
+                if (this._highlightBeacon) {
+                    this._highlightBeacon.parentNode.removeChild(this._highlightBeacon);
+                    this._highlightBeacon = null;
+                }
+            }
+
+            this._highlightedEl = targetEl;
+
+            // Set golden emissive glow with pulsing animation
+            targetEl.setAttribute('material', 'emissive', '#d4a853');
+            targetEl.setAttribute('material', 'emissiveIntensity', 0.6);
+            targetEl.setAttribute('animation__glow', {
+                property: 'material.emissiveIntensity',
+                from: 0.3,
+                to: 0.8,
+                dur: 800,
+                dir: 'alternate',
+                loop: 6,
+                easing: 'easeInOutSine'
+            });
+
+            // Add a vertical beacon above the building
+            if (this._highlightBeacon) {
+                this._highlightBeacon.parentNode.removeChild(this._highlightBeacon);
+            }
+
+            const beacon = document.createElement('a-cylinder');
+            beacon.setAttribute('radius', '0.06');
+            beacon.setAttribute('height', '5');
+            beacon.setAttribute('position', `${building.x} ${building.y + building.height / 2 + 2.5} ${building.z}`);
+            beacon.setAttribute('material', 'color: #d4a853; emissive: #d4a853; emissiveIntensity: 0.8; opacity: 0.4; transparent: true');
+            beacon.setAttribute('animation__fade', {
+                property: 'material.opacity',
+                from: 0.5,
+                to: 0.1,
+                dur: 3000,
+                easing: 'easeOutCubic'
+            });
+            container.appendChild(beacon);
+            this._highlightBeacon = beacon;
+
+            // Clean up beacon after animation
+            setTimeout(() => {
+                if (this._highlightBeacon === beacon && beacon.parentNode) {
+                    beacon.parentNode.removeChild(beacon);
+                    this._highlightBeacon = null;
+                }
+            }, 3500);
+
+            // Also trigger the building-selected event for Oracle integration
+            this.selectedBuilding = targetEl;
+            document.dispatchEvent(new CustomEvent('building-selected', {
+                detail: {
+                    filePath: building.filePath,
+                    fileName: building.fileName,
+                    loc: building.loc,
+                    extension: building.extension,
+                    directory: building.directory
+                }
+            }));
         }
     };
 

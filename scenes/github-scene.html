@@ -236,6 +236,63 @@
     </a>
 
     <!-- ══════════════════════════════════════════
+         FILE SEARCH PANEL (Bottom center)
+         ══════════════════════════════════════════ -->
+    <div id="file-search-panel" class="file-search-panel hidden">
+        <div class="file-search-header">
+            <span class="file-search-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </span>
+            <input type="text" id="file-search-input" placeholder="Buscar fichero..." autocomplete="off" spellcheck="false">
+            <button id="file-search-close" class="file-search-close" title="Cerrar (Esc)">
+                <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round">
+                    <line x1="3" y1="3" x2="11" y2="11"></line>
+                    <line x1="11" y1="3" x2="3" y2="11"></line>
+                </svg>
+            </button>
+        </div>
+        <div id="file-search-results" class="file-search-results"></div>
+        <div class="file-search-hint">
+            <span class="file-search-hint-key">Enter</span> ir al fichero
+            <span class="file-search-hint-key">↑↓</span> navegar
+            <span class="file-search-hint-key">Esc</span> cerrar
+        </div>
+    </div>
+
+    <!-- File Search Toggle Button -->
+    <button id="file-search-toggle" class="file-search-toggle" title="Buscar fichero (F)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <span class="toggle-label">Search</span>
+    </button>
+
+    <!-- ══════════════════════════════════════════
+         ORACLE FREE-TEXT INPUT (Bottom center)
+         ══════════════════════════════════════════ -->
+    <div id="oracle-input-overlay" class="oracle-input-overlay hidden">
+        <div class="oracle-input-container">
+            <span class="oracle-input-icon">✦</span>
+            <input type="text" id="oracle-free-input" placeholder="Pregunta al Oráculo..." autocomplete="off" spellcheck="false">
+            <button id="oracle-send-btn" class="oracle-send-btn" title="Enviar pregunta">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+            </button>
+        </div>
+        <div class="oracle-input-hint">Contexto: <span id="oracle-input-context">Global</span></div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
          A-FRAME SCENE
          ══════════════════════════════════════════ -->
     <a-scene id="github-scene">

@@ -219,6 +219,11 @@ AFRAME.registerComponent('oracle-panel', {
                         this.contextLabel.setAttribute('color', '#34d399');
                         this.contextPillBg.setAttribute('material', 'color', '#1e1b4b');
                         this._renderButtons();
+                        // Reset HTML overlay context hint
+                        if (this._contextHint) {
+                            this._contextHint.textContent = 'Global';
+                            this._contextHint.style.color = '#34d399';
+                        }
                     } else {
                         this.askOracle(qText);
                     }
@@ -233,6 +238,40 @@ AFRAME.registerComponent('oracle-panel', {
     //  BIND EVENTS
     // ─────────────────────────────────────────────
     _bindEvents: function () {
+        // ── HTML overlay input references ──
+        this._overlayEl = document.getElementById('oracle-input-overlay');
+        this._freeInput = document.getElementById('oracle-free-input');
+        this._sendBtn = document.getElementById('oracle-send-btn');
+        this._contextHint = document.getElementById('oracle-input-context');
+
+        // ── Wire up free-text input ──
+        if (this._freeInput) {
+            this._freeInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const q = this._freeInput.value.trim();
+                    if (q && !this.isThinking) {
+                        this.askOracle(q);
+                        this._freeInput.value = '';
+                    }
+                }
+                // Prevent Escape from also toggling the oracle off
+                if (e.key === 'Escape') {
+                    this._freeInput.blur();
+                    e.stopPropagation();
+                }
+            });
+        }
+        if (this._sendBtn) {
+            this._sendBtn.addEventListener('click', () => {
+                const q = this._freeInput ? this._freeInput.value.trim() : '';
+                if (q && !this.isThinking) {
+                    this.askOracle(q);
+                    this._freeInput.value = '';
+                }
+            });
+        }
+
         // Listen for Code City building selection
         document.addEventListener('building-selected', (e) => {
             const data = e.detail;
@@ -249,11 +288,18 @@ AFRAME.registerComponent('oracle-panel', {
             this.contextPillBg.setAttribute('material', 'color', '#422006');
             this._renderButtons();
 
+            // Update HTML overlay context hint
+            if (this._contextHint) {
+                this._contextHint.textContent = displayName;
+                this._contextHint.style.color = '#fbbf24';
+            }
+
             if (!this.isVisible) this.toggleVisibility();
         });
 
-        // Toggle visibility with 'O' key on keyboard
+        // Toggle visibility with 'O' key on keyboard (skip if typing in an input)
         window.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
             if (e.key === 'o' || e.key === 'O') {
                 this.toggleVisibility();
             }
@@ -290,6 +336,15 @@ AFRAME.registerComponent('oracle-panel', {
         this.isVisible = !this.isVisible;
         this.el.setAttribute('visible', this.isVisible);
 
+        // Show/hide HTML overlay input
+        if (this._overlayEl) {
+            if (this.isVisible) {
+                this._overlayEl.classList.remove('hidden');
+            } else {
+                this._overlayEl.classList.add('hidden');
+            }
+        }
+
         if (this.isVisible) {
             const cameraEl = document.querySelector('#player');
             if (cameraEl && AFRAME && AFRAME.THREE) {
@@ -316,6 +371,20 @@ AFRAME.registerComponent('oracle-panel', {
                 dur: 250,
                 easing: 'easeOutCubic'
             });
+
+            // Update context hint on the HTML overlay
+            if (this._contextHint) {
+                if (this.context.type === 'file' && this.context.fileName) {
+                    const displayName = this.context.fileName.length > 30
+                        ? this.context.fileName.substring(0, 27) + '...'
+                        : this.context.fileName;
+                    this._contextHint.textContent = displayName;
+                    this._contextHint.style.color = '#fbbf24';
+                } else {
+                    this._contextHint.textContent = 'Global';
+                    this._contextHint.style.color = '#34d399';
+                }
+            }
         }
     },
 
