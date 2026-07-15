@@ -259,9 +259,28 @@ AFRAME.registerComponent('oracle-panel', {
             }
         });
 
-        // Toggle visibility with VR controllers (X or Y buttons)
-        this.el.sceneEl.addEventListener('xbuttondown', () => this.toggleVisibility());
-        this.el.sceneEl.addEventListener('ybuttondown', () => this.toggleVisibility());
+        // Toggle visibility with VR controllers (A, B, X, Y buttons)
+        const toggle = () => this.toggleVisibility();
+        
+        const bindControllers = () => {
+            const leftController = document.querySelector('#left-controller');
+            const rightController = document.querySelector('#right-controller');
+            
+            if (leftController) {
+                leftController.addEventListener('xbuttondown', toggle);
+                leftController.addEventListener('ybuttondown', toggle);
+            }
+            if (rightController) {
+                rightController.addEventListener('abuttondown', toggle);
+                rightController.addEventListener('bbuttondown', toggle);
+            }
+        };
+
+        if (this.el.sceneEl.hasLoaded) {
+            bindControllers();
+        } else {
+            this.el.sceneEl.addEventListener('loaded', bindControllers);
+        }
     },
 
     // ─────────────────────────────────────────────
