@@ -48,6 +48,48 @@
         <div class="loading-spinner"></div>
         <div class="loading-text">Fetching repository data…</div>
         <div class="loading-repo" id="loading-repo-name"></div>
+
+        <!-- ── Avatar Picker ── -->
+        <div id="avatar-picker" class="avatar-picker">
+            <div class="avatar-picker-title">Elige tu Avatar</div>
+            <div class="avatar-picker-options">
+                <!-- Sphere Option -->
+                <button class="avatar-option selected" data-avatar="sphere" id="avatar-opt-sphere">
+                    <div class="avatar-option-preview">
+                        <img src="../assets/images/avatares/avatar_esfera.png" alt="Avatar Esfera"
+                            class="avatar-option-img">
+                    </div>
+                    <div class="avatar-option-name">Esfera</div>
+                    <div class="avatar-option-desc">Avatar clásico</div>
+                    <div class="avatar-option-check">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="3.5 8 6.5 11 12.5 5"></polyline>
+                        </svg>
+                    </div>
+                </button>
+                <!-- Robot Option -->
+                <button class="avatar-option" data-avatar="robot" id="avatar-opt-robot">
+                    <div class="avatar-option-preview">
+                        <img src="../assets/images/avatares/avatar_robot.png" alt="Avatar Robot"
+                            class="avatar-option-img">
+                    </div>
+                    <div class="avatar-option-name">Robot</div>
+                    <div class="avatar-option-desc">Cabeza cúbica</div>
+                    <div class="avatar-option-check">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="3.5 8 6.5 11 12.5 5"></polyline>
+                        </svg>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Explicit Enter Button -->
+            <button id="avatar-enter-btn" class="avatar-enter-btn" disabled>
+                Cargando datos...
+            </button>
+        </div>
     </div>
 
     <!-- ══════════════════════════════════════════
@@ -102,9 +144,10 @@
         </svg>
         <span class="toggle-label">Stats</span>
     </button>
-    
+
     <button id="xray-toggle" class="dashboard-toggle xray-btn" title="Toggle X-Ray Heatmap">
-        <svg class="toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <svg class="toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M2 12C2 12 5 5 12 5C19 5 22 12 22 12C22 12 19 19 12 19C5 19 2 12 2 12Z"></path>
             <circle cx="12" cy="12" r="3"></circle>
         </svg>
@@ -145,7 +188,8 @@
                     <select id="time-machine-select" class="time-machine-select">
                         <option value="">Loading history...</option>
                     </select>
-                    <button id="time-machine-go" class="oracle-action-btn" style="width: 100%; margin-top: 5px;">Time Travel</button>
+                    <button id="time-machine-go" class="oracle-action-btn" style="width: 100%; margin-top: 5px;">Time
+                        Travel</button>
                 </div>
             </div>
         </div>
@@ -278,7 +322,8 @@
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
             </span>
-            <input type="text" id="file-search-input" placeholder="Buscar fichero..." autocomplete="off" spellcheck="false">
+            <input type="text" id="file-search-input" placeholder="Buscar fichero..." autocomplete="off"
+                spellcheck="false">
             <button id="file-search-close" class="file-search-close" title="Cerrar (Esc)">
                 <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"
                     stroke-linecap="round">
@@ -311,7 +356,8 @@
     <div id="oracle-input-overlay" class="oracle-input-overlay hidden">
         <div class="oracle-input-container">
             <span class="oracle-input-icon">✦</span>
-            <input type="text" id="oracle-free-input" placeholder="Pregunta al Oráculo..." autocomplete="off" spellcheck="false">
+            <input type="text" id="oracle-free-input" placeholder="Pregunta al Oráculo..." autocomplete="off"
+                spellcheck="false">
             <button id="oracle-send-btn" class="oracle-send-btn" title="Enviar pregunta">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                     stroke-linecap="round" stroke-linejoin="round">
@@ -329,22 +375,47 @@
     <a-scene id="github-scene">
 
         <a-assets>
-            <!-- Avatar template -->
+            <!-- Avatar template (supports sphere + robot head) -->
             <template id="avatar-template">
                 <a-entity class="avatar">
                     <a-entity class="player-cam" networked-audio-source>
                         <a-entity class="visual-model"
                             animation="property: position; dir: alternate; dur: 2000; easing: easeInOutSine; loop: true; to: 0 0.1 0">
-                            <a-sphere class="head" scale="0.3 0.3 0.3"></a-sphere>
-                            <a-entity class="face" position="0 0.05 0">
-                                <a-sphere class="eye" color="#efefef" position="0.1 0.1 -0.2" scale="0.08 0.08 0.08">
-                                    <a-sphere class="pupil" color="#000" position="0 0 -1"
-                                        scale="0.2 0.2 0.2"></a-sphere>
+                            <!-- SPHERE HEAD (default) -->
+                            <a-entity class="avatar-sphere">
+                                <a-sphere class="head" scale="0.3 0.3 0.3"></a-sphere>
+                                <a-entity class="face" position="0 0.05 0">
+                                    <a-sphere class="eye" color="#efefef" position="0.1 0.1 -0.2"
+                                        scale="0.08 0.08 0.08">
+                                        <a-sphere class="pupil" color="#000" position="0 0 -1"
+                                            scale="0.2 0.2 0.2"></a-sphere>
+                                    </a-sphere>
+                                    <a-sphere class="eye" color="#efefef" position="-0.1 0.1 -0.2"
+                                        scale="0.08 0.08 0.08">
+                                        <a-sphere class="pupil" color="#000" position="0 0 -1"
+                                            scale="0.2 0.2 0.2"></a-sphere>
+                                    </a-sphere>
+                                </a-entity>
+                            </a-entity>
+                            <!-- ROBOT HEAD -->
+                            <a-entity class="avatar-robot" visible="false">
+                                <a-box class="head" scale="0.35 0.35 0.35"
+                                    material="metalness: 0.6; roughness: 0.3"></a-box>
+                                <!-- Antenna -->
+                                <a-cylinder position="0 0.25 0" radius="0.02" height="0.15"
+                                    material="color: #90caf9; metalness: 0.8"></a-cylinder>
+                                <a-sphere class="antenna-led" position="0 0.34 0" radius="0.035"
+                                    material="color: #ff5252; emissive: #ff5252; emissiveIntensity: 0.5"
+                                    animation="property: material.emissiveIntensity; from: 0.3; to: 0.8; dir: alternate; dur: 1000; loop: true">
                                 </a-sphere>
-                                <a-sphere class="eye" color="#efefef" position="-0.1 0.1 -0.2" scale="0.08 0.08 0.08">
-                                    <a-sphere class="pupil" color="#000" position="0 0 -1"
-                                        scale="0.2 0.2 0.2"></a-sphere>
-                                </a-sphere>
+                                <!-- Eyes -->
+                                <a-box position="0.1 0.05 -0.18" scale="0.08 0.04 0.01"
+                                    material="color: #69f0ae; emissive: #69f0ae; emissiveIntensity: 0.6"></a-box>
+                                <a-box position="-0.1 0.05 -0.18" scale="0.08 0.04 0.01"
+                                    material="color: #69f0ae; emissive: #69f0ae; emissiveIntensity: 0.6"></a-box>
+                                <!-- Mouth -->
+                                <a-box position="0 -0.06 -0.18" scale="0.14 0.02 0.01"
+                                    material="color: #69f0ae; emissive: #69f0ae; emissiveIntensity: 0.3"></a-box>
                             </a-entity>
                         </a-entity>
                         <a-entity class="nametag-container" position="0 0.6 0" look-at="[camera]">
@@ -800,7 +871,13 @@
                 <!-- Desktop cursor -->
                 <a-cursor raycaster="objects: .babia-bar, .babia-slice, .babia-cyl, .sh-hitbox" color="#d4a853"
                     fuse="false"></a-cursor>
-                <a-sphere class="head" visible="false" random-color></a-sphere>
+                <!-- Local avatar heads (hidden for local player, JS applies type) -->
+                <a-entity class="avatar-sphere">
+                    <a-sphere class="head" visible="false" random-color></a-sphere>
+                </a-entity>
+                <a-entity class="avatar-robot" visible="false">
+                    <a-box class="head" visible="false"></a-box>
+                </a-entity>
                 <a-text class="nametag" visible="false"></a-text>
             </a-entity>
 

@@ -53,6 +53,14 @@
                         property: 'color'
                     },
                     {
+                        selector: '.avatar-sphere',
+                        component: 'visible'
+                    },
+                    {
+                        selector: '.avatar-robot',
+                        component: 'visible'
+                    },
+                    {
                         selector: '.nametag',
                         component: 'text',
                         property: 'value'
@@ -76,6 +84,73 @@
     const dashboardToggle = document.getElementById('dashboard-toggle');
     const xrayToggle = document.getElementById('xray-toggle');
     const dataDashboard = document.getElementById('data-dashboard');
+
+    // ─────────────────────────────────────────────
+    // AVATAR PICKER STATE
+    // ─────────────────────────────────────────────
+    let selectedAvatar = 'sphere'; // 'sphere' | 'robot'
+    let avatarChosen = true;       // default is pre-selected (sphere)
+    let dataReady = false;         // set to true when repo data loads
+
+    const enterBtn = document.getElementById('avatar-enter-btn');
+
+    // Picker DOM
+    const avatarOptions = document.querySelectorAll('.avatar-option');
+    avatarOptions.forEach(option => {
+        option.addEventListener('click', () => {
+            // Remove selected from all
+            avatarOptions.forEach(o => o.classList.remove('selected'));
+            // Mark this one
+            option.classList.add('selected');
+            selectedAvatar = option.dataset.avatar;
+            avatarChosen = true;
+            console.log(`[AvatarPicker] Selected: ${selectedAvatar}`);
+            checkReadyState();
+        });
+    });
+
+    if (enterBtn) {
+        enterBtn.addEventListener('click', () => {
+            if (avatarChosen && dataReady && loadingOverlay) {
+                // Apply avatar to local rig before closing
+                applyAvatarType(selectedAvatar);
+                loadingOverlay.classList.add('fade-out');
+                setTimeout(() => { loadingOverlay.style.display = 'none'; }, 800);
+            }
+        });
+    }
+
+    function checkReadyState() {
+        if (dataReady && enterBtn) {
+            enterBtn.disabled = false;
+            enterBtn.textContent = 'Entrar a la Escena';
+        }
+    }
+
+    function applyAvatarType(type) {
+        const rig = document.getElementById('rig');
+        if (!rig) return;
+
+        const sphereModel = rig.querySelector('.avatar-sphere');
+        const robotModel = rig.querySelector('.avatar-robot');
+
+        if (type === 'robot') {
+            if (sphereModel) sphereModel.setAttribute('visible', false);
+            if (robotModel) robotModel.setAttribute('visible', true);
+        } else {
+            if (sphereModel) sphereModel.setAttribute('visible', true);
+            if (robotModel) robotModel.setAttribute('visible', false);
+        }
+
+        // Apply random color to the active head
+        const head = rig.querySelector(type === 'robot' ? '.avatar-robot .head' : '.avatar-sphere .head');
+        if (head) {
+            const hue = Math.floor(Math.random() * 360);
+            head.setAttribute('material', 'color', `hsl(${hue}, 70%, 60%)`);
+        }
+
+        console.log(`[AvatarPicker] Applied avatar type: ${type}`);
+    }
 
     // ─────────────────────────────────────────────
     // GITHUB LANGUAGE COLORS
@@ -417,11 +492,9 @@
             const metricStars = document.getElementById('metric-stars-value');
             if (metricStars) metricStars.setAttribute('text', 'value', formatNum(data.stars));
 
-            // ── Hide loading overlay ──
-            if (loadingOverlay) {
-                loadingOverlay.classList.add('fade-out');
-                setTimeout(() => { loadingOverlay.style.display = 'none'; }, 800);
-            }
+            // ── Enable Enter button (gated by avatar selection) ──
+            dataReady = true;
+            checkReadyState();
 
             // ── Populate data dashboard ──
             populateDashboard(data);
@@ -572,11 +645,11 @@
         dashboard.classList.remove('hidden');
         // Dashboard starts collapsed; user opens via toggle button
     }
-    
+
     // ─────────────────────────────────────────────
     // POPULATE FILE TYPES (Code City Legend)
     // ─────────────────────────────────────────────
-    window.populateFileTypesDashboard = function(buildings, totalLOC) {
+    window.populateFileTypesDashboard = function (buildings, totalLOC) {
         const container = document.getElementById('dash-file-types');
         if (!container) return;
 
@@ -1255,10 +1328,13 @@
         const nametag = document.querySelector('#rig .nametag');
         if (nametag) nametag.setAttribute('text', 'value', username);
 
-        const head = document.querySelector('#rig .head');
-        if (head) {
+        // Avatar type is applied via applyAvatarType() when overlay closes.
+        // Apply a preliminary random color to the default sphere head (in case
+        // the user already chose sphere before scene loaded)
+        const defaultHead = document.querySelector('#rig .avatar-sphere .head');
+        if (defaultHead) {
             const hue = Math.floor(Math.random() * 360);
-            head.setAttribute('material', 'color', `hsl(${hue}, 70%, 60%)`);
+            defaultHead.setAttribute('material', 'color', `hsl(${hue}, 70%, 60%)`);
         }
 
         // Generate grid

@@ -317,7 +317,8 @@ body {
 }
 
 .xray-btn {
-    top: 190px; /* Positioned below the dashboard toggle */
+    top: 190px;
+    /* Positioned below the dashboard toggle */
 }
 
 .xray-btn.xray-active {
@@ -695,7 +696,9 @@ body {
 #loading-overlay {
     position: fixed;
     inset: 0;
-    background: linear-gradient(180deg, #87CEEB 0%, #b8e0c8 60%, #4a8b3f 100%);
+    background: rgba(245, 245, 247, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -712,8 +715,8 @@ body {
 .loading-spinner {
     width: 40px;
     height: 40px;
-    border: 3px solid var(--gh-border);
-    border-top-color: var(--gh-accent);
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    border-top-color: #4338CA;
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
     margin-bottom: 16px;
@@ -726,17 +729,188 @@ body {
 }
 
 .loading-text {
-    font-size: 0.82rem;
-    color: var(--gh-text-secondary);
-    font-weight: 400;
+    font-size: 0.85rem;
+    color: #6E6E73;
+    font-weight: 500;
 }
 
 .loading-repo {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.72rem;
-    color: var(--gh-accent-bright);
+    font-size: 0.75rem;
+    color: #4338CA;
     margin-top: 6px;
     font-weight: 500;
+}
+
+/* =============================================
+   AVATAR PICKER — Platform Aesthetic Carousel
+   ============================================= */
+.avatar-picker {
+    margin-top: 32px;
+    text-align: center;
+    animation: avatar-picker-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both;
+    width: 100%;
+    max-width: 700px;
+}
+
+@keyframes avatar-picker-in {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.avatar-picker-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #1D1D1F;
+    margin-bottom: 30px;
+}
+
+.avatar-picker-options {
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    padding-bottom: 20px;
+}
+
+.avatar-option {
+    position: relative;
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.07);
+    border-radius: 24px;
+    padding: 24px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    outline: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 220px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.avatar-option:hover {
+    transform: translateY(-6px);
+    border-color: rgba(0, 0, 0, 0.12);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.10), 0 4px 8px rgba(0, 0, 0, 0.04);
+}
+
+.avatar-option:active {
+    transform: translateY(-2px) scale(0.98);
+}
+
+.avatar-option.selected {
+    border-color: #4338CA;
+    box-shadow: 0 20px 60px rgba(67, 56, 202, 0.15),
+        0 0 0 2px #4338CA;
+    background: #FFFFFF;
+}
+
+.avatar-option-preview {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #F5F5F7;
+    box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.avatar-option-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.avatar-option:hover .avatar-option-img {
+    transform: scale(1.1);
+}
+
+.avatar-option-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1D1D1F;
+    letter-spacing: -0.02em;
+    margin-top: 4px;
+}
+
+.avatar-option-desc {
+    font-size: 0.8rem;
+    color: #6E6E73;
+    font-weight: 500;
+}
+
+.avatar-option-check {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #4338CA;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 4px 10px rgba(67, 56, 202, 0.3);
+}
+
+.avatar-option.selected .avatar-option-check {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.avatar-enter-btn {
+    margin-top: 10px;
+    padding: 16px 48px;
+    background: #4338CA;
+    color: white;
+    border: none;
+    border-radius: 999px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: 0 6px 16px rgba(67, 56, 202, 0.3);
+    outline: none;
+}
+
+.avatar-enter-btn:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(67, 56, 202, 0.4);
+    background: #4F46E5;
+}
+
+.avatar-enter-btn:active:not(:disabled) {
+    transform: translateY(0) scale(0.98);
+}
+
+.avatar-enter-btn:disabled {
+    background: var(--gh-surface-hover);
+    color: var(--gh-text-tertiary);
+    cursor: not-allowed;
+    box-shadow: none;
+    opacity: 0.7;
 }
 
 /* =============================================
@@ -767,6 +941,7 @@ body {
     outline: none;
     cursor: pointer;
 }
+
 .time-machine-select:focus {
     border-color: var(--gh-border-accent);
 }
@@ -1118,8 +1293,15 @@ body {
 }
 
 @keyframes oracle-icon-glow {
-    0%, 100% { opacity: 0.7; }
-    50% { opacity: 1; }
+
+    0%,
+    100% {
+        opacity: 0.7;
+    }
+
+    50% {
+        opacity: 1;
+    }
 }
 
 #oracle-free-input {
