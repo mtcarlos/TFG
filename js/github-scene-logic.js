@@ -74,6 +74,7 @@
     const loadingOverlay = document.getElementById('loading-overlay');
     const loadingRepoName = document.getElementById('loading-repo-name');
     const dashboardToggle = document.getElementById('dashboard-toggle');
+    const xrayToggle = document.getElementById('xray-toggle');
     const dataDashboard = document.getElementById('data-dashboard');
 
     // ─────────────────────────────────────────────
@@ -127,6 +128,20 @@
     // Set room badge
     if (badgeRoom) {
         badgeRoom.textContent = roomId ? `Room: ${roomId}` : 'Local';
+    }
+
+    // ─────────────────────────────────────────────
+    // X-RAY TOGGLE
+    // ─────────────────────────────────────────────
+    if (xrayToggle) {
+        xrayToggle.addEventListener('click', () => {
+            const isXRay = window.CodeCity.toggleXRayMode();
+            if (isXRay) {
+                xrayToggle.classList.add('xray-active');
+            } else {
+                xrayToggle.classList.remove('xray-active');
+            }
+        });
     }
 
     // ─────────────────────────────────────────────

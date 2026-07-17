@@ -15,6 +15,56 @@
         layout: null,
         selectedBuilding: null,
         tooltip: null,
+        isXRayMode: false,
+
+        /**
+         * Toggls X-Ray Vision (Heatmap based on commit dates)
+         */
+        toggleXRayMode() {
+            this.isXRayMode = !this.isXRayMode;
+            const buildings = document.querySelectorAll('.code-building');
+            
+            const now = Date.now();
+            const ONE_DAY = 24 * 60 * 60 * 1000;
+
+            buildings.forEach(el => {
+                if (!this.isXRayMode) {
+                    // Restore original color
+                    const origColor = el.getAttribute('data-original-color');
+                    el.setAttribute('material', 'color', origColor);
+                } else {
+                    // X-Ray Mode: Color by recency
+                    const lastModified = parseInt(el.getAttribute('data-last-modified') || '0', 10);
+                    
+                    if (lastModified === 0) {
+                        el.setAttribute('material', 'color', '#4a5568'); // Gray for unknown
+                        return;
+                    }
+                    
+                    const ageInDays = (now - lastModified) / ONE_DAY;
+                    
+                    // Heatmap color logic (Red -> Yellow -> Blue)
+                    let newColor = '#0000ff'; // Blue for > 365 days
+                    
+                    if (ageInDays <= 7) {
+                        newColor = '#ff0000'; // Red (hot!)
+                    } else if (ageInDays <= 30) {
+                        newColor = '#ff6600'; // Orange
+                    } else if (ageInDays <= 90) {
+                        newColor = '#ffcc00'; // Yellow
+                    } else if (ageInDays <= 180) {
+                        newColor = '#33cc33'; // Green
+                    } else if (ageInDays <= 365) {
+                        newColor = '#0099ff'; // Light Blue
+                    }
+
+                    el.setAttribute('material', 'color', newColor);
+                }
+            });
+            
+            console.log(`[CodeCity] X-Ray Mode: ${this.isXRayMode ? 'ON' : 'OFF'}`);
+            return this.isXRayMode;
+        },
 
         /**
          * Fetch the city layout from the server and render it.
@@ -47,7 +97,86 @@
                 window.populateFileTypesDashboard(layout.buildings, layout.stats.totalLOC);
             }
 
+            // Initialize Time Machine
+            this._initTimeMachine(roomId);
+
             console.log(`[CodeCity] City rendered: ${layout.stats.totalFiles} files, ${layout.stats.totalLOC} LOC`);
+        },
+
+        /**
+         * Initialize Time Machine: fetch commits and wire up UI
+         */
+        async _initTimeMachine(roomId) {
+            const selectEl = document.getElementById('time-machine-select');
+            const goBtn = document.getElementById('time-machine-go');
+            if (!selectEl || !goBtn) return;
+
+            try {
+                const res = await fetch(`/api/rooms/${roomId}/commits`);
+                const data = await res.json();
+                if (data.commits && data.commits.length > 0) {
+                    selectEl.innerHTML = ''; // Clear loading
+                    data.commits.forEach(commit => {
+                        const opt = document.createElement('option');
+                        opt.value = commit.hash;
+                        // Format: "YYYY-MM-DD - message (hash)"
+                        opt.textContent = `${commit.date} - ${commit.message} (${commit.hash})`;
+                        selectEl.appendChild(opt);
+                    });
+
+                    goBtn.onclick = async () => {
+                        const sha = selectEl.value;
+                        if (!sha) return;
+
+                        // Give UI feedback
+                        const originalText = goBtn.textContent;
+                        goBtn.textContent = 'Traveling...';
+                        goBtn.disabled = true;
+
+                        try {
+                            const postRes = await fetch(`/api/rooms/${roomId}/checkout`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ commitSha: sha })
+                            });
+
+                            if (!postRes.ok) throw new Error('Checkout failed');
+                            const postData = await postRes.json();
+                            
+                            if (postData.success && postData.layout) {
+                                // 1. Clean up old city elements
+                                const container = document.getElementById('code-city');
+                                if (container) {
+                                    // Remove all children except tooltip/beacons if any (just clearing is easier)
+                                    container.innerHTML = '';
+                                }
+
+                                // 2. Set new layout and re-render
+                                this.layout = postData.layout;
+                                this._renderCity();
+                                this._updateRaycasters();
+                                
+                                // Re-apply X-Ray if it was on
+                                if (this.isXRayMode) {
+                                    this.isXRayMode = false; // toggle forces recalculation
+                                    this.toggleXRayMode();
+                                }
+                            }
+                        } catch (err) {
+                            console.error('[CodeCity] Time Travel error:', err);
+                        } finally {
+                            goBtn.textContent = originalText;
+                            goBtn.disabled = false;
+                        }
+                    };
+                } else {
+                    selectEl.innerHTML = '<option value="">No history available</option>';
+                    goBtn.disabled = true;
+                }
+            } catch (err) {
+                console.error('[CodeCity] Failed to fetch commit history:', err);
+                selectEl.innerHTML = '<option value="">Error fetching history</option>';
+            }
         },
 
         /**
@@ -198,6 +327,8 @@
                 el.setAttribute('data-loc', b.loc);
                 el.setAttribute('data-extension', b.extension);
                 el.setAttribute('data-directory', b.directory || '');
+                el.setAttribute('data-original-color', b.color);
+                el.setAttribute('data-last-modified', b.lastModified || 0);
 
                 // Entrance animation: buildings grow from ground
                 el.setAttribute('animation__grow', {
@@ -223,7 +354,8 @@
          */
         _onBuildingHover(el, buildingData) {
             // Highlight the building
-            el.setAttribute('material', 'emissive', buildingData.color);
+            const currentColor = el.components.material.data.color;
+            el.setAttribute('material', 'emissive', currentColor);
             el.setAttribute('material', 'emissiveIntensity', 0.3);
 
             // Position tooltip above the building (local → world space)

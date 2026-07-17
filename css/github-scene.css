@@ -316,6 +316,22 @@ body {
     transform: translateX(20px);
 }
 
+.xray-btn {
+    top: 190px; /* Positioned below the dashboard toggle */
+}
+
+.xray-btn.xray-active {
+    background: rgba(220, 38, 38, 0.2);
+    border-color: rgba(239, 68, 68, 0.6);
+    color: #fca5a5;
+    box-shadow: 0 0 15px rgba(220, 38, 38, 0.3);
+}
+
+.xray-btn.xray-active .toggle-icon {
+    transform: scale(1.15);
+    color: #f87171;
+}
+
 .toggle-icon {
     width: 16px;
     height: 16px;
@@ -737,6 +753,22 @@ body {
     display: flex;
     flex-direction: column;
     gap: 6px;
+}
+
+.time-machine-select {
+    width: 100%;
+    padding: 8px 10px;
+    background: rgba(30, 41, 59, 0.5);
+    border: 1px solid var(--gh-border);
+    border-radius: 8px;
+    color: var(--gh-text);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    outline: none;
+    cursor: pointer;
+}
+.time-machine-select:focus {
+    border-color: var(--gh-border-accent);
 }
 
 .dash-setting-row label {

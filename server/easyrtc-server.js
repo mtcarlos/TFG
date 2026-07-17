@@ -126,7 +126,7 @@ app.post("/api/rooms/:roomId/repo", async (req, res) => {
         rooms.setClonePath(req.params.roomId, clonePath);
         rooms.setCloneStatus(req.params.roomId, "analyzing");
 
-        const fileTree = repoAnalyzer.analyzeFileTree(clonePath);
+        const fileTree = await repoAnalyzer.analyzeFileTree(clonePath);
         const layout = cityLayoutGenerator.generateCityLayout(fileTree);
         rooms.setCityLayout(req.params.roomId, layout);
         rooms.setCloneStatus(req.params.roomId, "ready");
@@ -212,7 +212,7 @@ app.post("/api/rooms/:roomId/repo-clone", async (req, res) => {
     rooms.setCloneStatus(req.params.roomId, "analyzing");
 
     console.log(`[CodeCity] Analyzing file tree...`);
-    const fileTree = repoAnalyzer.analyzeFileTree(clonePath);
+    const fileTree = await repoAnalyzer.analyzeFileTree(clonePath);
 
     console.log(`[CodeCity] Generating city layout...`);
     const layout = cityLayoutGenerator.generateCityLayout(fileTree);
@@ -244,6 +244,51 @@ app.get("/api/rooms/:roomId/city-layout", (req, res) => {
   if (!layout) return res.status(404).json({ error: "Layout not available" });
 
   res.json(layout);
+});
+
+// GET /api/rooms/:roomId/commits — Get recent commits for Time Machine
+app.get("/api/rooms/:roomId/commits", async (req, res) => {
+  const room = rooms.getRoom(req.params.roomId);
+  if (!room) return res.status(404).json({ error: "Room not found" });
+
+  try {
+    const commits = await repoAnalyzer.getCommitHistory(req.params.roomId);
+    res.json({ commits });
+  } catch (err) {
+    console.error(`[TimeMachine] Error fetching commits: ${err.message}`);
+    res.status(500).json({ error: "Failed to fetch commits" });
+  }
+});
+
+// POST /api/rooms/:roomId/checkout — Checkout a specific commit and regenerate layout
+app.post("/api/rooms/:roomId/checkout", async (req, res) => {
+  const { commitSha } = req.body;
+  if (!commitSha) return res.status(400).json({ error: "commitSha is required" });
+
+  const room = rooms.getRoom(req.params.roomId);
+  if (!room) return res.status(404).json({ error: "Room not found" });
+
+  rooms.setCloneStatus(req.params.roomId, "analyzing");
+
+  try {
+    // 1. Checkout commit
+    const clonePath = await repoAnalyzer.checkoutCommit(req.params.roomId, commitSha);
+    
+    // 2. Analyze tree & generate layout
+    console.log(`[TimeMachine] Re-analyzing file tree for commit ${commitSha}...`);
+    const fileTree = await repoAnalyzer.analyzeFileTree(clonePath);
+    
+    console.log(`[TimeMachine] Generating new city layout...`);
+    const layout = cityLayoutGenerator.generateCityLayout(fileTree);
+    rooms.setCityLayout(req.params.roomId, layout);
+    rooms.setCloneStatus(req.params.roomId, "ready");
+    
+    res.json({ success: true, layout });
+  } catch (err) {
+    console.error(`[TimeMachine] Error checking out commit ${commitSha}: ${err.message}`);
+    rooms.setCloneStatus(req.params.roomId, "error");
+    res.status(500).json({ error: "Failed to checkout commit" });
+  }
 });
 
 // POST /api/rooms/:roomId/oracle/ask — Ask the Oracle (direct OpenRouter API)

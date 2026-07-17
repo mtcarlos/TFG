@@ -102,6 +102,14 @@
         </svg>
         <span class="toggle-label">Stats</span>
     </button>
+    
+    <button id="xray-toggle" class="dashboard-toggle xray-btn" title="Toggle X-Ray Heatmap">
+        <svg class="toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 12C2 12 5 5 12 5C19 5 22 12 22 12C22 12 19 19 12 19C5 19 2 12 2 12Z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+        </svg>
+        <span class="toggle-label">X-Ray</span>
+    </button>
 
     <!-- ══════════════════════════════════════════
          DATA DASHBOARD — Right side panel
@@ -117,6 +125,29 @@
                     <line x1="11" y1="3" x2="3" y2="11" />
                 </svg>
             </button>
+        </div>
+
+        <!-- Time Machine -->
+        <div class="dash-section">
+            <div class="dash-section-header">
+                <span class="dash-icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                </span>
+                <span class="dash-title">Time Machine</span>
+            </div>
+            <div class="dash-settings-group">
+                <div class="dash-setting-row" style="flex-direction: column; align-items: flex-start; gap: 8px;">
+                    <label for="time-machine-select" style="margin-bottom: 4px;">Select Commit</label>
+                    <select id="time-machine-select" class="time-machine-select">
+                        <option value="">Loading history...</option>
+                    </select>
+                    <button id="time-machine-go" class="oracle-action-btn" style="width: 100%; margin-top: 5px;">Time Travel</button>
+                </div>
+            </div>
         </div>
 
         <!-- Visual Settings -->
@@ -777,10 +808,13 @@
             <!-- Positioned dynamically in JS when toggled -->
             <a-entity id="oracle-panel" oracle-panel visible="false"></a-entity>
 
+            <!-- ══════ VR DASHBOARD PANEL (Floating Gadget) ══════ -->
+            <a-entity id="vr-dashboard-panel" vr-dashboard-panel visible="false"></a-entity>
+
             <!-- ══════ VR CONTROLLERS — Superhands + Laser Pointer ══════ -->
 
             <!-- Left Controller: Locomotion (thumbstick) + Grab (trigger/grip) -->
-            <a-entity id="left-controller" laser-controls="hand: left; model: true"
+            <a-entity id="left-controller" laser-controls="hand: left; model: true" vr-wrist-menu
                 cursor="fuse: false; rayOrigin: entity;"
                 raycaster="objects: .sh-hitbox, .babia-bar, .babia-slice, .babia-cyl; far: 15; showLine: true; lineColor: #d4a853; lineOpacity: 0.35"
                 super-hands="colliderEvent: raycaster-intersection;
@@ -830,6 +864,8 @@
     <!-- Scene Logic -->
     <script src="/js/code-city.js"></script>
     <script src="/js/oracle-panel.js"></script>
+    <script src="/js/vr-dashboard-panel.js"></script>
+    <script src="/js/vr-wrist-menu.js"></script>
     <script src="/js/github-scene-logic.js"></script>
 
 </body>

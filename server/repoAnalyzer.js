@@ -67,9 +67,9 @@ async function cloneRepo(repoUrl, roomId) {
     // Ensure the parent tmp/ folder exists
     fs.mkdirSync(targetDir, { recursive: true });
 
-    // Shallow clone for speed
+    // Blobless clone for fast cloning but full commit history
     const git = simpleGit();
-    await git.clone(repoUrl, targetDir, ['--depth', '1']);
+    await git.clone(repoUrl, targetDir, ['--filter=blob:none']);
 
     console.log(`[repoAnalyzer] Cloned ${repoUrl} → ${targetDir}`);
     return targetDir;
@@ -97,6 +97,44 @@ function countLinesOfCode(filePath) {
 }
 
 /**
+ * Get the last modified timestamp for all files in the repository.
+ *
+ * @param {string} repoPath
+ * @returns {Promise<Object>} Map of relative file paths to UNIX timestamps.
+ */
+async function getFileTimestamps(repoPath) {
+  try {
+    const git = simpleGit(repoPath);
+    // Gets commit timestamps followed by the files modified in that commit
+    const logOutput = await git.raw(['log', '--name-only', '--pretty=format:commit:%ct']);
+    
+    const lines = logOutput.split('\n');
+    const timestamps = {};
+    let currentTimestamp = 0;
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed) continue;
+      
+      if (trimmed.startsWith('commit:')) {
+        // Convert seconds to ms
+        currentTimestamp = parseInt(trimmed.replace('commit:', ''), 10) * 1000;
+      } else {
+        // It's a file path. Since git log is newest-first, the first time
+        // we see a file, it's its most recent modification date.
+        if (!timestamps[trimmed]) {
+          timestamps[trimmed] = currentTimestamp;
+        }
+      }
+    }
+    return timestamps;
+  } catch (err) {
+    console.error(`[repoAnalyzer] Error getting timestamps: ${err.message}`);
+    return {};
+  }
+}
+
+/**
  * Recursively walk a directory and build a hierarchical tree of its contents.
  *
  * Directories and files listed in {@link IGNORED_DIRS} or starting with a dot
@@ -106,11 +144,12 @@ function countLinesOfCode(filePath) {
  * @param {string} dirPath      - Absolute path to the directory to walk.
  * @param {string} [relativeTo] - Base path used to compute `fullPath` values
  *                                 (defaults to `dirPath` on the first call).
+ * @param {Object} [timestampsMap] - Map of file paths to their last modification timestamp.
  * @returns {Object[]} Array of tree nodes – each node is either a directory
  *   (`{ name, type: 'directory', children }`) or a file
- *   (`{ name, type: 'file', loc, extension, fullPath }`).
+ *   (`{ name, type: 'file', loc, extension, fullPath, lastModified }`).
  */
-function walkDirectory(dirPath, relativeTo) {
+function walkDirectory(dirPath, relativeTo, timestampsMap = {}) {
   // On the first (top-level) call, relativeTo is the repo root itself
   if (!relativeTo) {
     relativeTo = dirPath;
@@ -131,7 +170,7 @@ function walkDirectory(dirPath, relativeTo) {
       // Skip ignored directories
       if (IGNORED_DIRS.has(entryName)) continue;
 
-      const subChildren = walkDirectory(fullAbsPath, relativeTo);
+      const subChildren = walkDirectory(fullAbsPath, relativeTo, timestampsMap);
       children.push({
         name: entryName,
         type: 'directory',
@@ -146,6 +185,8 @@ function walkDirectory(dirPath, relativeTo) {
       const relativePath = path.relative(relativeTo, fullAbsPath)
         .split(path.sep)
         .join('/'); // normalise to forward slashes
+        
+      const lastModified = timestampsMap[relativePath] || 0;
 
       children.push({
         name: entryName,
@@ -153,6 +194,7 @@ function walkDirectory(dirPath, relativeTo) {
         loc: countLinesOfCode(fullAbsPath),
         extension: ext || '',
         fullPath: relativePath,
+        lastModified: lastModified,
       });
     }
   }
@@ -167,13 +209,14 @@ function walkDirectory(dirPath, relativeTo) {
  * level, mirroring the directory layout while ignoring non-source artefacts.
  *
  * @param {string} repoPath - Absolute path to the repository root.
- * @returns {Object} Tree object:
+ * @returns {Promise<Object>} Tree object:
  *   `{ name: 'root', type: 'directory', children: [...] }`
  * @throws Will throw if the directory cannot be read.
  */
-function analyzeFileTree(repoPath) {
+async function analyzeFileTree(repoPath) {
   try {
-    const children = walkDirectory(repoPath);
+    const timestampsMap = await getFileTimestamps(repoPath);
+    const children = walkDirectory(repoPath, null, timestampsMap);
 
     return {
       name: 'root',
@@ -205,4 +248,61 @@ function cleanupRepo(roomId) {
   }
 }
 
-module.exports = { cloneRepo, analyzeFileTree, cleanupRepo };
+/**
+ * Get the recent commit history of a cloned repo.
+ * @param {string} roomId
+ * @returns {Promise<Array>} Array of commit objects.
+ */
+async function getCommitHistory(roomId) {
+  const targetDir = getTmpDir(roomId);
+  if (!fs.existsSync(targetDir)) return [];
+
+  try {
+    const git = simpleGit(targetDir);
+    // Fetch last 50 commits formatted as: hash|author|date|message
+    const log = await git.raw(['log', '-n', '50', '--pretty=format:%h|%an|%ad|%s', '--date=short']);
+    
+    if (!log) return [];
+    
+    const commits = log.split('\n').map(line => {
+      const parts = line.split('|');
+      return {
+        hash: parts[0],
+        author: parts[1],
+        date: parts[2],
+        message: parts.slice(3).join('|')
+      };
+    });
+    
+    return commits;
+  } catch (err) {
+    console.error(`[repoAnalyzer] Error fetching commit history: ${err.message}`);
+    return [];
+  }
+}
+
+/**
+ * Checkout a specific commit in a cloned repo.
+ * @param {string} roomId
+ * @param {string} commitSha
+ */
+async function checkoutCommit(roomId, commitSha) {
+  const targetDir = getTmpDir(roomId);
+  try {
+    const git = simpleGit(targetDir);
+    await git.checkout(commitSha);
+    console.log(`[repoAnalyzer] Checked out commit ${commitSha} in room ${roomId}`);
+    return targetDir;
+  } catch (err) {
+    console.error(`[repoAnalyzer] Error checking out commit ${commitSha}: ${err.message}`);
+    throw err;
+  }
+}
+
+module.exports = { 
+  cloneRepo, 
+  analyzeFileTree, 
+  cleanupRepo, 
+  getCommitHistory, 
+  checkoutCommit 
+};

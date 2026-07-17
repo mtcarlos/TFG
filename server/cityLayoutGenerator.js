@@ -518,6 +518,7 @@ function generateCityLayout(fileTree, opts) {
       depth: buildingDepth,
       height,
       color: colorForExtension(ext),
+      lastModified: node.lastModified || 0,
     });
   }
 
