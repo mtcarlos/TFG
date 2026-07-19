@@ -49,42 +49,49 @@
         <div class="loading-text">Fetching repository data…</div>
         <div class="loading-repo" id="loading-repo-name"></div>
 
-        <!-- ── Avatar Picker ── -->
-        <div id="avatar-picker" class="avatar-picker">
-            <div class="avatar-picker-title">Elige tu Avatar</div>
-            <div class="avatar-picker-options">
-                <!-- Sphere Option -->
-                <button class="avatar-option selected" data-avatar="sphere" id="avatar-opt-sphere">
-                    <div class="avatar-option-preview">
-                        <img src="../assets/images/avatares/Esfera_chibi.png" alt="Avatar Esfera"
-                            class="avatar-option-img">
-                    </div>
-                    <div class="avatar-option-name">Esfera</div>
-                    <div class="avatar-option-check">
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor"
-                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="3.5 8 6.5 11 12.5 5"></polyline>
-                        </svg>
-                    </div>
-                </button>
-                <!-- Robot Option -->
-                <button class="avatar-option" data-avatar="robot" id="avatar-opt-robot">
-                    <div class="avatar-option-preview">
-                        <img src="../assets/images/avatares/Robot_chibi.png" alt="Avatar Robot"
-                            class="avatar-option-img">
-                    </div>
-                    <div class="avatar-option-name">Robot</div>
-                    <div class="avatar-option-check">
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor"
-                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="3.5 8 6.5 11 12.5 5"></polyline>
-                        </svg>
-                    </div>
-                </button>
+        <!-- ── Glassmorphism 3D Carousel (Avatar Picker) ── -->
+        <div id="avatar-picker" class="avatar-picker glass-carousel-container">
+            <div class="carousel-header">
+                <h2 class="carousel-title">Elige tu Avatar</h2>
+                <p class="carousel-subtitle">Selecciona tu representación en el museo</p>
+            </div>
+
+            <div class="carousel-scene">
+                <div class="carousel-rotator" id="carousel-rotator">
+                    
+                    <!-- Sphere Card -->
+                    <button class="carousel-card avatar-option selected" data-avatar="sphere" id="avatar-opt-sphere">
+                        <div class="card-glass">
+                            <div class="card-glow"></div>
+                            <img src="../assets/images/avatares/Esfera_chibi.png" alt="Avatar Esfera" class="card-img">
+                            <div class="card-info">
+                                <h3 class="card-name">Esfera</h3>
+                                <div class="card-check">
+                                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3.5 8 6.5 11 12.5 5"></polyline></svg>
+                                </div>
+                            </div>
+                        </div>
+                    </button>
+
+                    <!-- Robot Card -->
+                    <button class="carousel-card avatar-option" data-avatar="robot" id="avatar-opt-robot">
+                        <div class="card-glass">
+                            <div class="card-glow"></div>
+                            <img src="../assets/images/avatares/Robot_chibi.png" alt="Avatar Robot" class="card-img">
+                            <div class="card-info">
+                                <h3 class="card-name">Robot</h3>
+                                <div class="card-check">
+                                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3.5 8 6.5 11 12.5 5"></polyline></svg>
+                                </div>
+                            </div>
+                        </div>
+                    </button>
+
+                </div>
             </div>
 
             <!-- Explicit Enter Button -->
-            <button id="avatar-enter-btn" class="avatar-enter-btn" disabled>
+            <button id="avatar-enter-btn" class="glass-enter-btn" disabled>
                 Cargando datos...
             </button>
         </div>

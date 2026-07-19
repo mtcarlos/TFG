@@ -743,182 +743,273 @@ body {
 }
 
 /* =============================================
-   AVATAR PICKER — Platform Aesthetic Carousel
+   GLASSMORPHISM 3D CAROUSEL (Avatar Selection)
    ============================================= */
-.avatar-picker {
+.glass-carousel-container {
     margin-top: 32px;
     text-align: center;
-    animation: avatar-picker-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both;
+    animation: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
     width: 100%;
-    max-width: 700px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-@keyframes avatar-picker-in {
+@keyframes fade-in-up {
     from {
         opacity: 0;
-        transform: translateY(20px) scale(0.95);
+        transform: translateY(30px);
     }
 
     to {
         opacity: 1;
-        transform: translateY(0) scale(1);
+        transform: translateY(0);
     }
 }
 
-.avatar-picker-title {
-    font-size: 0.85rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: #1D1D1F;
-    margin-bottom: 30px;
+.carousel-header {
+    margin-bottom: 40px;
 }
 
-.avatar-picker-options {
+.carousel-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 2rem;
+    font-weight: 600;
+    color: #1D1D1F;
+    letter-spacing: -0.02em;
+    margin: 0 0 8px 0;
+}
+
+.carousel-subtitle {
+    font-size: 0.95rem;
+    color: #6E6E73;
+    font-weight: 400;
+    margin: 0;
+}
+
+/* SCENE */
+.carousel-scene {
+    width: 100%;
+    max-width: 700px;
+    height: 340px;
+    perspective: 1200px;
+    margin-bottom: 40px;
     display: flex;
-    gap: 32px;
     justify-content: center;
     align-items: center;
-    flex-wrap: wrap;
-    padding-bottom: 20px;
 }
 
-.avatar-option {
+.carousel-rotator {
+    width: 100%;
+    height: 100%;
     position: relative;
-    background: #FFFFFF;
-    border: 1px solid rgba(0, 0, 0, 0.07);
-    border-radius: 24px;
-    padding: 24px;
-    cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform-style: preserve-3d;
+    pointer-events: none;
+    /* Prevents Z=0 plane from blocking clicks to Z=-150px elements */
+}
+
+/* CARDS */
+.carousel-card {
+    position: absolute;
+    width: 240px;
+    height: 320px;
+    background: transparent;
+    border: none;
     outline: none;
+    padding: 0;
+    cursor: pointer;
+    pointer-events: auto;
+    /* Re-enable clicks for children */
+    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.8s, filter 0.8s;
+}
+
+/* Unselected State */
+#avatar-opt-sphere {
+    transform: translateX(-160px) translateZ(-150px) rotateY(20deg);
+    opacity: 0.4;
+    z-index: 1;
+    filter: blur(6px);
+}
+
+#avatar-opt-robot {
+    transform: translateX(160px) translateZ(-150px) rotateY(-20deg);
+    opacity: 0.4;
+    z-index: 1;
+    filter: blur(6px);
+}
+
+/* Hovering over an unselected card */
+.carousel-card:not(.selected):hover {
+    opacity: 0.8;
+    filter: blur(2px);
+}
+
+#avatar-opt-sphere:not(.selected):hover {
+    transform: translateX(-150px) translateZ(-100px) rotateY(15deg);
+}
+
+#avatar-opt-robot:not(.selected):hover {
+    transform: translateX(150px) translateZ(-100px) rotateY(-15deg);
+}
+
+/* Selected State */
+.carousel-card.selected {
+    transform: translateX(0) translateZ(80px) rotateY(0deg) !important;
+    opacity: 1 !important;
+    z-index: 10 !important;
+    filter: blur(0px) !important;
+}
+
+/* Glass Material */
+.card-glass {
+    width: 100%;
+    height: 100%;
+    border-radius: 32px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.1) 100%);
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.5),
+        0 20px 40px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
-    width: 220px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.04);
-}
-
-.avatar-option:hover {
-    transform: translateY(-6px);
-    border-color: rgba(0, 0, 0, 0.12);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.10), 0 4px 8px rgba(0, 0, 0, 0.04);
-}
-
-
-.avatar-option:active {
-    transform: translateY(-2px) scale(0.98);
-}
-
-.avatar-option.selected {
-    border-color: #4338CA;
-    box-shadow: 0 20px 60px rgba(67, 56, 202, 0.15),
-        0 0 0 2px #4338CA;
-    background: #ffffff;
-}
-
-.avatar-option-preview {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    /* overflow: hidden; Removed to allow 3D pop-out effect */
-    background: #dedcdc;
-    box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.05);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    justify-content: flex-start;
+    padding: 40px 20px;
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     position: relative;
+    overflow: hidden;
 }
 
-.avatar-option-img {
+.carousel-card.selected .card-glass {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.3) 100%);
+    box-shadow:
+        inset 0 0 0 2px rgba(255, 255, 255, 0.9),
+        0 30px 60px rgba(0, 0, 0, 0.15);
+}
+
+/* Avatar Image */
+.card-img {
+    width: 130px;
+    height: 130px;
+    object-fit: contain;
+    margin-bottom: 24px;
+    transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.08));
+}
+
+.carousel-card.selected .card-img {
+    transform: scale(1.15) translateY(-5px);
+    filter: drop-shadow(0 15px 20px rgba(0, 0, 0, 0.15));
+}
+
+.carousel-card.selected:hover .card-img {
+    transform: scale(1.3) translateY(-15px);
+    filter: drop-shadow(0 25px 30px rgba(0, 0, 0, 0.25));
+}
+
+/* Info Section */
+.card-info {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.5s ease;
-    border-radius: 50%;
-    /* Keep it circular when not hovered if it has a background */
-    z-index: 2;
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
 }
 
-.avatar-option:hover .avatar-option-img {
-    transform: scale(1.6) translateY(-10px);
-    filter: drop-shadow(0 12px 16px rgba(0, 0, 0, 0.25));
-    z-index: 10;
-}
-
-.avatar-option-name {
-    font-size: 1.1rem;
-    font-weight: 700;
+.card-name {
+    font-size: 1.25rem;
+    font-weight: 600;
     color: #1D1D1F;
-    letter-spacing: -0.02em;
-    margin-top: 4px;
+    margin: 0;
 }
 
-.avatar-option-desc {
-    font-size: 0.8rem;
-    color: #6E6E73;
-    font-weight: 500;
-}
-
-.avatar-option-check {
-    position: absolute;
-    top: -10px;
-    right: -10px;
-    width: 32px;
-    height: 32px;
+.card-check {
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
-    background: #4338CA;
+    background: #000;
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
     opacity: 0;
     transform: scale(0.5);
-    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    box-shadow: 0 4px 10px rgba(67, 56, 202, 0.3);
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    margin-top: 8px;
 }
 
-.avatar-option.selected .avatar-option-check {
+.carousel-card.selected .card-check {
     opacity: 1;
     transform: scale(1);
 }
 
-.avatar-enter-btn {
-    margin-top: 10px;
-    padding: 16px 48px;
-    background: #4338CA;
+/* Glass Shimmer Sweep */
+.card-glow {
+    position: absolute;
+    top: 0; left: -150%;
+    width: 60%; height: 100%;
+    background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
+    transform: skewX(-25deg);
+    pointer-events: none;
+    transition: none;
+}
+
+.carousel-card:hover .card-glow {
+    animation: glass-shimmer 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes glass-shimmer {
+    0% { left: -150%; }
+    100% { left: 200%; }
+}
+
+/* ENTER BUTTON */
+@keyframes pulse-btn {
+    0% { box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15), 0 0 0 0 rgba(0, 0, 0, 0.1); }
+    70% { box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15), 0 0 0 10px rgba(0, 0, 0, 0); }
+    100% { box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15), 0 0 0 0 rgba(0, 0, 0, 0); }
+}
+
+.glass-enter-btn {
+    padding: 16px 56px;
+    background: rgba(0, 0, 0, 0.85);
     color: white;
     border: none;
     border-radius: 999px;
     font-family: 'Inter', sans-serif;
-    font-size: 0.95rem;
-    font-weight: 600;
+    font-size: 1rem;
+    font-weight: 500;
     letter-spacing: 0.02em;
     cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    box-shadow: 0 6px 16px rgba(67, 56, 202, 0.3);
-    outline: none;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(10px);
 }
 
-.avatar-enter-btn:hover:not(:disabled) {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 24px rgba(67, 56, 202, 0.4);
-    background: #4F46E5;
+.glass-enter-btn:not(:disabled) {
+    animation: pulse-btn 2.5s infinite cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.avatar-enter-btn:active:not(:disabled) {
+.glass-enter-btn:hover:not(:disabled) {
+    transform: translateY(-2px) scale(1.02);
+    background: rgba(0, 0, 0, 1);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+    animation: none;
+}
+
+.glass-enter-btn:active:not(:disabled) {
     transform: translateY(0) scale(0.98);
 }
 
-.avatar-enter-btn:disabled {
-    background: var(--gh-surface-hover);
-    color: var(--gh-text-tertiary);
-    cursor: not-allowed;
+.glass-enter-btn:disabled {
+    background: rgba(0, 0, 0, 0.05);
+    color: rgba(0, 0, 0, 0.3);
     box-shadow: none;
-    opacity: 0.7;
+    cursor: not-allowed;
 }
 
 /* =============================================
