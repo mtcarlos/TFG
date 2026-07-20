@@ -1,81 +1,67 @@
-# Proyecto TFG: Entorno Virtual Colaborativo 🌐
+# VR Code City: Inmersive Code Analysis Environment
 
-Este proyecto es una plataforma de realidad virtual compartida y multijugador desarrollada para la web (WebVR/WebXR). En este entorno, los usuarios pueden conectarse, compartir presencia y comunicarse en tiempo real.
+VR Code City is a multiplayer, shared virtual reality platform developed for the web (WebVR/WebXR). It transforms software analysis into a spatial experience by visualizing GitHub repositories as interactive 3D cities.
 
-Recientemente el proyecto ha evolucionado para albergar distintas experiencias dentro del mismo ecosistema, combinando un **entorno de construcción y recolección interactivo (PxlBuilder)** con un nuevo **entorno formal de visualización de datos en 3D para reuniones profesionales (BabiaXR)**.
+In this environment, users can connect together, share presence in real-time, navigate through their codebase, and interact with an advanced AI Agent (The Oracle) to understand, debug, and refactor code directly from virtual reality.
 
-## ✨ Características Principales
+## Core Features
 
-Actualmente la plataforma está dividida en tres módulos o "mundos" accesibles desde un punto central:
+### 1. Code City Visualization
+- **Spatial Repository Mapping:** Repositories are dynamically cloned and parsed in the backend. Directories become districts (city blocks), and files become buildings.
+- **Visual Metrics:** The height of a building represents the Lines of Code (LOC) for that file.
+- **X-Ray Vision Mode:** A temporal heatmap mode that alters building colors based on the recency of the last commit, allowing teams to instantly spot active development zones or legacy code.
+- **Time Machine:** Travel back in time by checking out previous commits and watching the city restructure itself instantly.
 
-### 1. 🖥️ Terminal Lobby (`index.html`)
+### 2. The Oracle (Context-Aware AI Agent)
+- **Gaze-Based RAG:** The Oracle is an intelligent floating interface that knows exactly what file you are pointing at in the VR world.
+- **Code Explanation & Refactoring:** Ask the Oracle to explain the architecture of the project globally, or point to a specific building to find bugs, explain dependencies, or suggest refactors for that exact file.
+- **Powered by OpenRouter:** The AI interactions are securely routed through OpenRouter's API, leveraging cutting-edge LLMs (like Gemma) for rapid, accurate code assistance.
 
-- Interfaz principal con una estética de terminal retro.
-- Punto de entrada donde los usuarios configuran su nombre de usuario (sincronizado a través de la red) antes de elegir a qué sala conectarse.
+### 3. Multiplayer Collaboration
+- **Real-Time Presence:** Powered by WebRTC and Networked-Aframe, users can see each other's avatars (head and hand tracking) seamlessly.
+- **Voice Chat & Interaction:** Collaborate with your team as if you were walking through the same physical city, discussing the codebase architecture naturally.
 
-### 2. 🔨 PxlBuilder: Mundo de Construcción y Recolección (`scenes/scene.html`)
+## Architecture and Technologies
 
-- **Construcción Voxel 3D:** Un modo de construcción inmersivo donde los usuarios pueden colocar, eliminar y rotar distintos tipos de bloques y "props" (como árboles o rocas).
-- **Recolección de Recursos:** Sistema interactivo de nodos de recursos (madera, piedra, metal). Los jugadores pueden golpear estos recursos (con feedback visual de barras de vida), los cuales al agotarse sueltan _drops_ recogibles en el mundo.
-- **Inventario Dinámico:** Gestión completa de los materiales y bloques recogidos a través de un HUD en pantalla (estilo _Glassmorphism_).
-- **Multijugador:** Todos los bloques construidos, destruidos y la presencia de los usuarios (con su color de avatar e identificador) se sincroniza en tiempo real de forma robusta.
+- **Frontend (3D/VR):** A-Frame, Three.js, HTML5, Vanilla JavaScript, and CSS3.
+- **Networking:** Networked-Aframe, Socket.io, and EasyRTC (P2P signaling for low-latency VR).
+- **Backend:** Node.js, Express, and simple-git (for secure repository cloning and tree analysis).
+- **AI Integration:** Direct HTTP integration with OpenRouter API for real-time LLM inference.
 
-### 3. 📊 Data Room: Visualización de Datos BABIAXR (`scenes/babia.html`)
+## Installation and Local Setup
 
-- **Entorno Profesional:** Una nueva sala diseñada de forma elegante y minimalista pensada para reuniones corporativas, de investigación o docencia.
-- **Gráficos 3D Interactivos:** Integración con **BabiaXR** para representar datos a gran escala a través de gráficos de barras 3D (_Barsmap_), gráficos circulares (_Pie charts_) y gráficos simples.
-- **Exploración Espacial:** Los usuarios se pueden mover por la sala observando los perfiles de datos desde diferentes ejes y leyendo los paneles informativos.
-- **Presets de Datos:** Selector interactivo para cambiar entre diferentes casos de uso corporativos (Ventas, Asistencia a reuniones, KPIs).
-- **Sincronía de Avatares:** Al igual que en la sala de construcción, los avatares reflejan los nombres y personalización de los participantes en la reunión mediante un esquema NAF totalmente configurado.
+Follow these steps to run the environment locally:
 
-## 🛠️ Tecnologías y Herramientas Utilizadas
-
-- **Frontend 3D/VR:** [A-Frame](https://aframe.io/) y [Three.js](https://threejs.org/).
-- **Visualización de Datos:** [BabiaXR](https://babiaxr.gitlab.io/babiaxr/).
-- **Redes y Multijugador:** [Networked-Aframe](https://github.com/networked-aframe/networked-aframe), [Socket.io](https://socket.io/) y [EasyRTC](https://github.com/open-easyrtc/open-easyrtc).
-- **Backend:** Node.js (Servidor de señalización e instanciación de salas P2P).
-- **Diseño de Interfaz:** HTML5, JS y CSS3 Vainilla, empleando técnicas de diseño moderno como _Glassmorphism_ e iconografía reactiva.
-
-## 🚀 Instalación y Uso Local
-
-Sigue estos pasos para arrancar el entorno en tu máquina local:
-
-1. **Clona el repositorio** en tu equipo local.
-2. **Instala las dependencias** de Node necesarias ejecutando el comando:
-
+1. **Clone the repository** to your local machine.
+2. **Configure your environment variables:** Create a `.env` file in the root directory and add your OpenRouter API key:
+   ```
+   OPENROUTER_API_KEY=your_api_key_here
+   ```
+3. **Install Node dependencies:**
    ```bash
    npm install
    ```
-
-3. **Inicia el servidor** local:
-
+4. **Start the local server:**
    ```bash
    npm start
    ```
+5. **Access the application:** Open a Chromium-based browser and navigate to `http://localhost:8080`.
+   *(Note: To enter WebXR using headsets like Meta Quest, a secure HTTPS tunnel like NGROK is required, or you must configure a local SSL certificate).*
 
-4. **Accede a la aplicación:** Abre un navegador basado en Chromium y dirígete a `http://localhost:8080`.
-   _(Nota: Para entrar en WebXR usando gafas como Meta Quest, es obligatorio utilizar un túnel seguro `https` como NGROK o configurar un certificado SSL local)_.
+## Controls
 
-## 🎮 Controles
+### Desktop Mode (Keyboard and Mouse)
+- **Movement:** `W`, `A`, `S`, `D` keys.
+- **Look Around:** Mouse movement.
+- **Toggle Oracle:** Press `O` on the keyboard.
+- **Pause / Unfocus:** `ESC`.
 
-### Modo Escritorio (Teclado y Ratón)
+### Virtual Reality Mode (HMD and VR Controllers)
+- **Movement:** Left Joystick (Fly / Walk).
+- **Camera Turn (Snap Turn):** Right Joystick.
+- **Interact:** Use the laser pointer and right trigger to click on buildings or the Oracle interface.
+- **Toggle Oracle:** Press `X`/`Y` (Left Controller) or `A`/`B` (Right Controller).
 
-- **Movimiento:** Teclas `W`, `A`, `S`, `D`.
-- **Mirar:** Movimiento del Ratón.
-- **Modo PxlBuilder:**
-  - **Colocar Bloque:** `Click Derecho`.
-  - **Mina / Eliminar Bloque:** `Click Izquierdo`.
-  - **Cambiar Item Activo:** `Q` / `E` o la `Rueda del Ratón`.
-- **Pausa / Salir del foco:** `ESC`.
+## Future Roadmap
 
-### Modo Realidad Virtual (HMD y Mandos VR)
-
-- **Movimiento General:** Joystick Izquierdo _(Fly / Caminar)_.
-- **Giro de Cámara (Snap Turn):** Joystick Derecho.
-- **Modo PxlBuilder:**
-  - **Construir / Interactuar:** Apretar el gatillo del mando derecho.
-  - _(El sistema está preparado mediante WebXR Hand Controls y Laser Controls)_.
-
-## 🔮 Roadmap / Futuro
-
-Este es un proyecto vivo y en activo desarrollo. Los próximos pasos se centran en refinar los componentes corporativos y añadir métricas compartidas de los datos proyectados en el entorno BabiaXR, uniendo toda la experiencia bajo una presentación e interfaz impecable.
+The project is under active development. Future iterations aim to integrate deeper static analysis tools, support for larger monolithic repositories with optimized rendering techniques, and richer collaborative AI features for software development teams.
