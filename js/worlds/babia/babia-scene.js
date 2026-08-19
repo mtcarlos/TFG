@@ -312,13 +312,15 @@
         AFRAME.registerComponent('thumbstick-move', {
             schema: {
                 speed: { type: 'number', default: 2.5 },
-                deadzone: { type: 'number', default: 0.15 }
+                deadzone: { type: 'number', default: 0.15 },
+                fly: { type: 'boolean', default: true }
             },
             init: function () {
                 this.inputVec = { x: 0, y: 0 };
                 this.direction = new THREE.Vector3();
                 this.forward = new THREE.Vector3();
                 this.right = new THREE.Vector3();
+                this.camQuat = new THREE.Quaternion();
 
                 const onMove = (x, y) => {
                     this.inputVec.x = x;
@@ -362,19 +364,23 @@
                 if (ix === 0 && iy === 0) return;
 
                 const rig = document.getElementById('rig');
-                const cam = document.getElementById('player');
+                const cam = document.getElementById('player') || (rig && rig.querySelector('[camera]'));
                 if (!rig || !cam) return;
 
                 const speed = this.data.speed * (delta / 1000);
 
-                // Camera forward/right in world space (horizontal only)
-                this.forward.set(0, 0, -1).applyQuaternion(cam.object3D.quaternion);
-                this.forward.y = 0;
-                this.forward.normalize();
+                cam.object3D.getWorldQuaternion(this.camQuat);
 
-                this.right.set(1, 0, 0).applyQuaternion(cam.object3D.quaternion);
-                this.right.y = 0;
-                this.right.normalize();
+                // 3D gaze vector orientation
+                this.forward.set(0, 0, -1).applyQuaternion(this.camQuat);
+                this.right.set(1, 0, 0).applyQuaternion(this.camQuat);
+
+                if (!this.data.fly) {
+                    this.forward.y = 0;
+                    this.forward.normalize();
+                    this.right.y = 0;
+                    this.right.normalize();
+                }
 
                 this.direction.set(0, 0, 0);
                 // In WebXR, pushing forward is usually negative Y

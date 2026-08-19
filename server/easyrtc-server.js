@@ -7,6 +7,9 @@ const express = require("express");           // web framework external module
 const socketIo = require("socket.io");        // web socket external module
 const easyrtc = require("open-easyrtc");      // EasyRTC external module
 const { exec } = require("child_process");    // for running CLI commands
+
+// Python microservice URL
+const PYTHON_SERVICE_URL = process.env.PYTHON_SERVICE_URL || "http://localhost:8000";
 // To generate a certificate for local development with https, you can use
 // npx webpack serve --server-type https
 // and stop it with ctrl+c, it will generate the file node_modules/.cache/webpack-dev-server/server.pem
@@ -47,8 +50,7 @@ app.use(express.json());
 const rooms = require("./rooms");
 const githubClient = require("./githubClient");
 const githubDataMapper = require("./githubDataMapper");
-const repoAnalyzer = require("./repoAnalyzer");
-const cityLayoutGenerator = require("./cityLayoutGenerator");
+// repoAnalyzer and cityLayoutGenerator are now handled by the Python microservice
 
 // Global state to track active users per room for the Presence API
 const activeRoomsTracker = {}; // easyrtcid -> { username, roomName }
@@ -115,23 +117,31 @@ app.post("/api/rooms/:roomId/repo", async (req, res) => {
     console.log(`[Rooms] Room ${req.params.roomId} → repo set to ${parsed.owner}/${parsed.repo}`);
     res.json({ success: true, repo: `${parsed.owner}/${parsed.repo}` });
 
-    // ── Trigger Code City cloning in background ──
+    // ── Trigger Code City cloning in background (delegated to Python) ──
     (async () => {
       try {
         const repoUrl = `https://github.com/${parsed.owner}/${parsed.repo}.git`;
         rooms.setCloneStatus(req.params.roomId, "cloning");
-        console.log(`[CodeCity] Auto-cloning ${repoUrl} for room ${req.params.roomId}...`);
+        console.log(`[CodeCity] Auto-cloning ${repoUrl} for room ${req.params.roomId} (via Python)...`);
 
-        const clonePath = await repoAnalyzer.cloneRepo(repoUrl, req.params.roomId);
-        rooms.setClonePath(req.params.roomId, clonePath);
+        const pyRes = await fetch(`${PYTHON_SERVICE_URL}/api/python/clone-and-analyze`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ repoUrl, roomId: req.params.roomId }),
+        });
+
+        if (!pyRes.ok) {
+          const errData = await pyRes.json().catch(() => ({}));
+          throw new Error(errData.detail || `Python service error: ${pyRes.status}`);
+        }
+
+        const pyData = await pyRes.json();
+        rooms.setClonePath(req.params.roomId, pyData.clonePath);
         rooms.setCloneStatus(req.params.roomId, "analyzing");
-
-        const fileTree = await repoAnalyzer.analyzeFileTree(clonePath);
-        const layout = cityLayoutGenerator.generateCityLayout(fileTree);
-        rooms.setCityLayout(req.params.roomId, layout);
+        rooms.setCityLayout(req.params.roomId, pyData.layout);
         rooms.setCloneStatus(req.params.roomId, "ready");
 
-        console.log(`[CodeCity] Room ${req.params.roomId} → city ready (${layout.stats.totalFiles} files, ${layout.stats.totalLOC} LOC)`);
+        console.log(`[CodeCity] Room ${req.params.roomId} → city ready (${pyData.layout.stats.totalFiles} files, ${pyData.layout.stats.totalLOC} LOC)`);
       } catch (err) {
         console.error(`[CodeCity] Auto-clone error:`, err.message || err);
         rooms.setCloneStatus(req.params.roomId, "error");
@@ -202,24 +212,28 @@ app.post("/api/rooms/:roomId/repo-clone", async (req, res) => {
   rooms.setCloneStatus(req.params.roomId, "cloning");
   res.json({ success: true, status: "cloning" });
 
-  // Background: clone → analyze → generate layout
+  // Background: delegate to Python microservice
   try {
     const repoUrl = `https://github.com/${parsed.owner}/${parsed.repo}.git`;
-    console.log(`[CodeCity] Cloning ${repoUrl} for room ${req.params.roomId}...`);
+    console.log(`[CodeCity] Cloning ${repoUrl} for room ${req.params.roomId} (via Python)...`);
 
-    const clonePath = await repoAnalyzer.cloneRepo(repoUrl, req.params.roomId);
-    rooms.setClonePath(req.params.roomId, clonePath);
-    rooms.setCloneStatus(req.params.roomId, "analyzing");
+    const pyRes = await fetch(`${PYTHON_SERVICE_URL}/api/python/clone-and-analyze`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ repoUrl, roomId: req.params.roomId }),
+    });
 
-    console.log(`[CodeCity] Analyzing file tree...`);
-    const fileTree = await repoAnalyzer.analyzeFileTree(clonePath);
+    if (!pyRes.ok) {
+      const errData = await pyRes.json().catch(() => ({}));
+      throw new Error(errData.detail || `Python service error: ${pyRes.status}`);
+    }
 
-    console.log(`[CodeCity] Generating city layout...`);
-    const layout = cityLayoutGenerator.generateCityLayout(fileTree);
-    rooms.setCityLayout(req.params.roomId, layout);
+    const pyData = await pyRes.json();
+    rooms.setClonePath(req.params.roomId, pyData.clonePath);
+    rooms.setCityLayout(req.params.roomId, pyData.layout);
     rooms.setCloneStatus(req.params.roomId, "ready");
 
-    console.log(`[CodeCity] Room ${req.params.roomId} → city ready (${layout.stats.totalFiles} files, ${layout.stats.totalLOC} LOC)`);
+    console.log(`[CodeCity] Room ${req.params.roomId} → city ready (${pyData.layout.stats.totalFiles} files, ${pyData.layout.stats.totalLOC} LOC)`);
   } catch (err) {
     console.error(`[CodeCity] Error:`, err.message || err);
     rooms.setCloneStatus(req.params.roomId, "error");
@@ -252,8 +266,12 @@ app.get("/api/rooms/:roomId/commits", async (req, res) => {
   if (!room) return res.status(404).json({ error: "Room not found" });
 
   try {
-    const commits = await repoAnalyzer.getCommitHistory(req.params.roomId);
-    res.json({ commits });
+    const pyRes = await fetch(`${PYTHON_SERVICE_URL}/api/python/commits/${req.params.roomId}`);
+    const pyData = await pyRes.json();
+    if (!pyRes.ok) {
+      throw new Error(pyData.detail || 'Python service error');
+    }
+    res.json(pyData);
   } catch (err) {
     console.error(`[TimeMachine] Error fetching commits: ${err.message}`);
     res.status(500).json({ error: "Failed to fetch commits" });
@@ -271,19 +289,22 @@ app.post("/api/rooms/:roomId/checkout", async (req, res) => {
   rooms.setCloneStatus(req.params.roomId, "analyzing");
 
   try {
-    // 1. Checkout commit
-    const clonePath = await repoAnalyzer.checkoutCommit(req.params.roomId, commitSha);
-    
-    // 2. Analyze tree & generate layout
-    console.log(`[TimeMachine] Re-analyzing file tree for commit ${commitSha}...`);
-    const fileTree = await repoAnalyzer.analyzeFileTree(clonePath);
-    
-    console.log(`[TimeMachine] Generating new city layout...`);
-    const layout = cityLayoutGenerator.generateCityLayout(fileTree);
-    rooms.setCityLayout(req.params.roomId, layout);
+    // Delegate to Python microservice
+    const pyRes = await fetch(`${PYTHON_SERVICE_URL}/api/python/checkout`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ roomId: req.params.roomId, commitSha }),
+    });
+
+    const pyData = await pyRes.json();
+    if (!pyRes.ok) {
+      throw new Error(pyData.detail || 'Python service error');
+    }
+
+    rooms.setCityLayout(req.params.roomId, pyData.layout);
     rooms.setCloneStatus(req.params.roomId, "ready");
     
-    res.json({ success: true, layout });
+    res.json({ success: true, layout: pyData.layout });
   } catch (err) {
     console.error(`[TimeMachine] Error checking out commit ${commitSha}: ${err.message}`);
     rooms.setCloneStatus(req.params.roomId, "error");
@@ -291,77 +312,39 @@ app.post("/api/rooms/:roomId/checkout", async (req, res) => {
   }
 });
 
-// POST /api/rooms/:roomId/oracle/ask — Ask the Oracle (direct OpenRouter API)
+// POST /api/rooms/:roomId/oracle/ask — Ask the Oracle (proxied to Python)
 app.post("/api/rooms/:roomId/oracle/ask", async (req, res) => {
   const { question, filePath } = req.body;
   if (!question) {
     return res.status(400).json({ error: "Question is required" });
   }
 
-  const clonePath = rooms.getClonePath(req.params.roomId);
-  if (!clonePath) {
-    return res.status(400).json({ error: "Repository is not cloned yet. Wait for the city to be built." });
-  }
-
-  const apiKey = process.env.OPENROUTER_API_KEY;
-  if (!apiKey) {
-    console.error("[Oracle] OPENROUTER_API_KEY not set in .env");
-    return res.status(500).json({ error: "API key not configured on the server." });
-  }
-
-  console.log(`[Oracle] Preguntando: "${question}" sobre ${filePath || 'Global'} (Room: ${req.params.roomId})`);
-
-  // Build the prompt with file context if a specific file is selected
-  let systemPrompt = "Eres un asistente experto en código. Responde de forma concisa y clara en español. No uses markdown excesivo, mantén la respuesta breve (máximo 300 palabras).";
-  let userPrompt = question;
-
-  if (filePath) {
-    try {
-      const absoluteFilePath = path.join(clonePath, filePath);
-      const fileContent = fs.readFileSync(absoluteFilePath, 'utf-8');
-      // Truncate very large files to avoid token limits
-      const truncated = fileContent.length > 8000 ? fileContent.substring(0, 8000) + '\n... (fichero truncado)' : fileContent;
-      userPrompt = `Fichero: ${filePath}\n\n\`\`\`\n${truncated}\n\`\`\`\n\nPregunta: ${question}`;
-      console.log(`[Oracle] Fichero adjuntado: ${filePath} (${fileContent.length} chars)`);
-    } catch (err) {
-      console.warn(`[Oracle] No se pudo leer el fichero ${filePath}:`, err.message);
-      userPrompt = `Sobre el fichero ${filePath}: ${question}`;
-    }
-  }
+  console.log(`[Oracle] Proxying question: "${question}" about ${filePath || 'Global'} (Room: ${req.params.roomId})`);
 
   try {
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    const pyRes = await fetch(`${PYTHON_SERVICE_URL}/api/python/oracle/ask`, {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': 'http://localhost:8080',
-        'X-Title': 'VR Code City Oracle'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'google/gemma-4-31b-it:free',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt }
-        ],
-        max_tokens: 1024
-      })
+        question,
+        filePath: filePath || null,
+        roomId: req.params.roomId,
+      }),
     });
 
-    const data = await response.json();
+    const pyData = await pyRes.json();
 
-    if (!response.ok) {
-      console.error('[Oracle] API error:', JSON.stringify(data));
-      return res.status(response.status).json({ error: data.error?.message || 'Error de la API de OpenRouter' });
+    if (!pyRes.ok) {
+      console.error('[Oracle] Python service error:', pyData.detail || pyData);
+      return res.status(pyRes.status).json({ error: pyData.detail || 'Error del servicio Python' });
     }
 
-    const answer = data.choices?.[0]?.message?.content || 'Sin respuesta del modelo.';
-    console.log(`[Oracle] Respuesta recibida (${answer.length} chars)`);
-    res.json({ answer });
+    console.log(`[Oracle] Respuesta recibida (${pyData.answer?.length || 0} chars)`);
+    res.json(pyData);
 
   } catch (err) {
-    console.error('[Oracle] Fetch error:', err.message);
-    res.status(500).json({ error: 'Error de conexión con OpenRouter.' });
+    console.error('[Oracle] Proxy error:', err.message);
+    res.status(500).json({ error: 'Error de conexión con el servicio Python.' });
   }
 });
 
@@ -430,12 +413,10 @@ easyrtc.events.on("roomLeave", (connectionObj, roomName, callback) => {
       const roomId = roomName.replace("github-", "");
       const remainingUsers = Object.values(activeRoomsTracker).filter(u => u.roomName === roomName).length;
       if (remainingUsers === 0) {
-        console.log(`[CodeCity] Room ${roomId} is empty. Cleaning up repository...`);
-        try {
-          repoAnalyzer.cleanupRepo(roomId);
-        } catch (cleanupErr) {
-          console.error(`[CodeCity] Cleanup error on roomLeave:`, cleanupErr);
-        }
+        console.log(`[CodeCity] Room ${roomId} is empty. Cleaning up repository (via Python)...`);
+        fetch(`${PYTHON_SERVICE_URL}/api/python/rooms/${roomId}`, { method: 'DELETE' })
+          .then(() => console.log(`[CodeCity] Room ${roomId} cleanup delegated to Python.`))
+          .catch(cleanupErr => console.error(`[CodeCity] Cleanup error on roomLeave:`, cleanupErr.message));
       }
     }
     callback(err);
@@ -455,12 +436,10 @@ easyrtc.events.on("disconnect", (connectionObj, next) => {
       const roomId = roomName.replace("github-", "");
       const remainingUsers = Object.values(activeRoomsTracker).filter(u => u.roomName === roomName).length;
       if (remainingUsers === 0) {
-        console.log(`[CodeCity] Room ${roomId} is empty on disconnect. Cleaning up repository...`);
-        try {
-          repoAnalyzer.cleanupRepo(roomId);
-        } catch (cleanupErr) {
-          console.error(`[CodeCity] Cleanup error on disconnect:`, cleanupErr);
-        }
+        console.log(`[CodeCity] Room ${roomId} is empty on disconnect. Cleaning up repository (via Python)...`);
+        fetch(`${PYTHON_SERVICE_URL}/api/python/rooms/${roomId}`, { method: 'DELETE' })
+          .then(() => console.log(`[CodeCity] Room ${roomId} cleanup delegated to Python.`))
+          .catch(cleanupErr => console.error(`[CodeCity] Cleanup error on disconnect:`, cleanupErr.message));
       }
     }
   } else {

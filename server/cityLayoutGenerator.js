@@ -40,8 +40,55 @@ const EXT_COLORS = {
 
 const DEFAULT_COLOR = "#64748b";
 
-/** District ground-plane color (semi-transparent dark grey) */
-const DISTRICT_COLOR = "rgba(30, 30, 46, 0.35)";
+/** Curated palette of distinguishable district ground-plane colors (low-saturation pastels) */
+const DISTRICT_PALETTE = [
+  "#e8d5b7", // warm sand
+  "#c4d7a4", // sage green
+  "#b5cfe0", // soft sky blue
+  "#e0c4d4", // dusty rose
+  "#d4cce0", // lavender
+  "#c9ddd2", // mint
+  "#e0d4b0", // wheat
+  "#c0d4e8", // periwinkle
+  "#ddd0be", // taupe
+  "#bdd8c4", // seafoam
+  "#d8ccb8", // oat
+  "#c8d0dc", // steel blue
+  "#d4c4b0", // light mocha
+  "#b8d0d0", // teal mist
+  "#d8c8d8", // mauve
+  "#c4d4b4", // pistachio
+];
+
+/**
+ * Hash a string to a consistent integer index for the palette.
+ * @param {string} str
+ * @returns {number}
+ */
+function hashStringToIndex(str) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash * 31 + str.charCodeAt(i)) | 0;
+  }
+  return Math.abs(hash) % DISTRICT_PALETTE.length;
+}
+
+/**
+ * Blend a hex color toward white by a given amount (0-1).
+ * Used to lighten nested district colors.
+ * @param {string} hex
+ * @param {number} amount
+ * @returns {string}
+ */
+function lightenColor(hex, amount) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  const nr = Math.min(255, Math.round(r + (255 - r) * amount));
+  const ng = Math.min(255, Math.round(g + (255 - g) * amount));
+  const nb = Math.min(255, Math.round(b + (255 - b) * amount));
+  return "#" + [nr, ng, nb].map((v) => v.toString(16).padStart(2, "0")).join("");
+}
 
 // ---------------------------------------------------------------------------
 // Default options
@@ -407,7 +454,7 @@ function generateCityLayout(fileTree, opts) {
   // 2. Recursively lay out the tree using squarified treemap
   const rootRect = { x: 0, z: 0, w: totalSize, h: totalSize };
 
-  layoutNode(fileTree, rootRect);
+  layoutNode(fileTree, rootRect, 0);
 
   return { buildings, districts, stats };
 
@@ -433,15 +480,16 @@ function generateCityLayout(fileTree, opts) {
    * Recursively lay out a node and its children within the given rect.
    * @param {FileNode} node
    * @param {Rect}     rect
+   * @param {number}   depth — nesting depth (0 = root)
    */
-  function layoutNode(node, rect) {
+  function layoutNode(node, rect, depth) {
     if (node.type === "file") {
       addBuilding(node, rect);
       return;
     }
 
     // Node is a directory — emit a district
-    addDistrict(node, rect);
+    addDistrict(node, rect, depth);
 
     const children = node.children || [];
     if (children.length === 0) return;
@@ -465,7 +513,7 @@ function generateCityLayout(fileTree, opts) {
       }));
       const positioned = squarify(items, inner);
       for (const { node: childNode, rect: childRect } of positioned) {
-        layoutNode(childNode, childRect);
+        layoutNode(childNode, childRect, depth + 1);
       }
       return;
     }
@@ -484,7 +532,7 @@ function generateCityLayout(fileTree, opts) {
 
     const positioned = squarify(items, inner);
     for (const { node: childNode, rect: childRect } of positioned) {
-      layoutNode(childNode, childRect);
+      layoutNode(childNode, childRect, depth + 1);
     }
   }
 
@@ -526,16 +574,25 @@ function generateCityLayout(fileTree, opts) {
    * Register a district (ground plane) entry for a directory node.
    * @param {FileNode} node
    * @param {Rect}     rect
+   * @param {number}   depth — nesting depth
    */
-  function addDistrict(node, rect) {
+  function addDistrict(node, rect, depth) {
+    // Pick a distinct color from the palette based on directory name
+    const name = node.name || "";
+    const baseColor = DISTRICT_PALETTE[hashStringToIndex(name)];
+    // Lighten for deeper nesting so sub-districts are distinguishable but softer
+    const lightAmount = Math.min(depth * 0.15, 0.45);
+    const color = depth > 0 ? lightenColor(baseColor, lightAmount) : baseColor;
+
     districts.push({
       type: "district",
-      name: node.name || "",
+      name: name,
       x: rect.x + rect.w / 2,
       z: rect.z + rect.h / 2,
       width: rect.w,
       depth: rect.h,
-      color: DISTRICT_COLOR,
+      color: color,
+      districtDepth: depth,
     });
   }
 }

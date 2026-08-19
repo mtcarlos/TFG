@@ -290,25 +290,68 @@
             // Render districts (ground planes for directories)
             if (districts) {
                 districts.forEach((d, idx) => {
+                    const distDepth = d.districtDepth || 0;
+                    // Raise districts slightly off the ground, with deeper districts slightly higher
+                    const yOffset = 0.06 + distDepth * 0.01;
+
+                    // Main district ground plane — solid colored, slightly raised
                     const el = document.createElement('a-plane');
                     el.setAttribute('class', 'city-district');
-                    el.setAttribute('position', `${d.x} 0.02 ${d.z}`);
+                    el.setAttribute('position', `${d.x} ${yOffset} ${d.z}`);
                     el.setAttribute('rotation', '-90 0 0');
                     el.setAttribute('width', d.width);
                     el.setAttribute('height', d.depth);
-                    el.setAttribute('material', `color: ${d.color || '#c9b99a'}; opacity: 0.4; transparent: true; side: double`);
+                    el.setAttribute('material', `color: ${d.color || '#c9b99a'}; opacity: 0.6; transparent: true; side: double`);
                     container.appendChild(el);
 
-                    // District label (only for larger districts)
+                    // District border outline — slightly larger, darker tint
+                    if (d.width > 1.5 && d.depth > 1.5) {
+                        const border = document.createElement('a-plane');
+                        border.setAttribute('class', 'city-district-border');
+                        border.setAttribute('position', `${d.x} ${yOffset - 0.003} ${d.z}`);
+                        border.setAttribute('rotation', '-90 0 0');
+                        border.setAttribute('width', d.width + 0.12);
+                        border.setAttribute('height', d.depth + 0.12);
+                        border.setAttribute('material', `color: #5a5040; opacity: 0.25; transparent: true; side: double`);
+                        container.appendChild(border);
+                    }
+
+                    // District label — floating above the district with background
                     if (d.width > 2 && d.depth > 2 && d.name !== 'root') {
+                        const labelY = 0.35 + distDepth * 0.05;
+                        const labelGroup = document.createElement('a-entity');
+                        labelGroup.setAttribute('position', `${d.x} ${labelY} ${d.z + d.depth / 2 + 0.3}`);
+                        labelGroup.setAttribute('look-at', '[camera]');
+
+                        // Background plane for readability
+                        const labelBg = document.createElement('a-plane');
+                        const labelWidth = Math.min(d.name.length * 0.22 + 0.6, 3.5);
+                        labelBg.setAttribute('width', labelWidth);
+                        labelBg.setAttribute('height', '0.35');
+                        labelBg.setAttribute('material', `color: ${d.color || '#f5f0e6'}; opacity: 0.85; transparent: true; side: double`);
+                        labelGroup.appendChild(labelBg);
+
+                        // Border for label background
+                        const labelBorder = document.createElement('a-plane');
+                        labelBorder.setAttribute('width', labelWidth + 0.04);
+                        labelBorder.setAttribute('height', '0.39');
+                        labelBorder.setAttribute('position', '0 0 -0.002');
+                        labelBorder.setAttribute('material', `color: #5a5040; opacity: 0.2; transparent: true; side: double`);
+                        labelGroup.appendChild(labelBorder);
+
+                        // Text label
                         const label = document.createElement('a-text');
                         label.setAttribute('value', d.name);
-                        label.setAttribute('position', `${d.x} 0.05 ${d.z + d.depth / 2 + 0.2}`);
+                        label.setAttribute('position', '0 0 0.01');
                         label.setAttribute('align', 'center');
-                        label.setAttribute('color', '#5a6b5c');
-                        label.setAttribute('width', Math.min(d.width * 1.5, 4));
+                        label.setAttribute('color', '#3a2e1a');
+                        label.setAttribute('width', Math.min(d.width * 1.8, 5));
+                        label.setAttribute('font', '/assets/fonts/custom-msdf.json');
+                        label.setAttribute('negate', false);
                         label.setAttribute('side', 'double');
-                        container.appendChild(label);
+                        labelGroup.appendChild(label);
+
+                        container.appendChild(labelGroup);
                     }
                 });
             }

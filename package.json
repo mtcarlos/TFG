@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "My first multi-user virtual reality",
   "scripts": {
-    "start": "node ./server/easyrtc-server.js"
+    "start": "node ./server/easyrtc-server.js",
+    "start:python": "cd python-service && python main.py",
+    "start:all": "start cmd /c \"cd python-service && python main.py\" && timeout /t 3 && node ./server/easyrtc-server.js"
   },
   "author": "Carlos Malagón Tenorio",
   "dependencies": {
