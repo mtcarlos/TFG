@@ -143,13 +143,13 @@ AFRAME.registerComponent('oracle-panel', {
     _onVoiceStop: function () {
         this.isListening = false;
         if (this._micBtn) {
-            this._micBtn.setAttribute('material', 'color', '#1e1b4b');
+            this._micBtn.setAttribute('material', 'color', '#27272a');
             this._micBtn.removeAttribute('animation__mic');
             this._micBtn.setAttribute('scale', '1 1 1');
         }
         if (this._micLabel) {
             this._micLabel.setAttribute('value', '🎤 Preguntar por voz');
-            this._micLabel.setAttribute('color', '#a5b4fc');
+            this._micLabel.setAttribute('color', '#f8fafc');
         }
     },
 
@@ -168,15 +168,15 @@ AFRAME.registerComponent('oracle-panel', {
         const bgPlane = document.createElement('a-plane');
         bgPlane.setAttribute('width', W);
         bgPlane.setAttribute('height', H);
-        bgPlane.setAttribute('material', 'color: #0a0a0f; opacity: 0.92; transparent: true; side: double');
+        bgPlane.setAttribute('material', 'color: #161618; opacity: 0.85; transparent: true; side: double');
         this.container.appendChild(bgPlane);
 
         // ── Subtle border glow ──
         const borderPlane = document.createElement('a-plane');
-        borderPlane.setAttribute('width', W + 0.02);
-        borderPlane.setAttribute('height', H + 0.02);
+        borderPlane.setAttribute('width', W + 0.015);
+        borderPlane.setAttribute('height', H + 0.015);
         borderPlane.setAttribute('position', '0 0 -0.003');
-        borderPlane.setAttribute('material', 'color: #6366f1; opacity: 0.15; transparent: true; side: double');
+        borderPlane.setAttribute('material', 'color: #ffffff; opacity: 0.08; transparent: true; side: double');
         this.container.appendChild(borderPlane);
 
         // ── Top accent line ──
@@ -184,7 +184,7 @@ AFRAME.registerComponent('oracle-panel', {
         accentLine.setAttribute('width', W * 0.4);
         accentLine.setAttribute('height', '0.004');
         accentLine.setAttribute('position', `0 ${H / 2 - 0.04} 0.002`);
-        accentLine.setAttribute('material', 'color: #818cf8; opacity: 0.7; transparent: true');
+        accentLine.setAttribute('material', 'color: #ffffff; opacity: 0.15; transparent: true');
         this.container.appendChild(accentLine);
 
         // ── Title: "Oráculo" ──
@@ -192,7 +192,7 @@ AFRAME.registerComponent('oracle-panel', {
         title.setAttribute('value', 'Oráculo');
         title.setAttribute('position', `${-W / 2 + 0.12} ${H / 2 - 0.09} 0.005`);
         title.setAttribute('align', 'left');
-        title.setAttribute('color', '#e0e7ff');
+        title.setAttribute('color', '#ffffff');
         title.setAttribute('font', '/assets/fonts/custom-msdf.json');
         title.setAttribute('negate', false);
         title.setAttribute('scale', '0.35 0.35 0.35');
@@ -204,11 +204,11 @@ AFRAME.registerComponent('oracle-panel', {
         closeBtn.setAttribute('height', '0.12');
         closeBtn.setAttribute('position', `${W / 2 - 0.1} ${H / 2 - 0.09} 0.005`);
         closeBtn.setAttribute('class', 'sh-hitbox');
-        closeBtn.setAttribute('material', 'color: #1e1b4b; opacity: 0.6; transparent: true');
+        closeBtn.setAttribute('material', 'color: #27272a; opacity: 0.8; transparent: true');
         const closeText = document.createElement('a-text');
         closeText.setAttribute('value', '✕');
         closeText.setAttribute('align', 'center');
-        closeText.setAttribute('color', '#94a3b8');
+        closeText.setAttribute('color', '#a1a1aa');
         closeText.setAttribute('scale', '0.2 0.2 0.2');
         closeText.setAttribute('position', '0 0 0.003');
         closeBtn.appendChild(closeText);
@@ -218,8 +218,8 @@ AFRAME.registerComponent('oracle-panel', {
             if (window.VRHaptics) VRHaptics.tick();
         });
         closeBtn.addEventListener('mouseleave', () => {
-            closeBtn.setAttribute('material', 'color', '#1e1b4b');
-            closeText.setAttribute('color', '#94a3b8');
+            closeBtn.setAttribute('material', 'color', '#27272a');
+            closeText.setAttribute('color', '#a1a1aa');
         });
         closeBtn.addEventListener('click', () => {
             if (window.VRSounds) VRSounds.click();
@@ -234,25 +234,25 @@ AFRAME.registerComponent('oracle-panel', {
         this._followBtn.setAttribute('height', '0.12');
         this._followBtn.setAttribute('position', `${W / 2 - 0.24} ${H / 2 - 0.09} 0.005`);
         this._followBtn.setAttribute('class', 'sh-hitbox');
-        this._followBtn.setAttribute('material', 'color: #1e1b4b; opacity: 0.6; transparent: true');
+        this._followBtn.setAttribute('material', 'color: #27272a; opacity: 0.8; transparent: true');
         this._followLabel = document.createElement('a-text');
         this._followLabel.setAttribute('value', '📌');
         this._followLabel.setAttribute('align', 'center');
-        this._followLabel.setAttribute('color', '#94a3b8');
+        this._followLabel.setAttribute('color', '#a1a1aa');
         this._followLabel.setAttribute('scale', '0.18 0.18 0.18');
         this._followLabel.setAttribute('position', '0 0 0.003');
         this._followBtn.appendChild(this._followLabel);
         this._followBtn.addEventListener('mouseenter', () => {
-            this._followBtn.setAttribute('material', 'color', '#312e81');
+            this._followBtn.setAttribute('material', 'color', '#3f3f46');
             if (window.VRHaptics) VRHaptics.tick();
         });
         this._followBtn.addEventListener('mouseleave', () => {
-            this._followBtn.setAttribute('material', 'color', this.isFollowing ? '#4338ca' : '#1e1b4b');
+            this._followBtn.setAttribute('material', 'color', this.isFollowing ? '#3f3f46' : '#27272a');
         });
         this._followBtn.addEventListener('click', () => {
             this.isFollowing = !this.isFollowing;
-            this._followBtn.setAttribute('material', 'color', this.isFollowing ? '#4338ca' : '#1e1b4b');
-            this._followLabel.setAttribute('color', this.isFollowing ? '#e0e7ff' : '#94a3b8');
+            this._followBtn.setAttribute('material', 'color', this.isFollowing ? '#3f3f46' : '#27272a');
+            this._followLabel.setAttribute('color', this.isFollowing ? '#ffffff' : '#a1a1aa');
             if (window.VRSounds) VRSounds.click();
             if (window.VRHaptics) VRHaptics.click();
         });
@@ -263,14 +263,14 @@ AFRAME.registerComponent('oracle-panel', {
         this.contextPillBg.setAttribute('width', '0.5');
         this.contextPillBg.setAttribute('height', '0.05');
         this.contextPillBg.setAttribute('position', `0 ${H / 2 - 0.17} 0.004`);
-        this.contextPillBg.setAttribute('material', 'color: #1e1b4b; opacity: 0.6; transparent: true');
+        this.contextPillBg.setAttribute('material', 'color: #27272a; opacity: 0.8; transparent: true');
         this.container.appendChild(this.contextPillBg);
 
         this.contextLabel = document.createElement('a-text');
         this.contextLabel.setAttribute('value', '● Global');
         this.contextLabel.setAttribute('position', `0 ${H / 2 - 0.17} 0.006`);
         this.contextLabel.setAttribute('align', 'center');
-        this.contextLabel.setAttribute('color', '#34d399');
+        this.contextLabel.setAttribute('color', '#d4d4d8');
         this.contextLabel.setAttribute('scale', '0.18 0.18 0.18');
         this.contextLabel.setAttribute('font', '/assets/fonts/custom-msdf.json');
         this.contextLabel.setAttribute('negate', false);
@@ -278,10 +278,10 @@ AFRAME.registerComponent('oracle-panel', {
 
         // ── Separator line ──
         const sep1 = document.createElement('a-plane');
-        sep1.setAttribute('width', W - 0.16);
-        sep1.setAttribute('height', '0.001');
-        sep1.setAttribute('position', `0 ${H / 2 - 0.22} 0.004`);
-        sep1.setAttribute('material', 'color: #334155; opacity: 0.4; transparent: true');
+        sep1.setAttribute('width', W - 0.08);
+        sep1.setAttribute('height', '0.002');
+        sep1.setAttribute('position', `0 ${H / 2 - 0.22} 0.002`);
+        sep1.setAttribute('material', 'color: #e5e7eb; opacity: 1; transparent: true');
         this.container.appendChild(sep1);
 
         // ── Response Area (center of panel) ──
@@ -289,7 +289,7 @@ AFRAME.registerComponent('oracle-panel', {
         this.responseArea.setAttribute('value', 'Selecciona una pregunta para comenzar.');
         this.responseArea.setAttribute('position', `${-W / 2 + 0.1} 0.18 0.005`);
         this.responseArea.setAttribute('align', 'left');
-        this.responseArea.setAttribute('color', '#cbd5e1');
+        this.responseArea.setAttribute('color', '#e2e8f0');
         this.responseArea.setAttribute('scale', '0.17 0.17 0.17');
         this.responseArea.setAttribute('width', (W - 0.2) / 0.17);
         this.responseArea.setAttribute('wrap-count', 72);
@@ -303,7 +303,7 @@ AFRAME.registerComponent('oracle-panel', {
         this._thinkingDot = document.createElement('a-circle');
         this._thinkingDot.setAttribute('radius', '0.015');
         this._thinkingDot.setAttribute('position', `${W / 2 - 0.1} 0.18 0.005`);
-        this._thinkingDot.setAttribute('material', 'color: #818cf8; opacity: 0; transparent: true');
+        this._thinkingDot.setAttribute('material', 'color: #a1a1aa; opacity: 1; transparent: true');
         this._thinkingDot.setAttribute('visible', false);
         this.container.appendChild(this._thinkingDot);
 
@@ -318,16 +318,16 @@ AFRAME.registerComponent('oracle-panel', {
         this._pageIndicator.setAttribute('value', '');
         this._pageIndicator.setAttribute('position', `${W / 2 - 0.08} 0.01 0.005`);
         this._pageIndicator.setAttribute('align', 'center');
-        this._pageIndicator.setAttribute('color', '#64748b');
+        this._pageIndicator.setAttribute('color', '#9ca3af');
         this._pageIndicator.setAttribute('scale', '0.12 0.12 0.12');
         this.container.appendChild(this._pageIndicator);
 
         // ── Separator line before buttons ──
         const sep2 = document.createElement('a-plane');
         sep2.setAttribute('width', W - 0.16);
-        sep2.setAttribute('height', '0.001');
+        sep2.setAttribute('height', '0.002');
         sep2.setAttribute('position', `0 ${-H / 2 + 0.42} 0.004`);
-        sep2.setAttribute('material', 'color: #334155; opacity: 0.4; transparent: true');
+        sep2.setAttribute('material', 'color: #e5e7eb; opacity: 1; transparent: true');
         this.container.appendChild(sep2);
 
         // ── Buttons Container (bottom of panel — 3 rows of 2) ──
@@ -344,12 +344,12 @@ AFRAME.registerComponent('oracle-panel', {
         btn.setAttribute('height', '0.08');
         btn.setAttribute('position', `${x} ${y} 0.005`);
         btn.setAttribute('class', 'sh-hitbox');
-        btn.setAttribute('material', 'color: #1e1b4b; opacity: 0.7; transparent: true');
+        btn.setAttribute('material', 'color: #f3f4f6; opacity: 1; transparent: true');
 
         const txt = document.createElement('a-text');
         txt.setAttribute('value', label);
         txt.setAttribute('align', 'center');
-        txt.setAttribute('color', '#94a3b8');
+        txt.setAttribute('color', '#4b5563');
         txt.setAttribute('scale', '0.18 0.18 0.18');
         txt.setAttribute('position', '0 0 0.003');
         btn.appendChild(txt);
@@ -449,9 +449,9 @@ AFRAME.registerComponent('oracle-panel', {
             if (idx >= positions.length) return;
 
             const isBack = qText === 'Volver a Global';
-            const baseColor = isBack ? '#1e1b4b' : '#312e81';
-            const hoverColor = isBack ? '#312e81' : '#4338ca';
-            const textColor = isBack ? '#a5b4fc' : '#e0e7ff';
+            const baseColor = isBack ? '#18181b' : '#27272a';
+            const hoverColor = isBack ? '#27272a' : '#3f3f46';
+            const textColor = isBack ? '#a1a1aa' : '#ffffff';
 
             const btn = document.createElement('a-plane');
             btn.setAttribute('position', `${positions[idx].x} ${positions[idx].y} 0`);
@@ -491,13 +491,13 @@ AFRAME.registerComponent('oracle-panel', {
                     if (isBack) {
                         this.context = { type: 'global', filePath: null, fileName: null };
                         this.contextLabel.setAttribute('value', '● Global');
-                        this.contextLabel.setAttribute('color', '#34d399');
-                        this.contextPillBg.setAttribute('material', 'color', '#1e1b4b');
+                        this.contextLabel.setAttribute('color', '#d4d4d8');
+                        this.contextPillBg.setAttribute('material', 'color', '#27272a');
                         this._renderButtons();
                         // Reset HTML overlay context hint
                         if (this._contextHint) {
                             this._contextHint.textContent = 'Global';
-                            this._contextHint.style.color = '#34d399';
+                            this._contextHint.style.color = '#d4d4d8';
                         }
                     } else {
                         this.askOracle(qText);
@@ -515,12 +515,12 @@ AFRAME.registerComponent('oracle-panel', {
             this._micBtn.setAttribute('class', 'sh-hitbox');
             this._micBtn.setAttribute('width', btnW * 2 + 0.04);
             this._micBtn.setAttribute('height', btnH);
-            this._micBtn.setAttribute('material', 'color: #1e1b4b; opacity: 0.85; transparent: true');
+            this._micBtn.setAttribute('material', 'color: #27272a; opacity: 0.85; transparent: true');
 
             this._micLabel = document.createElement('a-text');
             this._micLabel.setAttribute('value', '🎤 Preguntar por voz');
             this._micLabel.setAttribute('align', 'center');
-            this._micLabel.setAttribute('color', '#a5b4fc');
+            this._micLabel.setAttribute('color', '#f8fafc');
             this._micLabel.setAttribute('scale', '0.15 0.15 0.15');
             this._micLabel.setAttribute('position', '0 0 0.003');
             this._micLabel.setAttribute('font', '/assets/fonts/custom-msdf.json');
@@ -529,13 +529,13 @@ AFRAME.registerComponent('oracle-panel', {
 
             this._micBtn.addEventListener('mouseenter', () => {
                 if (!this.isListening) {
-                    this._micBtn.setAttribute('material', 'color', '#312e81');
+                    this._micBtn.setAttribute('material', 'color', '#3f3f46');
                 }
                 if (window.VRHaptics) VRHaptics.tick();
             });
             this._micBtn.addEventListener('mouseleave', () => {
                 if (!this.isListening) {
-                    this._micBtn.setAttribute('material', 'color', '#1e1b4b');
+                    this._micBtn.setAttribute('material', 'color', '#27272a');
                 }
             });
             this._micBtn.addEventListener('click', () => {
@@ -602,14 +602,14 @@ AFRAME.registerComponent('oracle-panel', {
             // Truncate long file names
             const displayName = data.fileName.length > 30 ? data.fileName.substring(0, 27) + '...' : data.fileName;
             this.contextLabel.setAttribute('value', `◆ ${displayName}`);
-            this.contextLabel.setAttribute('color', '#fbbf24');
-            this.contextPillBg.setAttribute('material', 'color', '#422006');
+            this.contextLabel.setAttribute('color', '#60a5fa');
+            this.contextPillBg.setAttribute('material', 'color', '#27272a');
             this._renderButtons();
 
             // Update HTML overlay context hint
             if (this._contextHint) {
                 this._contextHint.textContent = displayName;
-                this._contextHint.style.color = '#fbbf24';
+                this._contextHint.style.color = '#60a5fa';
             }
 
             if (!this.isVisible) this.toggleVisibility();
@@ -746,10 +746,10 @@ AFRAME.registerComponent('oracle-panel', {
                         ? this.context.fileName.substring(0, 27) + '...'
                         : this.context.fileName;
                     this._contextHint.textContent = displayName;
-                    this._contextHint.style.color = '#fbbf24';
+                    this._contextHint.style.color = '#60a5fa';
                 } else {
                     this._contextHint.textContent = 'Global';
-                    this._contextHint.style.color = '#34d399';
+                    this._contextHint.style.color = '#d4d4d8';
                 }
             }
         } else {

@@ -29,9 +29,17 @@
 
             buildings.forEach(el => {
                 if (!this.isXRayMode) {
-                    // Restore original color
-                    const origColor = el.getAttribute('data-original-color');
-                    el.setAttribute('material', 'color', origColor);
+                    // Restore original color safely
+                    try {
+                        const origColor = el.getAttribute('data-original-color') || '#64748b';
+                        if (origColor !== 'undefined' && origColor !== 'null') {
+                            el.setAttribute('material', 'color', origColor);
+                        } else {
+                            el.setAttribute('material', 'color', '#64748b');
+                        }
+                    } catch (e) {
+                        console.warn('[CodeCity] Failed to restore color for building', e);
+                    }
                 } else {
                     // X-Ray Mode: Color by recency
                     const lastModified = parseInt(el.getAttribute('data-last-modified') || '0', 10);

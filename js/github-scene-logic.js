@@ -168,6 +168,8 @@
         'Perl': '#0298c3', 'Haskell': '#5e5086', 'Elixir': '#6e4a7e',
         'Clojure': '#db5855', 'Erlang': '#B83998', 'Objective-C': '#438eff'
     };
+    // Expose language colors globally for VR components
+    window.LANGUAGE_COLORS = LANGUAGE_COLORS;
 
     // ─────────────────────────────────────────────
     // CLOCK & SESSION TIMER
@@ -536,6 +538,9 @@
     }
 
     function populateDashboard(data) {
+        // Expose repo data globally for VR dashboard components
+        window._repoData = data;
+
         const dashboard = document.getElementById('data-dashboard');
         if (!dashboard) return;
 
@@ -1276,6 +1281,13 @@
             if (valCityScale) valCityScale.textContent = `${cityScale.toFixed(1)}x`;
             if (valHeightScale) valHeightScale.textContent = `${heightScale.toFixed(2)}x`;
             if (valThicknessScale) valThicknessScale.textContent = `${thicknessScale.toFixed(2)}x`;
+
+            // Expose current values globally for VR components to read/sync
+            window._visualSettings = {
+                cityScale: cityScale,
+                heightScale: heightScale,
+                thicknessScale: thicknessScale
+            };
 
             const cityEl = document.getElementById('code-city');
             if (cityEl) {
