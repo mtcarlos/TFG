@@ -36,6 +36,10 @@
     <!-- Superhands — Natural VR interaction -->
     <script src="https://unpkg.com/super-hands@^3.0.6/dist/super-hands.min.js"></script>
 
+    <!-- VR Systems (must load before a-scene to register components) -->
+    <script src="/js/vr-haptics.js"></script>
+    <script src="/js/vr-mode-manager.js"></script>
+
     <link rel="stylesheet" href="../css/github-scene.css">
 </head>
 
@@ -377,7 +381,7 @@
     <!-- ══════════════════════════════════════════
          A-FRAME SCENE
          ══════════════════════════════════════════ -->
-    <a-scene id="github-scene">
+    <a-scene id="github-scene" vr-mode-manager>
 
         <a-assets>
             <!-- Avatar template (supports sphere + robot head) -->

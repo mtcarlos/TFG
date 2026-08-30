@@ -42,19 +42,53 @@ AFRAME.registerComponent('vr-dashboard-panel', {
         // Title
         const title = document.createElement('a-text');
         title.setAttribute('value', 'VR Dashboard');
-        title.setAttribute('position', `0 ${H / 2 - 0.1} 0.01`);
-        title.setAttribute('align', 'center');
+        title.setAttribute('position', `${-W / 2 + 0.12} ${H / 2 - 0.08} 0.01`);
+        title.setAttribute('align', 'left');
         title.setAttribute('color', '#e2e8f0');
-        title.setAttribute('scale', '0.2 0.2 0.2');
+        title.setAttribute('scale', '0.22 0.22 0.22');
         this.container.appendChild(title);
+
+        // Close Button (✕)
+        const closeBtn = document.createElement('a-plane');
+        closeBtn.setAttribute('width', '0.1');
+        closeBtn.setAttribute('height', '0.1');
+        closeBtn.setAttribute('position', `${W / 2 - 0.08} ${H / 2 - 0.08} 0.01`);
+        closeBtn.setAttribute('class', 'sh-hitbox');
+        closeBtn.setAttribute('material', 'color: #1e293b; opacity: 0.8');
+        const closeText = document.createElement('a-text');
+        closeText.setAttribute('value', '✕');
+        closeText.setAttribute('align', 'center');
+        closeText.setAttribute('color', '#94a3b8');
+        closeText.setAttribute('scale', '0.16 0.16 0.16');
+        closeText.setAttribute('position', '0 0 0.005');
+        closeBtn.appendChild(closeText);
+        closeBtn.addEventListener('mouseenter', () => {
+            closeBtn.setAttribute('material', 'color', '#ef4444');
+            closeText.setAttribute('color', '#ffffff');
+            if (window.VRHaptics) VRHaptics.tick();
+        });
+        closeBtn.addEventListener('mouseleave', () => {
+            closeBtn.setAttribute('material', 'color', '#1e293b');
+            closeText.setAttribute('color', '#94a3b8');
+        });
+        closeBtn.addEventListener('mousedown', (e) => {
+            e.stopPropagation();
+            if (window.VRHaptics) VRHaptics.click();
+            if (window.VRSounds) VRSounds.click();
+            this.toggleVisibility();
+        });
+        this.container.appendChild(closeBtn);
 
         // ── X-RAY TOGGLE ──
         this.xrayBtn = this._createButton('Toggle X-Ray', 0, 0.1, '#ef4444', 0.8, 0.1);
-        this.xrayBtn.addEventListener('click', () => {
+        this.xrayBtn.addEventListener('mousedown', (e) => {
+            e.stopPropagation();
             if (window.CodeCity) {
                 const isXRay = window.CodeCity.toggleXRayMode();
                 this.xrayBtn.querySelector('a-text').setAttribute('value', isXRay ? 'X-Ray: ON' : 'X-Ray: OFF');
                 this.xrayBtn.setAttribute('material', 'color', isXRay ? '#dc2626' : '#334155');
+                if (window.VRHaptics) VRHaptics.click('both');
+                if (window.VRSounds) VRSounds.click();
             }
         });
         this.container.appendChild(this.xrayBtn);
@@ -87,21 +121,28 @@ AFRAME.registerComponent('vr-dashboard-panel', {
 
         this.currentCommitIndex = 0;
 
-        this.btnPrev.addEventListener('click', () => {
+        this.btnPrev.addEventListener('mousedown', (e) => {
+            e.stopPropagation();
             if (this.currentCommitIndex < this.commits.length - 1) {
                 this.currentCommitIndex++;
                 this._updateCommitLabel();
+                if (window.VRHaptics) VRHaptics.tick();
+                if (window.VRSounds) VRSounds.hover();
             }
         });
 
-        this.btnNext.addEventListener('click', () => {
+        this.btnNext.addEventListener('mousedown', (e) => {
+            e.stopPropagation();
             if (this.currentCommitIndex > 0) {
                 this.currentCommitIndex--;
                 this._updateCommitLabel();
+                if (window.VRHaptics) VRHaptics.tick();
+                if (window.VRSounds) VRSounds.hover();
             }
         });
 
-        this.btnGo.addEventListener('click', () => {
+        this.btnGo.addEventListener('mousedown', (e) => {
+            e.stopPropagation();
             if (this.commits.length > 0) {
                 const commit = this.commits[this.currentCommitIndex];
                 this._timeTravel(commit.hash);
@@ -128,6 +169,7 @@ AFRAME.registerComponent('vr-dashboard-panel', {
         btn.addEventListener('mouseenter', () => {
             btn.setAttribute('material', 'color', hoverColor);
             btn.setAttribute('scale', '1.05 1.05 1');
+            if (window.VRHaptics) VRHaptics.tick();
         });
         btn.addEventListener('mouseleave', () => {
             btn.setAttribute('material', 'color', '#334155');
@@ -189,9 +231,14 @@ AFRAME.registerComponent('vr-dashboard-panel', {
                     window.CodeCity.isXRayMode = false;
                     window.CodeCity.toggleXRayMode();
                 }
+
+                if (window.VRHaptics) VRHaptics.success('both');
+                if (window.VRSounds) VRSounds.success();
             }
         } catch (err) {
             console.error('[VRDashboard] Time Travel error:', err);
+            if (window.VRHaptics) VRHaptics.error('both');
+            if (window.VRSounds) VRSounds.error();
         } finally {
             this.btnGo.querySelector('a-text').setAttribute('value', 'Time Travel');
         }
@@ -202,24 +249,28 @@ AFRAME.registerComponent('vr-dashboard-panel', {
         const toggle = () => this.toggleVisibility();
         
         const bindControllers = () => {
-            const leftController = document.querySelector('#left-controller');
+            const rightController = document.querySelector('#right-controller');
             
-            if (leftController) {
-                // We'll map the Grip button on the left controller to open the dashboard as requested
-                leftController.addEventListener('gripdown', toggle);
+            if (rightController) {
+                // Map the B button on the right controller to open the dashboard (Phase 2)
+                rightController.addEventListener('bbuttondown', toggle);
             }
         };
 
-        if (this.el.sceneEl.hasLoaded) {
-            bindControllers();
-        } else {
-            this.el.sceneEl.addEventListener('loaded', bindControllers);
-        }
+        // Try binding immediately
+        bindControllers();
+
+        // Also wait for scene load in case controllers aren't initialized yet
+        document.querySelector('a-scene').addEventListener('loaded', bindControllers);
     },
 
     toggleVisibility: function () {
         this.isVisible = !this.isVisible;
         this.el.setAttribute('visible', this.isVisible);
+
+        // Feedback
+        if (window.VRSounds) VRSounds.swoosh();
+        if (window.VRHaptics) VRHaptics.click('both');
 
         if (this.isVisible) {
             const cameraEl = document.querySelector('#player');
@@ -234,6 +285,10 @@ AFRAME.registerComponent('vr-dashboard-panel', {
                 // Spawn the panel 1.5m in front of the user
                 const panelPos = pos.clone().add(dir.multiplyScalar(1.5));
                 panelPos.y += 0.2; // Slightly above eye level
+                
+                // Convert world position to local space of the rig
+                this.el.parentEl.object3D.worldToLocal(panelPos);
+                
                 this.el.setAttribute('position', panelPos);
                 this.el.object3D.lookAt(pos);
             }

@@ -14,7 +14,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, field_validator
 import re
 
-from config import PYTHON_PORT, OPENROUTER_API_KEY
+from config import PYTHON_PORT, GEMINI_API_KEY
 from analyzer import (
     clone_repo,
     analyze_file_tree,
@@ -138,10 +138,10 @@ async def oracle_ask(request: OracleRequest) -> dict:
             detail="Repository is not cloned yet. Wait for the city to be built.",
         )
 
-    if not OPENROUTER_API_KEY:
+    if not GEMINI_API_KEY:
         raise HTTPException(
             status_code=500,
-            detail="OPENROUTER_API_KEY not configured on the Python service.",
+            detail="GEMINI_API_KEY not configured on the Python service.",
         )
 
     print(
@@ -154,7 +154,7 @@ async def oracle_ask(request: OracleRequest) -> dict:
             question=request.question,
             file_path=request.filePath,
             clone_path=clone_path,
-            api_key=OPENROUTER_API_KEY,
+            api_key=GEMINI_API_KEY,
         )
         return {"answer": answer}
 
