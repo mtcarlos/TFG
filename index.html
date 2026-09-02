@@ -13,6 +13,9 @@
         href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="index.css">
+    <!-- Three.js + GLTFLoader for 3D Sphere World -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 </head>
 
 <body>
@@ -74,7 +77,59 @@
                 </div>
             </div>
 
-            <!-- Slide 2: PxlBuilder -->
+            <!-- Slide 2: GitHub Explorer -->
+            <div class="hud-slide" data-theme="emerald">
+                <div class="hud-content">
+                    <h2 class="hud-title"><span class="hud-accent-emerald">GitHub</span> Explorer</h2>
+
+                    <div class="hud-split">
+                        <div class="hud-text-block">
+                            <p>Visualize repositories as interactive cities. Search files instantly and ask the AI
+                                Oracle for deep codebase insights.</p>
+                        </div>
+                        <div class="hud-wireframe-display active-wireframe">
+                            <svg class="blueprint-svg city-blueprint" viewBox="0 0 200 150">
+                                <!-- Base Grid -->
+                                <path class="draw-base" d="M 100 120 L 180 80 L 100 40 L 20 80 Z" stroke="var(--text-3)"
+                                    fill="none" stroke-width="1.5" />
+                                <!-- Building 1 -->
+                                <path class="draw-bar hud-emerald-glow" d="M 60 70 L 60 30 L 80 20 L 80 60 Z"
+                                    stroke="currentColor" fill="none" stroke-width="1.5" />
+                                <path class="draw-bar hud-emerald-glow" d="M 60 30 L 80 20 L 100 30 L 80 40 Z"
+                                    stroke="currentColor" fill="none" stroke-width="1.5" />
+                                <path class="draw-bar hud-emerald-glow" d="M 80 60 L 80 40 L 100 30 L 100 50 Z"
+                                    stroke="currentColor" fill="none" stroke-width="1.5" />
+                                <!-- Building 2 -->
+                                <path class="draw-bar hud-emerald-glow" d="M 100 90 L 100 50 L 120 40 L 120 80 Z"
+                                    stroke="currentColor" fill="none" stroke-width="1.5"
+                                    style="animation-delay: 0.2s" />
+                                <path class="draw-bar hud-emerald-glow" d="M 100 50 L 120 40 L 140 50 L 120 60 Z"
+                                    stroke="currentColor" fill="none" stroke-width="1.5"
+                                    style="animation-delay: 0.2s" />
+                                <path class="draw-bar hud-emerald-glow" d="M 120 80 L 120 60 L 140 50 L 140 70 Z"
+                                    stroke="currentColor" fill="none" stroke-width="1.5"
+                                    style="animation-delay: 0.2s" />
+                                <!-- Fly-to Path -->
+                                <path class="draw-trend" d="M 30 20 Q 70 0 110 35" stroke="currentColor" fill="none"
+                                    stroke-width="2" stroke-dasharray="4 4" style="animation-delay: 0.5s" />
+                                <circle class="draw-eye" cx="110" cy="35" r="3" fill="var(--text-1)"
+                                    style="animation-delay: 0.8s" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="hud-legend">
+                        <div class="legend-item"><span class="legend-dot emerald-glow"></span> <strong>F:</strong>
+                            Search & Fly</div>
+                        <div class="legend-item"><span class="legend-dot emerald-glow"></span> <strong>O:</strong> AI
+                            Oracle</div>
+                        <div class="legend-item"><span class="legend-dot emerald-glow"></span> <strong>Click:</strong>
+                            Inspect File</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3: PxlBuilder -->
             <div class="hud-slide" data-theme="amber">
                 <div class="hud-content">
                     <h2 class="hud-title"><span class="hud-accent-amber">PxlBuilder</span> Protocol</h2>
@@ -119,7 +174,7 @@
                 </div>
             </div>
 
-            <!-- Slide 3: Data Room -->
+            <!-- Slide 4: Data Room -->
             <div class="hud-slide" data-theme="indigo">
                 <div class="hud-content">
                     <h2 class="hud-title"><span class="hud-accent-indigo">Data Room</span> Analysis</h2>
@@ -157,41 +212,6 @@
                                 Hover:</strong> Inspect Metrics</div>
                         <div class="legend-item"><span class="legend-dot indigo-glow"></span> <strong>Mouse:</strong>
                             Look Around</div>
-                    </div>
-                </div>
-            </div>
-            <!-- Slide 4: GitHub Explorer -->
-            <div class="hud-slide" data-theme="emerald">
-                <div class="hud-content">
-                    <h2 class="hud-title"><span class="hud-accent-emerald">GitHub</span> Explorer</h2>
-
-                    <div class="hud-split">
-                        <div class="hud-text-block">
-                            <p>Visualize repositories as interactive cities. Search files instantly and ask the AI Oracle for deep codebase insights.</p>
-                        </div>
-                        <div class="hud-wireframe-display active-wireframe">
-                            <svg class="blueprint-svg city-blueprint" viewBox="0 0 200 150">
-                                <!-- Base Grid -->
-                                <path class="draw-base" d="M 100 120 L 180 80 L 100 40 L 20 80 Z" stroke="var(--text-3)" fill="none" stroke-width="1.5"/>
-                                <!-- Building 1 -->
-                                <path class="draw-bar hud-emerald-glow" d="M 60 70 L 60 30 L 80 20 L 80 60 Z" stroke="currentColor" fill="none" stroke-width="1.5"/>
-                                <path class="draw-bar hud-emerald-glow" d="M 60 30 L 80 20 L 100 30 L 80 40 Z" stroke="currentColor" fill="none" stroke-width="1.5"/>
-                                <path class="draw-bar hud-emerald-glow" d="M 80 60 L 80 40 L 100 30 L 100 50 Z" stroke="currentColor" fill="none" stroke-width="1.5"/>
-                                <!-- Building 2 -->
-                                <path class="draw-bar hud-emerald-glow" d="M 100 90 L 100 50 L 120 40 L 120 80 Z" stroke="currentColor" fill="none" stroke-width="1.5" style="animation-delay: 0.2s"/>
-                                <path class="draw-bar hud-emerald-glow" d="M 100 50 L 120 40 L 140 50 L 120 60 Z" stroke="currentColor" fill="none" stroke-width="1.5" style="animation-delay: 0.2s"/>
-                                <path class="draw-bar hud-emerald-glow" d="M 120 80 L 120 60 L 140 50 L 140 70 Z" stroke="currentColor" fill="none" stroke-width="1.5" style="animation-delay: 0.2s"/>
-                                <!-- Fly-to Path -->
-                                <path class="draw-trend" d="M 30 20 Q 70 0 110 35" stroke="currentColor" fill="none" stroke-width="2" stroke-dasharray="4 4" style="animation-delay: 0.5s"/>
-                                <circle class="draw-eye" cx="110" cy="35" r="3" fill="var(--text-1)" style="animation-delay: 0.8s"/>
-                            </svg>
-                        </div>
-                    </div>
-
-                    <div class="hud-legend">
-                        <div class="legend-item"><span class="legend-dot emerald-glow"></span> <strong>F:</strong> Search & Fly</div>
-                        <div class="legend-item"><span class="legend-dot emerald-glow"></span> <strong>O:</strong> AI Oracle</div>
-                        <div class="legend-item"><span class="legend-dot emerald-glow"></span> <strong>Click:</strong> Inspect File</div>
                     </div>
                 </div>
             </div>
@@ -251,7 +271,6 @@
                     </div>
                 </div>
                 <div class="tc-body">
-                    <span class="tc-prompt">user@vr-spaces ~$</span>
                     <input type="text" id="usernameInput" class="tc-input" placeholder="enter your name"
                         autocomplete="off" spellcheck="false" maxlength="30">
                 </div>
@@ -259,7 +278,7 @@
 
             <div class="enter-hint">
                 <kbd class="hint-key">Enter ↵</kbd>
-                <span>to choose your space</span>
+                <span>to choose your tag name</span>
             </div>
         </main>
 
@@ -267,7 +286,7 @@
     </div>
 
     <!-- ═══════════════════════════════
-         SCREEN 2 — WORLD SELECTOR
+         SCREEN 2 — WORLD SELECTOR / 3D EARTH HUB
     ═══════════════════════════════ -->
     <div class="screen screen--hidden" id="screenWorlds">
         <nav class="nav">
@@ -282,63 +301,98 @@
             <span class="greeting">Hello, <strong id="displayName">Explorer</strong></span>
         </nav>
 
-        <div class="spotlight-stage">
-            <h2 class="worlds-h2">Choose your <em>space.</em></h2>
+        <!-- Main Earth Center Stage -->
+        <main class="earth-hub-stage">
+            <!-- 3D Sphere World Viewer Container -->
+            <div class="earth-viewer-wrapper" id="earthViewerWrapper">
+                <div class="earth-halo"></div>
+                <div class="earth-canvas-container" id="sphereContainer">
+                    <canvas id="sphereCanvas"></canvas>
+                </div>
+            </div>
 
-            <div class="spotlight-body">
-                <button class="spotlight-arrow spotlight-arrow--prev" id="prevWorld" aria-label="Previous world">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <polyline points="15 18 9 12 15 6" />
-                    </svg>
+            <!-- GitHub Mode Info Below the Earth -->
+            <div class="earth-hub-info">
+                <h1 class="earth-hub-title">VR CodeCity <em>Explorer.</em></h1>
+                <p class="earth-hub-desc">
+                    Three-dimensional visualization of code repositories, collaborative analysis of metrics and
+                    intelligent assistant Oracle in WebXR.
+                </p>
+
+                <div class="earth-hub-actions">
+                    <button class="enter-world-btn flagship-btn" id="enterGithubBtn" aria-label="Enter VR CodeCity">
+                        <span class="btn-text">Enter VR CodeCity</span>
+                        <span class="btn-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                                <polyline points="12 5 19 12 12 19" />
+                            </svg>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Minimalist Lateral Floating Dock for Other Modes -->
+        <aside class="side-worlds-dock" id="sideWorldsDock" aria-label="Otros espacios">
+            <div class="dock-header">
+                <span class="dock-title">Otros Espacios</span>
+            </div>
+
+            <div class="dock-items">
+                <!-- PxlBuilder Button with SVG Icon -->
+                <button class="dock-item" id="dockPxlBtn" aria-label="PxlBuilder Sandbox">
+                    <div class="dock-icon-box">
+                        <!-- Isometric Voxel Cube SVG -->
+                        <svg class="dock-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+                            </path>
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                        </svg>
+                    </div>
+                    <div class="dock-tooltip">
+                        <div class="dock-tt-header">
+                            <span class="dock-tt-name">PxlBuilder</span>
+                            <span class="dock-tt-tag tag-amber">Voxel</span>
+                        </div>
+                        <p class="dock-tt-desc">Sandbox voxel en tiempo real</p>
+                        <div class="live-badge" id="pxlBadge">
+                            <div class="live-dot dot-amber"></div>
+                            <span class="live-text" id="pxlBadgeText">0 online</span>
+                        </div>
+                    </div>
                 </button>
 
-                <div class="spotlight-center">
-                    <div class="orb-wrapper" id="orbWrapper">
-                        <div class="orb-glow" id="orbGlow"></div>
-                        <div class="orb-shell" id="orbShell">
-                            <canvas id="orbCanvas"></canvas>
+                <!-- Babia Data Room Button with SVG Icon -->
+                <button class="dock-item" id="dockBabiaBtn" aria-label="Babia Data Room">
+                    <div class="dock-icon-box">
+                        <!-- 3D Bar Chart / Analytics SVG -->
+                        <svg class="dock-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="20" x2="18" y2="10"></line>
+                            <line x1="12" y1="20" x2="12" y2="4"></line>
+                            <line x1="6" y1="20" x2="6" y2="14"></line>
+                            <line x1="2" y1="20" x2="22" y2="20"></line>
+                        </svg>
+                    </div>
+                    <div class="dock-tooltip">
+                        <div class="dock-tt-header">
+                            <span class="dock-tt-name">Data Room</span>
+                            <span class="dock-tt-tag tag-indigo">BabiaXR</span>
                         </div>
-                        <div class="orb-ring"></div>
-                        <div class="orb-particles" id="orbParticles"></div>
-                    </div>
-
-                    <div class="spotlight-info" id="spotlightInfo">
-                        <div class="spotlight-meta">
-                            <span class="spotlight-tag" id="worldTag">Creative</span>
-                            <div class="live-badge" id="worldBadge">
-                                <div class="live-dot"></div>
-                                <span class="live-text" id="worldBadgeText">0 online</span>
-                            </div>
+                        <p class="dock-tt-desc">Análisis de métricas 3D</p>
+                        <div class="live-badge" id="babiaBadge">
+                            <div class="live-dot dot-indigo"></div>
+                            <span class="live-text" id="babiaBadgeText">0 online</span>
                         </div>
-                        <h3 class="spotlight-name" id="worldName">PxlBuilder</h3>
-                        <p class="spotlight-desc" id="worldDesc">Build voxel structures and gather resources
-                            collaboratively in a shared 3D world.</p>
-                        <button class="enter-world-btn" id="enterWorldBtn">
-                            <span>Enter World</span>
-                            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <line x1="4" y1="10" x2="16" y2="10" />
-                                <polyline points="11 5 16 10 11 15" />
-                            </svg>
-                        </button>
                     </div>
-
-                    <div class="spotlight-dots">
-                        <button class="s-dot s-dot--active" data-index="0" aria-label="PxlBuilder"></button>
-                        <button class="s-dot" data-index="1" aria-label="Data Room"></button>
-                        <button class="s-dot" data-index="2" aria-label="GitHub Explorer"></button>
-                    </div>
-                </div>
-
-                <button class="spotlight-arrow spotlight-arrow--next" id="nextWorld" aria-label="Next world">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <polyline points="9 18 15 12 9 6" />
-                    </svg>
                 </button>
             </div>
-        </div>
+        </aside>
 
         <footer class="hero-foot">A-Frame &middot; Networked-Aframe &middot; BabiaXR &middot; EasyRTC</footer>
 
@@ -826,6 +880,7 @@
                 screenWorlds.classList.remove('screen--hidden'); // Remove initial old state
                 screenWorlds.classList.remove('screen--z-hidden');
                 screenWorlds.classList.add('screen--z-enter');
+                window.dispatchEvent(new Event('resize'));
                 setTimeout(() => screenWorlds.classList.remove('screen--z-enter'), 700);
             }, 450); // Matches CSS transition timing
         }
@@ -901,440 +956,339 @@
             });
         });
 
-        // ─── Focus username on load ───────────────────────────────────────
-        window.addEventListener('DOMContentLoaded', () => usernameInput.focus());
+        // ─── Focus username on load (and prefill from URL if coming back) ───
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const userFromUrl = urlParams.get('username');
+            if (userFromUrl) {
+                usernameInput.value = userFromUrl;
+            }
+            usernameInput.focus();
+        });
 
-        // ─── Orbital Portal Spotlight ─────────────────────────────────────
+        // ─── Hub Controller ───────────────────────────────────────────────
         (function () {
-            const worlds = [
-                {
-                    id: 'build',
-                    name: 'PxlBuilder',
-                    tag: 'Creative',
-                    desc: 'Build voxel structures and gather resources collaboratively in a shared 3D world.',
-                    url: 'scenes/scene.html',
-                    primary: '#B45309',
-                    glow: 'rgba(180, 83, 9, 0.20)',
-                    particle: 'rgba(245, 158, 11, 0.7)',
-                    room: 'basic-room',
-                    activity: 'Explorando',
-                    presence: { count: 0, users: [] }
-                },
-                {
-                    id: 'data',
-                    name: 'Data Room',
-                    tag: 'Analytics',
-                    desc: 'Analyze 3D charts and KPIs collaboratively in an immersive VR meeting room.',
-                    url: 'scenes/babia.html',
-                    primary: '#4338CA',
-                    glow: 'rgba(67, 56, 202, 0.20)',
-                    particle: 'rgba(129, 140, 248, 0.7)',
-                    room: 'babia-data-room',
-                    activity: 'Analizando',
-                    presence: { count: 0, users: [] }
-                },
-                {
-                    id: 'github',
-                    name: 'GitHub Explorer',
-                    tag: 'Analysis',
-                    desc: 'Analyze GitHub repositories collaboratively in immersive 3D. Create rooms and explore code metrics together.',
-                    url: 'lobby.html',
-                    primary: '#059669',
-                    glow: 'rgba(5, 150, 105, 0.20)',
-                    particle: 'rgba(52, 211, 153, 0.7)',
-                    room: 'github-lobby',
-                    activity: 'Analizando',
-                    presence: { count: 0, users: [] }
-                }
-            ];
-
-            let currentIndex = 0;
             let isTransitioning = false;
 
-            // DOM
-            const orbWrapper = document.getElementById('orbWrapper');
-            const orbCanvas = document.getElementById('orbCanvas');
-            const orbGlow = document.getElementById('orbGlow');
-            const orbParticles = document.getElementById('orbParticles');
-            const info = document.getElementById('spotlightInfo');
-            const wName = document.getElementById('worldName');
-            const wDesc = document.getElementById('worldDesc');
-            const wTag = document.getElementById('worldTag');
-            const wBadge = document.getElementById('worldBadge');
-            const wBadgeText = document.getElementById('worldBadgeText');
-            const enterBtn = document.getElementById('enterWorldBtn');
-            const prevBtn = document.getElementById('prevWorld');
-            const nextBtn = document.getElementById('nextWorld');
-            const dots = document.querySelectorAll('.s-dot');
             const enterFlash = document.getElementById('enterFlash');
+            const enterGithubBtn = document.getElementById('enterGithubBtn');
+            const dockPxlBtn = document.getElementById('dockPxlBtn');
+            const dockBabiaBtn = document.getElementById('dockBabiaBtn');
+            const earthViewerWrapper = document.getElementById('earthViewerWrapper');
 
-            // Canvas setup
-            const ORB = 520;
-            orbCanvas.width = ORB;
-            orbCanvas.height = ORB;
-            const ctx = orbCanvas.getContext('2d');
+            const pxlBadge = document.getElementById('pxlBadge');
+            const pxlBadgeText = document.getElementById('pxlBadgeText');
+            const babiaBadge = document.getElementById('babiaBadge');
+            const babiaBadgeText = document.getElementById('babiaBadgeText');
 
-            // ── Particles ─────────────────────────────────────
-            function createParticles() {
-                orbParticles.innerHTML = '';
-                for (let i = 0; i < 10; i++) {
-                    const p = document.createElement('span');
-                    p.className = 'orb-particle';
-                    const a = (i / 10) * Math.PI * 2;
-                    const r = 130;
-                    p.style.left = (130 + Math.cos(a) * r) + 'px';
-                    p.style.top = (130 + Math.sin(a) * r) + 'px';
-                    p.style.setProperty('--px', Math.cos(a) * (40 + Math.random() * 30) + 'px');
-                    p.style.setProperty('--py', Math.sin(a) * (40 + Math.random() * 30) + 'px');
-                    p.style.animationDelay = (Math.random() * 2).toFixed(1) + 's';
-                    orbParticles.appendChild(p);
-                }
-            }
-
-            // ── Update display ────────────────────────────────
-            function applyWorld(w) {
-                wName.textContent = w.name;
-                wDesc.textContent = w.desc;
-                wTag.textContent = w.tag;
-                document.documentElement.style.setProperty('--orb-primary', w.primary);
-                document.documentElement.style.setProperty('--orb-glow', w.glow);
-                document.documentElement.style.setProperty('--orb-particle', w.particle);
-                dots.forEach((d, i) => d.classList.toggle('s-dot--active', i === currentIndex));
-
-                // Presence
-                if (w.presence.count > 0) {
-                    wBadge.classList.add('visible');
-                    wBadgeText.textContent = w.presence.count + ' ' + w.activity;
-                    wBadge.title = w.presence.users.join(', ');
-                } else {
-                    wBadge.classList.remove('visible');
-                }
-            }
-
-            // ── Transition ────────────────────────────────────
-            function goTo(idx) {
-                if (isTransitioning || idx === currentIndex) return;
-                isTransitioning = true;
-
-                orbWrapper.style.opacity = '0';
-                orbWrapper.style.filter = 'blur(10px)';
-                info.classList.add('info--changing');
-
-                setTimeout(() => {
-                    currentIndex = idx;
-                    applyWorld(worlds[idx]);
-                    orbWrapper.offsetHeight; // reflow
-                    orbWrapper.style.opacity = '1';
-                    orbWrapper.style.filter = 'blur(0)';
-                    info.classList.remove('info--changing');
-                    setTimeout(() => { isTransitioning = false; }, 420);
-                }, 380);
-            }
-
-            function next() { goTo((currentIndex + 1) % worlds.length); }
-            function prev() { goTo((currentIndex - 1 + worlds.length) % worlds.length); }
-
-            prevBtn.addEventListener('click', prev);
-            nextBtn.addEventListener('click', next);
-            dots.forEach((d, i) => d.addEventListener('click', () => goTo(i)));
-
-            // Keyboard arrows
-            document.addEventListener('keydown', e => {
-                if (screenWorlds.classList.contains('screen--hidden')) return;
-                if (aboutModal.classList.contains('modal--open')) return;
-                if (e.key === 'Escape') aboutModal.classList.remove('modal--open');
-                if (e.key === 'ArrowLeft') prev();
-                if (e.key === 'ArrowRight') next();
-            });
-
-            // ── Enter world (cinematic) ───────────────────────
-            enterBtn.addEventListener('click', () => {
+            // ── Navigation Transitions ────────────────────────
+            function launchWorld(url, isFlagship = false) {
                 if (isTransitioning) return;
                 isTransitioning = true;
-                const w = worlds[currentIndex];
+                if (typeof AudioEngine !== 'undefined') AudioEngine.playTick();
 
-                orbWrapper.style.transition = 'transform 0.7s cubic-bezier(.4,0,.2,1), opacity 0.7s ease';
-                orbWrapper.style.transform = 'scale(2.8)';
-                orbWrapper.style.opacity = '0';
+                const targetUrl = url + '?username=' + encodeURIComponent(getUsername());
 
-                setTimeout(() => {
-                    enterFlash.classList.add('enter-flash--active');
-                    setTimeout(() => {
-                        window.location.href = w.url + '?username=' + encodeURIComponent(getUsername());
-                    }, 350);
-                }, 450);
-            });
+                if (isFlagship && window.triggerEarthZoom) {
+                    window.triggerEarthZoom();
 
-            // ── Canvas: Voxel Preview ─────────────────────────
-            function drawIso(cx, cy, s, topA, leftA, rightA) {
-                const h = s * 0.58;
-                // Top
-                ctx.beginPath();
-                ctx.moveTo(cx, cy - h);
-                ctx.lineTo(cx + s, cy);
-                ctx.lineTo(cx, cy + h);
-                ctx.lineTo(cx - s, cy);
-                ctx.closePath();
-                ctx.fillStyle = `rgba(245,158,11,${topA})`;
-                ctx.fill();
-                // Left
-                ctx.beginPath();
-                ctx.moveTo(cx - s, cy);
-                ctx.lineTo(cx, cy + h);
-                ctx.lineTo(cx, cy + h + s * 0.85);
-                ctx.lineTo(cx - s, cy + s * 0.85);
-                ctx.closePath();
-                ctx.fillStyle = `rgba(180,83,9,${leftA})`;
-                ctx.fill();
-                // Right
-                ctx.beginPath();
-                ctx.moveTo(cx + s, cy);
-                ctx.lineTo(cx, cy + h);
-                ctx.lineTo(cx, cy + h + s * 0.85);
-                ctx.lineTo(cx + s, cy + s * 0.85);
-                ctx.closePath();
-                ctx.fillStyle = `rgba(180,83,9,${rightA})`;
-                ctx.fill();
-                // Edges
-                ctx.strokeStyle = 'rgba(251,191,36,0.35)';
-                ctx.lineWidth = 0.8;
-                ctx.beginPath();
-                ctx.moveTo(cx, cy - h); ctx.lineTo(cx + s, cy); ctx.lineTo(cx, cy + h); ctx.lineTo(cx - s, cy); ctx.closePath(); ctx.stroke();
-                ctx.beginPath();
-                ctx.moveTo(cx - s, cy); ctx.lineTo(cx - s, cy + s * 0.85); ctx.lineTo(cx, cy + h + s * 0.85); ctx.lineTo(cx, cy + h); ctx.stroke();
-                ctx.beginPath();
-                ctx.moveTo(cx + s, cy); ctx.lineTo(cx + s, cy + s * 0.85); ctx.lineTo(cx, cy + h + s * 0.85); ctx.lineTo(cx, cy + h); ctx.stroke();
-            }
+                    const earthViewerWrapper = document.getElementById('earthViewerWrapper');
+                    if (earthViewerWrapper) {
+                        // Stop the float animation
+                        earthViewerWrapper.style.animation = 'none';
 
-            function drawVoxel(t) {
-                const s = ORB;
-                const bg = ctx.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s * 0.5);
-                bg.addColorStop(0, '#1f1408');
-                bg.addColorStop(1, '#0a0604');
-                ctx.fillStyle = bg;
-                ctx.fillRect(0, 0, s, s);
-
-                const cubes = [
-                    [0, 0, 0], [1, 0, 0], [-1, 0, 0], [0, 1, 0], [0, -1, 0],
-                    [0, 0, 1], [1, 1, 0], [-1, 1, 0], [1, 0, 1], [0, 2, 0],
-                    [-1, 0, 1], [2, 0, 0], [1, -1, 0]
-                ];
-                const cs = s * 0.038;
-                const spacing = cs * 2.8;
-                const angle = t * 0.00035;
-                const cosA = Math.cos(angle), sinA = Math.sin(angle);
-
-                const proj = cubes.map(([gx, gy, gz]) => {
-                    const rx = gx * cosA - gz * sinA;
-                    const rz = gx * sinA + gz * cosA;
-                    const sx = s / 2 + (rx - rz) * spacing * 0.7;
-                    const sy = s / 2 + (rx + rz) * spacing * 0.35 - gy * spacing * 0.82;
-                    const pulse = 0.35 + Math.sin(t * 0.0015 + gx * 2 + gy * 3 + gz) * 0.2;
-                    return { sx, sy, depth: rx + rz - gy * 0.5, pulse };
-                });
-                proj.sort((a, b) => a.depth - b.depth);
-                for (const { sx, sy, pulse } of proj) {
-                    drawIso(sx, sy, cs, pulse * 0.7, pulse * 0.5, pulse * 0.35);
-                }
-
-                // sparkles
-                for (let i = 0; i < 6; i++) {
-                    const a2 = t * 0.0004 + i * 1.05;
-                    const r2 = s * 0.28 + Math.sin(t * 0.001 + i) * s * 0.04;
-                    const px = s / 2 + Math.cos(a2) * r2;
-                    const py = s / 2 + Math.sin(a2) * r2 * 0.55;
-                    const al = 0.15 + Math.sin(t * 0.003 + i * 1.7) * 0.12;
-                    ctx.beginPath();
-                    ctx.arc(px, py, s * 0.005, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(251,191,36,${al})`;
-                    ctx.fill();
-                }
-            }
-
-            // ── Canvas: Data Preview ──────────────────────────
-            function drawData(t) {
-                const s = ORB;
-                const bg = ctx.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s * 0.5);
-                bg.addColorStop(0, '#0c0a1e');
-                bg.addColorStop(1, '#050510');
-                ctx.fillStyle = bg;
-                ctx.fillRect(0, 0, s, s);
-
-                const barCount = 7, barW = s * 0.032;
-                const gap = s * 0.07;
-                const startX = s / 2 - ((barCount - 1) * gap) / 2;
-                const baseY = s * 0.62;
-
-                // Bars
-                for (let i = 0; i < barCount; i++) {
-                    const x = startX + i * gap;
-                    const hf = 0.25 + Math.sin(t * 0.0008 + i * 0.9) * 0.18 + Math.sin(t * 0.0013 + i * 1.4) * 0.12;
-                    const h = s * hf;
-                    const grad = ctx.createLinearGradient(x, baseY, x, baseY - h);
-                    grad.addColorStop(0, 'rgba(67,56,202,0.25)');
-                    grad.addColorStop(1, 'rgba(129,140,248,0.75)');
-                    ctx.fillStyle = grad;
-                    ctx.beginPath();
-                    ctx.moveTo(x - barW / 2, baseY);
-                    ctx.lineTo(x - barW / 2, baseY - h + barW / 2);
-                    ctx.quadraticCurveTo(x - barW / 2, baseY - h, x, baseY - h);
-                    ctx.quadraticCurveTo(x + barW / 2, baseY - h, x + barW / 2, baseY - h + barW / 2);
-                    ctx.lineTo(x + barW / 2, baseY);
-                    ctx.closePath();
-                    ctx.fill();
-
-                    // Top dot
-                    ctx.beginPath();
-                    ctx.arc(x, baseY - h, barW * 0.38, 0, Math.PI * 2);
-                    ctx.fillStyle = 'rgba(199,210,254,0.85)';
-                    ctx.fill();
-                }
-
-                // Base line
-                ctx.beginPath();
-                ctx.moveTo(s * 0.2, baseY);
-                ctx.lineTo(s * 0.8, baseY);
-                ctx.strokeStyle = 'rgba(67,56,202,0.25)';
-                ctx.lineWidth = 1;
-                ctx.stroke();
-
-                // Line chart overlay
-                ctx.beginPath();
-                for (let i = 0; i < barCount; i++) {
-                    const x = startX + i * gap;
-                    const hf = 0.2 + Math.sin(t * 0.0006 + i * 1.1) * 0.12 + Math.cos(t * 0.001 + i * 0.7) * 0.08;
-                    const y = baseY - s * hf;
-                    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-                }
-                ctx.strokeStyle = 'rgba(167,139,250,0.4)';
-                ctx.lineWidth = 1.5;
-                ctx.stroke();
-
-                // Floating particles
-                for (let i = 0; i < 10; i++) {
-                    const a2 = t * 0.00025 + i * (Math.PI * 2 / 10);
-                    const r2 = s * 0.3 + Math.sin(t * 0.0008 + i) * s * 0.05;
-                    const px = s / 2 + Math.cos(a2) * r2;
-                    const py = s / 2 + Math.sin(a2) * r2 * 0.6;
-                    const al = 0.12 + Math.sin(t * 0.002 + i * 2.5) * 0.1;
-                    ctx.beginPath();
-                    ctx.arc(px, py, s * 0.006, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(129,140,248,${al})`;
-                    ctx.fill();
-                }
-            }
-
-            // ── Canvas: GitHub Preview ────────────────────────
-            function drawGitHub(t) {
-                const s = ORB;
-                const bg = ctx.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s * 0.5);
-                bg.addColorStop(0, '#071a12');
-                bg.addColorStop(1, '#030a06');
-                ctx.fillStyle = bg;
-                ctx.fillRect(0, 0, s, s);
-
-                // Network graph nodes
-                const nodeCount = 12;
-                const nodes = [];
-                for (let i = 0; i < nodeCount; i++) {
-                    const angle = (i / nodeCount) * Math.PI * 2 + t * 0.0002;
-                    const radius = s * (0.15 + (i % 3) * 0.08);
-                    const wobble = Math.sin(t * 0.001 + i * 2.1) * s * 0.03;
-                    const nx = s / 2 + Math.cos(angle) * (radius + wobble);
-                    const ny = s / 2 + Math.sin(angle) * (radius + wobble) * 0.7;
-                    nodes.push({ x: nx, y: ny, i });
-                }
-
-                // Draw connections
-                ctx.lineWidth = 1;
-                for (let i = 0; i < nodes.length; i++) {
-                    for (let j = i + 1; j < nodes.length; j++) {
-                        const dx = nodes[i].x - nodes[j].x;
-                        const dy = nodes[i].y - nodes[j].y;
-                        const dist = Math.sqrt(dx * dx + dy * dy);
-                        if (dist < s * 0.28) {
-                            const alpha = 0.15 * (1 - dist / (s * 0.28));
-                            ctx.strokeStyle = `rgba(52, 211, 153, ${alpha})`;
-                            ctx.beginPath();
-                            ctx.moveTo(nodes[i].x, nodes[i].y);
-                            ctx.lineTo(nodes[j].x, nodes[j].y);
-                            ctx.stroke();
+                        // Hide the halo smoothly
+                        const halo = earthViewerWrapper.querySelector('.earth-halo');
+                        if (halo) {
+                            halo.style.transition = 'opacity 0.3s ease';
+                            halo.style.opacity = '0';
                         }
+
+                        // Get exact current on-screen position
+                        const rect = earthViewerWrapper.getBoundingClientRect();
+
+                        // Set to fixed without jumping
+                        earthViewerWrapper.style.position = 'fixed';
+                        earthViewerWrapper.style.left = rect.left + 'px';
+                        earthViewerWrapper.style.top = rect.top + 'px';
+                        earthViewerWrapper.style.width = rect.width + 'px';
+                        earthViewerWrapper.style.height = rect.height + 'px';
+                        earthViewerWrapper.style.margin = '0';
+                        earthViewerWrapper.style.transform = 'none'; // Clear any transform from animation
+                        earthViewerWrapper.style.zIndex = '9999';
+
+                        // Force layout recalculation
+                        earthViewerWrapper.offsetHeight;
+
+                        // Apply smooth transition
+                        earthViewerWrapper.style.transition = 'all 0.8s cubic-bezier(0.5, 0, 0.2, 1)';
+                        earthViewerWrapper.style.left = '0px';
+                        earthViewerWrapper.style.top = '0px';
+                        earthViewerWrapper.style.width = '100vw';
+                        earthViewerWrapper.style.height = '100vh';
+
+                        // Smoothly remove the circular mask
+                        const sphereContainer = document.getElementById('sphereContainer');
+                        if (sphereContainer) {
+                            sphereContainer.style.transition = 'border-radius 0.8s cubic-bezier(0.5, 0, 0.2, 1)';
+                            sphereContainer.style.borderRadius = '0';
+                        }
+
+                        // Continuously update ThreeJS canvas size during the CSS animation
+                        const resizeInterval = setInterval(() => window.dispatchEvent(new Event('resize')), 16);
+                        setTimeout(() => clearInterval(resizeInterval), 900);
                     }
-                }
 
-                // Draw nodes
-                nodes.forEach((node, idx) => {
-                    const pulse = 0.6 + Math.sin(t * 0.002 + idx * 1.5) * 0.3;
-                    const r = s * (0.012 + (idx % 4 === 0 ? 0.008 : 0));
+                    // Hide UI for cinematic effect
+                    const hubInfo = document.querySelector('.earth-hub-info');
+                    if (hubInfo) {
+                        hubInfo.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                        hubInfo.style.opacity = '0';
+                        hubInfo.style.transform = 'translateY(20px)';
+                    }
 
-                    // Glow
-                    const glow = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, r * 4);
-                    glow.addColorStop(0, `rgba(52, 211, 153, ${pulse * 0.3})`);
-                    glow.addColorStop(1, 'transparent');
-                    ctx.fillStyle = glow;
-                    ctx.beginPath();
-                    ctx.arc(node.x, node.y, r * 4, 0, Math.PI * 2);
-                    ctx.fill();
+                    const sideDock = document.getElementById('sideWorldsDock');
+                    if (sideDock) {
+                        sideDock.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                        sideDock.style.opacity = '0';
+                        sideDock.style.transform = 'translateX(20px)';
+                    }
 
-                    // Core
-                    ctx.beginPath();
-                    ctx.arc(node.x, node.y, r, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(52, 211, 153, ${pulse})`;
-                    ctx.fill();
-                });
+                    const nav = document.querySelector('#screenWorlds .nav');
+                    if (nav) {
+                        nav.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                        nav.style.opacity = '0';
+                        nav.style.transform = 'translateY(-20px)';
+                    }
 
-                // Central icon placeholder (commit dot)
-                const cx = s / 2, cy = s / 2;
-                ctx.beginPath();
-                ctx.arc(cx, cy, s * 0.025, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(5, 150, 105, ${0.7 + Math.sin(t * 0.003) * 0.2})`;
-                ctx.fill();
+                    setTimeout(() => {
+                        if (enterFlash) enterFlash.classList.add('enter-flash--active');
+                        setTimeout(() => {
+                            window.location.href = targetUrl;
+                        }, 400);
+                    }, 1200); // Wait for the zoom to feel impactful
+                } else {
+                    if (isFlagship && earthViewerWrapper) {
+                        earthViewerWrapper.style.transition = 'transform 0.6s cubic-bezier(.4,0,.2,1), opacity 0.6s ease';
+                        earthViewerWrapper.style.transform = 'scale(1.35)';
+                        earthViewerWrapper.style.opacity = '0';
+                    }
 
-                // Orbiting sparkles
-                for (let i = 0; i < 8; i++) {
-                    const a2 = t * 0.0003 + i * (Math.PI * 2 / 8);
-                    const r2 = s * 0.32 + Math.sin(t * 0.0008 + i) * s * 0.04;
-                    const px = s / 2 + Math.cos(a2) * r2;
-                    const py = s / 2 + Math.sin(a2) * r2 * 0.6;
-                    const al = 0.15 + Math.sin(t * 0.002 + i * 2.5) * 0.1;
-                    ctx.beginPath();
-                    ctx.arc(px, py, s * 0.005, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(52, 211, 153, ${al})`;
-                    ctx.fill();
+                    setTimeout(() => {
+                        if (enterFlash) enterFlash.classList.add('enter-flash--active');
+                        setTimeout(() => {
+                            window.location.href = targetUrl;
+                        }, 320);
+                    }, isFlagship ? 350 : 150);
                 }
             }
 
-            // ── Animation loop ────────────────────────────────
-            function drawOrb() {
-                const t = performance.now();
-                const wId = worlds[currentIndex].id;
-                if (wId === 'build') drawVoxel(t);
-                else if (wId === 'github') drawGitHub(t);
-                else drawData(t);
-                requestAnimationFrame(drawOrb);
-            }
+            if (enterGithubBtn) enterGithubBtn.addEventListener('click', () => launchWorld('lobby.html', true));
+            if (dockPxlBtn) dockPxlBtn.addEventListener('click', () => launchWorld('scenes/scene.html', false));
+            if (dockBabiaBtn) dockBabiaBtn.addEventListener('click', () => launchWorld('scenes/babia.html', false));
 
-            // ── Presence polling ──────────────────────────────
+            // ── Presence Polling ──────────────────────────────
             async function fetchPresence() {
                 try {
                     const res = await fetch('/api/status');
                     if (!res.ok) return;
                     const data = await res.json();
-                    worlds[0].presence = data['basic-room'] || { count: 0, users: [] };
-                    worlds[1].presence = data['babia-data-room'] || { count: 0, users: [] };
-                    applyWorld(worlds[currentIndex]);
+
+                    // PxlBuilder
+                    const pxlData = data['basic-room'] || { count: 0, users: [] };
+                    if (pxlBadge && pxlBadgeText) {
+                        if (pxlData.count > 0) {
+                            pxlBadge.classList.add('visible');
+                            pxlBadgeText.textContent = `${pxlData.count} explorando`;
+                            pxlBadge.title = pxlData.users.join(', ');
+                        } else {
+                            pxlBadge.classList.remove('visible');
+                        }
+                    }
+
+                    // Babia Data Room
+                    const babiaData = data['babia-data-room'] || { count: 0, users: [] };
+                    if (babiaBadge && babiaBadgeText) {
+                        if (babiaData.count > 0) {
+                            babiaBadge.classList.add('visible');
+                            babiaBadgeText.textContent = `${babiaData.count} analizando`;
+                            babiaBadge.title = babiaData.users.join(', ');
+                        } else {
+                            babiaBadge.classList.remove('visible');
+                        }
+                    }
+
                 } catch (err) {
                     // silent
                 }
             }
-            setInterval(fetchPresence, 4000);
-            setTimeout(fetchPresence, 500);
 
-            // ── Init ──────────────────────────────────────────
-            createParticles();
-            applyWorld(worlds[0]);
-            drawOrb();
+            setInterval(fetchPresence, 4000);
+            setTimeout(fetchPresence, 400);
+
+            // ── 3D Sphere World Viewer (Three.js) ─────────────
+            (function initSphereViewer() {
+                const canvas = document.getElementById('sphereCanvas');
+                if (!canvas || typeof THREE === 'undefined') return;
+
+                const container = document.getElementById('sphereContainer');
+                if (!container) return;
+
+                let width = container.clientWidth || 320;
+                let height = container.clientHeight || 320;
+
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 1000);
+                camera.position.set(0, 0, 4.2);
+
+                const renderer = new THREE.WebGLRenderer({
+                    canvas,
+                    alpha: true,
+                    antialias: true,
+                    powerPreference: 'high-performance'
+                });
+                renderer.setSize(width, height);
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                if (THREE.sRGBEncoding) renderer.outputEncoding = THREE.sRGBEncoding;
+
+                // Lighting
+                const ambientLight = new THREE.AmbientLight(0xffffff, 1.3);
+                scene.add(ambientLight);
+
+                const sunLight = new THREE.DirectionalLight(0xfff8ee, 1.4);
+                sunLight.position.set(6, 10, 7);
+                scene.add(sunLight);
+
+                const fillLight = new THREE.DirectionalLight(0xa0d8ef, 0.7);
+                fillLight.position.set(-6, -4, -4);
+                scene.add(fillLight);
+
+                let model = null;
+                let isDragging = false;
+                let prevMouseX = 0;
+                let prevMouseY = 0;
+                let targetRotY = 0;
+                let targetRotX = 0.2;
+                let currentRotY = 0;
+                let currentRotX = 0.2;
+                let autoRotSpeed = 0.0035;
+                let isZoomingIn = false;
+
+                window.triggerEarthZoom = function () {
+                    isZoomingIn = true;
+                };
+
+                const loader = new THREE.GLTFLoader();
+                loader.load('assets/models/minecraft_sphere_world_2.glb', (gltf) => {
+                    model = gltf.scene;
+
+                    // Center & normalize scale
+                    const box = new THREE.Box3().setFromObject(model);
+                    const center = box.getCenter(new THREE.Vector3());
+                    const size = box.getSize(new THREE.Vector3());
+                    const maxDim = Math.max(size.x, size.y, size.z);
+                    const targetScale = 2.3 / (maxDim || 1);
+
+                    model.scale.set(targetScale, targetScale, targetScale);
+                    model.position.sub(center.multiplyScalar(targetScale));
+
+                    // Initial orientation
+                    model.rotation.x = currentRotX;
+                    scene.add(model);
+                }, undefined, (err) => {
+                    console.warn('Error loading sphere model:', err);
+                });
+
+                // Mouse interaction
+                canvas.addEventListener('mousedown', (e) => {
+                    isDragging = true;
+                    prevMouseX = e.clientX;
+                    prevMouseY = e.clientY;
+                });
+
+                window.addEventListener('mouseup', () => {
+                    isDragging = false;
+                });
+
+                window.addEventListener('mousemove', (e) => {
+                    if (!isDragging || !model) return;
+                    const deltaX = e.clientX - prevMouseX;
+                    const deltaY = e.clientY - prevMouseY;
+                    prevMouseX = e.clientX;
+                    prevMouseY = e.clientY;
+
+                    targetRotY += deltaX * 0.009;
+                    targetRotX = Math.max(-0.8, Math.min(0.8, targetRotX + deltaY * 0.009));
+                });
+
+                // Touch interaction for mobile
+                canvas.addEventListener('touchstart', (e) => {
+                    if (e.touches.length === 1) {
+                        isDragging = true;
+                        prevMouseX = e.touches[0].clientX;
+                        prevMouseY = e.touches[0].clientY;
+                    }
+                }, { passive: true });
+
+                window.addEventListener('touchend', () => {
+                    isDragging = false;
+                });
+
+                window.addEventListener('touchmove', (e) => {
+                    if (!isDragging || !model || e.touches.length !== 1) return;
+                    const deltaX = e.touches[0].clientX - prevMouseX;
+                    const deltaY = e.touches[0].clientY - prevMouseY;
+                    prevMouseX = e.touches[0].clientX;
+                    prevMouseY = e.touches[0].clientY;
+
+                    targetRotY += deltaX * 0.009;
+                    targetRotX = Math.max(-0.8, Math.min(0.8, targetRotX + deltaY * 0.009));
+                }, { passive: true });
+
+                // Render Loop
+                function animate() {
+                    requestAnimationFrame(animate);
+
+                    if (model) {
+                        if (!isDragging && !isZoomingIn) {
+                            targetRotY += autoRotSpeed;
+                        }
+
+                        if (isZoomingIn) {
+                            // Cinematic Zoom Logic
+                            camera.position.z += (0.1 - camera.position.z) * 0.03;
+                            targetRotY += 0.015; // Spin faster while zooming
+                            targetRotX += (0 - targetRotX) * 0.05; // Level the camera
+                            // Warp effect by increasing FOV
+                            camera.fov += (90 - camera.fov) * 0.03;
+                            camera.updateProjectionMatrix();
+                        }
+
+                        // Smooth interpolation (damping)
+                        currentRotY += (targetRotY - currentRotY) * 0.08;
+                        currentRotX += (targetRotX - currentRotX) * 0.08;
+
+                        model.rotation.y = currentRotY;
+                        model.rotation.x = currentRotX;
+                    }
+
+                    renderer.render(scene, camera);
+                }
+                animate();
+
+                // Resize handler
+                function onResize() {
+                    if (!container) return;
+                    width = container.clientWidth || 320;
+                    height = container.clientHeight || 320;
+                    if (width > 0 && height > 0) {
+                        camera.aspect = width / height;
+                        camera.updateProjectionMatrix();
+                        renderer.setSize(width, height);
+                    }
+                }
+                window.addEventListener('resize', onResize);
+            })();
         })();
     </script>
 

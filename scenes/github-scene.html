@@ -924,7 +924,7 @@
             </a-entity>
 
             <!-- Right Controller: Snap Turn (thumbstick) + Grab (trigger/grip) -->
-            <a-entity id="right-controller" laser-controls="hand: right; model: true"
+            <a-entity id="right-controller" laser-controls="hand: right; model: true" vr-right-wrist-menu
                 cursor="fuse: false; rayOrigin: entity;"
                 raycaster="objects: .sh-hitbox, .babia-bar, .babia-slice, .babia-cyl; far: 15; showLine: true; lineColor: #d4a853; lineOpacity: 0.35"
                 super-hands="colliderEvent: raycaster-intersection;
@@ -957,9 +957,10 @@
 
     <!-- Scene Logic -->
     <script src="/js/code-city.js"></script>
+    <script src="/js/vr-wrist-menu.js"></script>
+    <script src="/js/vr-right-wrist-menu.js"></script>
     <script src="/js/oracle-panel.js"></script>
     <script src="/js/vr-dashboard-panel.js"></script>
-    <script src="/js/vr-wrist-menu.js"></script>
     <script src="/js/github-scene-logic.js"></script>
 
 </body>

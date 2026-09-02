@@ -20,7 +20,7 @@
     --amber: #B45309;
     --amber-soft: rgba(180, 83, 9, 0.08);
     --amber-border: rgba(180, 83, 9, 0.16);
-    --emerald: #059669;
+    --emerald: #4F46E5;
     --border: rgba(0, 0, 0, 0.07);
     --border-hover: rgba(0, 0, 0, 0.12);
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
@@ -338,20 +338,20 @@ body.glitch-mode .custom-cursor {
     width: 100%;
     max-width: 520px;
     background: var(--terminal-bg);
-    border: 1px solid var(--terminal-border);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: var(--r-lg);
     overflow: hidden;
-    box-shadow: var(--shadow-lg), 0 0 0 1px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-lg);
     animation: fadeUp 0.6s var(--ease) 0.4s both;
     margin-bottom: 20px;
-    transition: box-shadow 0.3s ease, transform 0.4s var(--ease-spring), width 0.4s var(--ease-spring), height 0.4s var(--ease-spring), opacity 0.4s ease;
-    will-change: transform, width, height;
+    transition: box-shadow 0.4s ease, border-color 0.4s ease, transform 0.4s var(--ease-spring), width 0.4s var(--ease-spring), height 0.4s var(--ease-spring), opacity 0.4s ease;
+    will-change: transform, width, height, box-shadow, border-color;
     z-index: 10;
 }
 
 .terminal-card:focus-within:not(.dragging) {
-    box-shadow: var(--shadow-lg), 0 0 0 1px rgba(0, 0, 0, 0.15),
-        0 0 0 3px var(--accent-border);
+    border-color: rgba(67, 56, 202, 0.4);
+    box-shadow: var(--shadow-lg), 0 0 24px rgba(67, 56, 202, 0.25);
 }
 
 .terminal-card.dragging {
@@ -465,8 +465,8 @@ body.glitch-mode .custom-cursor {
 .tc-body {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 16px 20px;
+    gap: 12px;
+    padding: 24px 28px;
 }
 
 .tc-prompt {
@@ -483,9 +483,9 @@ body.glitch-mode .custom-cursor {
     outline: none;
     color: var(--terminal-text);
     font-family: 'Fira Code', monospace;
-    font-size: 0.88rem;
+    font-size: 0.95rem;
     flex: 1;
-    caret-color: var(--terminal-prompt);
+    caret-color: var(--accent-mid);
     min-width: 0;
 }
 
@@ -543,77 +543,42 @@ body.glitch-mode .custom-cursor {
     letter-spacing: -0.02em;
 }
 
-/* ─── Spotlight Stage ─────────────────────────────────────── */
-.spotlight-stage {
+/* ─── 3D Earth Hub Stage ──────────────────────────────────── */
+.earth-hub-stage {
     flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 0 24px;
-    gap: 24px;
-}
-
-.spotlight-body {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 40px;
+    padding: 10px 24px 30px;
+    gap: 12px;
+    max-width: 720px;
     width: 100%;
+    margin: 0 auto;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    position: relative;
+    z-index: 1;
 }
 
-.spotlight-center {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 24px;
+.earth-hub-stage::-webkit-scrollbar {
+    display: none;
 }
 
-/* ─── Arrows ──────────────────────────────────────────────── */
-.spotlight-arrow {
-    background: rgba(0, 0, 0, 0.03);
-    border: 1px solid var(--border);
-    border-radius: 50%;
-    width: 48px;
-    height: 48px;
+/* ─── 3D Earth Viewer ─────────────────────────────────────── */
+.earth-viewer-wrapper {
+    position: relative;
+    width: 320px;
+    height: 320px;
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    color: var(--text-3);
-    transition: all 0.3s var(--ease);
-    flex-shrink: 0;
+    animation: earthFloat 7s ease-in-out infinite;
+    transition: transform 0.4s var(--ease), opacity 0.4s ease;
 }
 
-.spotlight-arrow svg {
-    width: 20px;
-    height: 20px;
-}
-
-.spotlight-arrow:hover {
-    background: var(--bg-card);
-    border-color: var(--border-hover);
-    color: var(--text-1);
-    box-shadow: var(--shadow-md);
-    transform: scale(1.1);
-}
-
-.spotlight-arrow:active {
-    transform: scale(0.95);
-}
-
-/* ─── Orb ─────────────────────────────────────────────────── */
-.orb-wrapper {
-    position: relative;
-    width: 260px;
-    height: 260px;
-    animation: orbFloat 6s ease-in-out infinite;
-    transition: opacity 0.38s ease, filter 0.38s ease;
-    opacity: 1;
-    filter: blur(0);
-}
-
-@keyframes orbFloat {
+@keyframes earthFloat {
 
     0%,
     100% {
@@ -621,244 +586,363 @@ body.glitch-mode .custom-cursor {
     }
 
     50% {
-        transform: translateY(-14px);
+        transform: translateY(-8px);
     }
 }
 
-.orb-glow {
+.earth-halo {
     position: absolute;
-    inset: -50px;
+    inset: 10px;
     border-radius: 50%;
-    background: radial-gradient(circle, var(--orb-glow, rgba(180, 83, 9, 0.2)) 0%, transparent 65%);
-    opacity: 0.6;
-    animation: glowPulse 4s ease-in-out infinite;
+    background: radial-gradient(circle, rgba(67, 56, 202, 0.18) 0%, rgba(79, 70, 229, 0.06) 45%, transparent 70%);
     pointer-events: none;
-    transition: background 0.6s ease;
+    filter: blur(12px);
+    animation: haloPulse 5s ease-in-out infinite;
 }
 
-@keyframes glowPulse {
+@keyframes haloPulse {
 
     0%,
     100% {
-        opacity: 0.5;
-        transform: scale(1);
+        opacity: 0.6;
+        transform: scale(0.96);
     }
 
     50% {
-        opacity: 0.9;
-        transform: scale(1.08);
+        opacity: 1;
+        transform: scale(1.05);
     }
 }
 
-.orb-shell {
+.earth-canvas-container {
     width: 100%;
     height: 100%;
+    position: relative;
     border-radius: 50%;
     overflow: hidden;
-    position: relative;
-    z-index: 2;
-    box-shadow:
-        0 8px 40px rgba(0, 0, 0, 0.15),
-        0 0 0 1px rgba(255, 255, 255, 0.08),
-        inset 0 -4px 16px rgba(0, 0, 0, 0.08);
-    transition: transform 0.4s var(--ease), box-shadow 0.4s ease;
-    cursor: pointer;
+    pointer-events: auto;
+    cursor: grab;
 }
 
-#orbCanvas {
-    width: 100%;
-    height: 100%;
+.earth-canvas-container:active {
+    cursor: grabbing;
+}
+
+#sphereCanvas {
+    width: 100% !important;
+    height: 100% !important;
     display: block;
+    outline: none;
 }
 
-.orb-ring {
-    position: absolute;
-    inset: -3px;
-    border-radius: 50%;
-    border: 1.5px solid rgba(255, 255, 255, 0.12);
-    z-index: 3;
-    pointer-events: none;
-    transition: border-color 0.5s ease;
-}
-
-.orb-wrapper:hover .orb-shell {
-    transform: scale(1.06);
-    box-shadow:
-        0 14px 50px rgba(0, 0, 0, 0.2),
-        0 0 0 1px rgba(255, 255, 255, 0.12),
-        inset 0 -4px 16px rgba(0, 0, 0, 0.08);
-}
-
-.orb-wrapper:hover .orb-glow {
-    opacity: 1;
-}
-
-.orb-wrapper:hover .orb-ring {
-    border-color: rgba(255, 255, 255, 0.25);
-}
-
-/* ─── Orb Particles ───────────────────────────────────────── */
-.orb-particles {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 1;
-}
-
-.orb-particle {
-    position: absolute;
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: var(--orb-particle, rgba(245, 158, 11, 0.7));
-    opacity: 0;
-    transition: background 0.5s ease;
-}
-
-.orb-wrapper:hover .orb-particle {
-    animation: particleFloat 2.2s ease-out infinite;
-}
-
-@keyframes particleFloat {
-    0% {
-        transform: translate(0, 0) scale(1);
-        opacity: 0.7;
-    }
-
-    100% {
-        transform: translate(var(--px, 30px), var(--py, -50px)) scale(0);
-        opacity: 0;
-    }
-}
-
-/* ─── Spotlight Info ──────────────────────────────────────── */
-.spotlight-info {
+/* ─── Earth Hub Info ──────────────────────────────────────── */
+.earth-hub-info {
     text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 10px;
-    max-width: 420px;
+    max-width: 540px;
 }
 
-.spotlight-meta {
+.earth-hub-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.1rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: var(--text-1);
+    line-height: 1.15;
+}
+
+.earth-hub-title em {
+    font-style: italic;
+    color: var(--emerald);
+}
+
+.earth-hub-desc {
+    font-size: 0.88rem;
+    color: var(--text-2);
+    line-height: 1.55;
+    max-width: 480px;
+}
+
+.earth-hub-actions {
+    margin-top: 4px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
 }
 
-.spotlight-tag {
-    font-size: 0.68rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text-3);
-    padding: 4px 12px;
-    background: rgba(0, 0, 0, 0.04);
-    border-radius: 999px;
-    border: 1px solid var(--border);
-    transition: all 0.35s ease;
-}
-
-.spotlight-name {
-    font-size: 1.5rem;
-    font-weight: 700;
-    letter-spacing: -0.03em;
-    color: var(--text-1);
-    transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.spotlight-desc {
-    font-size: 0.86rem;
-    color: var(--text-2);
-    line-height: 1.6;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-/* Info transition */
-.spotlight-info.info--changing .spotlight-name,
-.spotlight-info.info--changing .spotlight-desc,
-.spotlight-info.info--changing .spotlight-meta,
-.spotlight-info.info--changing .enter-world-btn {
-    opacity: 0;
-    transform: translateY(10px);
-}
-
-/* ─── Enter Button ────────────────────────────────────────── */
+/* ─── Enter Button (Minimalist Expanding Pill) ─────────────── */
 .enter-world-btn {
+    position: relative;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    margin-top: 6px;
-    padding: 12px 30px;
-    border: none;
+    justify-content: flex-start;
+    height: 48px;
+    width: 48px;
+    padding: 0;
+    border: 1px solid #ffffff00;
     border-radius: 999px;
     font-family: inherit;
     font-size: 0.88rem;
     font-weight: 600;
-    color: white;
-    background: var(--orb-primary, #B45309);
+    color: var(--accent);
+    background: #ffffff00;
     cursor: pointer;
-    transition: all 0.35s var(--ease), background 0.5s ease;
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.15);
-    position: relative;
     overflow: hidden;
+    transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+        background-color 0.3s ease,
+        box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+        border-color 0.3s ease;
+    outline: none;
+    user-select: none;
+    -webkit-user-select: none;
+    text-decoration: none;
 }
 
 .enter-world-btn::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 50%);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, transparent 60%);
     border-radius: inherit;
+    pointer-events: none;
+}
+
+/* Arrow Icon Container */
+.enter-world-btn .btn-icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    pointer-events: none;
+    transition: left 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .enter-world-btn svg {
-    width: 16px;
-    height: 16px;
-    transition: transform 0.3s ease;
+    width: 18px;
+    height: 18px;
+    stroke-width: 3.5;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.enter-world-btn:hover {
+/* Revealed Text */
+.enter-world-btn .btn-text {
+    color: white;
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+    padding-left: 22px;
+    padding-right: 48px;
+    white-space: nowrap;
+    opacity: 0;
+    clip-path: inset(0 100% 0 0);
+    transform: translateX(-10px);
+    pointer-events: none;
+    transition: clip-path 1s cubic-bezier(0.16, 1, 0.3, 1),
+        opacity 0.3s ease,
+        transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Hover & Focus State */
+.enter-world-btn:hover,
+.enter-world-btn:focus-visible {
+    width: 250px;
+    background: var(--accent);
+    border-color: var(--accent);
+    box-shadow: 0 8px 24px rgba(67, 56, 202, 0.38), 0 2px 6px rgba(0, 0, 0, 0.08);
     transform: translateY(-2px);
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.22);
+    color: white;
 }
 
-.enter-world-btn:hover svg {
-    transform: translateX(4px);
+.enter-world-btn:hover .btn-icon,
+.enter-world-btn:focus-visible .btn-icon {
+    left: calc(100% - 48px);
+}
+
+.enter-world-btn:hover svg,
+.enter-world-btn:focus-visible svg {
+    transform: translateX(1px);
+}
+
+.enter-world-btn:hover .btn-text,
+.enter-world-btn:focus-visible .btn-text {
+    opacity: 1;
+    clip-path: inset(0 0% 0 0);
+    transform: translateX(0);
 }
 
 .enter-world-btn:active {
     transform: translateY(0) scale(0.97);
+    box-shadow: 0 3px 10px rgba(67, 56, 202, 0.25);
 }
 
-/* ─── Dots ────────────────────────────────────────────────── */
-.spotlight-dots {
+/* ─── Minimalist Side Dock (Other Spaces) ─────────────────── */
+.side-worlds-dock {
+    position: fixed;
+    right: 28px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 12px 8px;
+    box-shadow: var(--shadow-md);
     display: flex;
-    gap: 8px;
-    margin-top: 2px;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
 }
 
-.s-dot {
+.dock-header {
+    padding: 4px 0 2px;
+}
+
+.dock-title {
+    font-size: 0.62rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-3);
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    display: block;
+    user-select: none;
+}
+
+.dock-items {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.dock-item {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-2);
+    transition: all 0.25s var(--ease);
+    padding: 0;
+}
+
+.dock-item:hover {
+    transform: scale(1.08);
+    background: #FFFFFF;
+    color: var(--text-1);
+    border-color: var(--border-hover);
+    box-shadow: var(--shadow-sm);
+}
+
+.dock-item:active {
+    transform: scale(0.96);
+}
+
+.dock-svg {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.25s ease;
+}
+
+.dock-item:hover .dock-svg {
+    transform: translateY(-1px);
+}
+
+/* ─── Dock Tooltip ────────────────────────────────────────── */
+.dock-tooltip {
+    position: absolute;
+    right: calc(100% + 14px);
+    top: 50%;
+    transform: translateY(-50%) translateX(6px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.22s var(--ease), transform 0.22s var(--ease);
+    background: #FFFFFF;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 14px;
+    box-shadow: var(--shadow-md);
+    white-space: nowrap;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 170px;
+}
+
+.dock-tooltip::after {
+    content: '';
+    position: absolute;
+    right: -5px;
+    top: 50%;
+    transform: translateY(-50%) rotate(45deg);
     width: 8px;
     height: 8px;
-    border-radius: 50%;
-    border: none;
-    background: var(--border-hover);
-    cursor: pointer;
-    padding: 0;
-    transition: all 0.35s var(--ease);
+    background: #FFFFFF;
+    border-right: 1px solid var(--border);
+    border-top: 1px solid var(--border);
 }
 
-.s-dot:hover {
-    background: var(--text-3);
+.dock-item:hover .dock-tooltip {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(-50%) translateX(0);
 }
 
-.s-dot--active {
-    width: 24px;
+.dock-tt-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.dock-tt-name {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-1);
+}
+
+.dock-tt-tag {
+    font-size: 0.62rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 2px 7px;
     border-radius: 999px;
-    background: var(--orb-primary, var(--accent));
-    transition: all 0.35s var(--ease), background 0.5s ease;
+}
+
+.dock-tt-tag.tag-amber {
+    color: var(--amber);
+    background: var(--amber-soft);
+    border: 1px solid var(--amber-border);
+}
+
+.dock-tt-tag.tag-indigo {
+    color: var(--accent);
+    background: var(--accent-soft);
+    border: 1px solid var(--accent-border);
+}
+
+.dock-tt-desc {
+    font-size: 0.74rem;
+    color: var(--text-2);
+    margin: 0;
 }
 
 /* ─── Enter Flash ─────────────────────────────────────────── */
@@ -1302,7 +1386,7 @@ body.glitch-mode .custom-cursor {
     }
 
     50% {
-        fill: rgba(5, 150, 105, 0.2);
+        fill: rgba(67, 56, 202, 0.2);
     }
 }
 
@@ -1503,6 +1587,70 @@ body.glitch-mode .custom-cursor {
 }
 
 /* ─── Responsive ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .earth-hub-stage {
+        padding: 10px 16px 85px;
+        gap: 10px;
+    }
+
+    .earth-viewer-wrapper {
+        width: 250px;
+        height: 250px;
+    }
+
+    .earth-hub-title {
+        font-size: 1.75rem;
+    }
+
+    .earth-hub-desc {
+        font-size: 0.82rem;
+    }
+
+    .side-worlds-dock {
+        right: 50%;
+        top: auto;
+        bottom: 24px;
+        transform: translateX(50%);
+        flex-direction: row;
+        padding: 6px 12px;
+        border-radius: 999px;
+    }
+
+    .dock-title {
+        writing-mode: horizontal-tb;
+        transform: none;
+        margin-right: 6px;
+        font-size: 0.68rem;
+    }
+
+    .dock-items {
+        flex-direction: row;
+    }
+
+    .dock-tooltip {
+        right: auto;
+        left: 50%;
+        top: auto;
+        bottom: calc(100% + 12px);
+        transform: translateX(-50%) translateY(4px);
+    }
+
+    .dock-tooltip::after {
+        right: auto;
+        left: 50%;
+        top: auto;
+        bottom: -5px;
+        transform: translateX(-50%) rotate(45deg);
+        border-right: 1px solid var(--border);
+        border-top: none;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .dock-item:hover .dock-tooltip {
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
 @media (max-width: 600px) {
     .nav {
         padding: 16px 20px;
@@ -1520,31 +1668,17 @@ body.glitch-mode .custom-cursor {
         padding: 14px 16px;
     }
 
-    .orb-wrapper {
-        width: 200px;
-        height: 200px;
+    .earth-viewer-wrapper {
+        width: 210px;
+        height: 210px;
     }
 
-    .spotlight-body {
-        gap: 16px;
+    .earth-hub-title {
+        font-size: 1.55rem;
     }
 
-    .spotlight-arrow {
-        width: 36px;
-        height: 36px;
-    }
-
-    .spotlight-arrow svg {
-        width: 16px;
-        height: 16px;
-    }
-
-    .spotlight-name {
-        font-size: 1.2rem;
-    }
-
-    .spotlight-desc {
-        font-size: 0.82rem;
+    .earth-hub-desc {
+        font-size: 0.8rem;
     }
 }
 

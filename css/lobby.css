@@ -12,10 +12,10 @@
     --text-1: #1D1D1F;
     --text-2: #6E6E73;
     --text-3: #A1A1A6;
-    --accent: #059669;
-    --accent-mid: #10B981;
-    --accent-soft: rgba(5, 150, 105, 0.08);
-    --accent-border: rgba(5, 150, 105, 0.16);
+    --accent: #4338CA;
+    --accent-mid: #4F46E5;
+    --accent-soft: rgba(67, 56, 202, 0.08);
+    --accent-border: rgba(67, 56, 202, 0.18);
     --border: rgba(0, 0, 0, 0.07);
     --border-hover: rgba(0, 0, 0, 0.12);
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
@@ -406,17 +406,17 @@ body {
 .terminal-card {
     width: 100%;
     background: var(--terminal-bg);
-    border: 1px solid var(--terminal-border);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: var(--r-lg);
     overflow: hidden;
-    box-shadow: var(--shadow-lg), 0 0 0 1px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-lg);
     margin-bottom: 16px;
-    transition: box-shadow 0.3s ease;
+    transition: all 0.4s var(--ease);
 }
 
 .terminal-card:focus-within {
-    box-shadow: var(--shadow-lg), 0 0 0 1px rgba(0, 0, 0, 0.15),
-        0 0 0 3px var(--accent-border);
+    border-color: rgba(67, 56, 202, 0.4);
+    box-shadow: var(--shadow-lg), 0 0 24px rgba(67, 56, 202, 0.25);
 }
 
 .tc-titlebar {
@@ -461,8 +461,8 @@ body {
 .tc-body {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 16px 20px;
+    gap: 12px;
+    padding: 24px 28px;
 }
 
 .tc-prompt {
@@ -479,9 +479,9 @@ body {
     outline: none;
     color: var(--terminal-text);
     font-family: 'Fira Code', monospace;
-    font-size: 0.88rem;
+    font-size: 0.95rem;
     flex: 1;
-    caret-color: var(--terminal-prompt);
+    caret-color: var(--accent-mid);
     min-width: 0;
 }
 
@@ -511,6 +511,29 @@ body {
     opacity: 0.4;
     cursor: not-allowed;
 }
+
+.tc-action.icon-btn {
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+}
+
+.tc-action.icon-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+@keyframes spin {
+    100% { transform: rotate(360deg); }
+}
+
+.spinner {
+    animation: spin 1s linear infinite;
+}
+
 
 /* ─── Status ──────────────────────────────────────────────── */
 .status-msg {
@@ -623,7 +646,7 @@ body {
     position: absolute;
     inset: -20px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(5, 150, 105, 0.08), transparent 65%);
+    background: radial-gradient(circle, rgba(67, 56, 202, 0.12), transparent 65%);
     animation: orbGlow 4s ease-in-out infinite;
 }
 
@@ -681,7 +704,7 @@ body {
 }
 
 .launch-orb:hover .launch-orb-ring {
-    border-color: rgba(5, 150, 105, 0.2);
+    border-color: rgba(67, 56, 202, 0.25);
 }
 
 /* ─── Spotlight Info (same pattern as index.html) ─────────── */
@@ -784,10 +807,10 @@ body {
     font-size: 0.88rem;
     font-weight: 600;
     color: white;
-    background: #059669;
+    background: var(--accent);
     cursor: pointer;
     transition: all 0.35s var(--ease);
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 18px rgba(67, 56, 202, 0.2);
     position: relative;
     overflow: hidden;
 }
@@ -808,7 +831,8 @@ body {
 
 .launch-enter-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(5, 150, 105, 0.3);
+    background: #3730A3;
+    box-shadow: 0 8px 24px rgba(67, 56, 202, 0.35);
 }
 
 .launch-enter-btn:hover svg {
@@ -977,7 +1001,7 @@ body {
     width: 80px;
     height: 120px;
     transform: translate(30px, 10px);
-    background: linear-gradient(135deg, rgba(5, 150, 105, 0.2), rgba(255, 255, 255, 0.2));
+    background: linear-gradient(135deg, rgba(67, 56, 202, 0.2), rgba(255, 255, 255, 0.2));
 }
 
 .p3 {
@@ -990,7 +1014,7 @@ body {
 .sculpture-ring {
     position: absolute;
     border-radius: 50%;
-    border: 1px solid rgba(5, 150, 105, 0.4);
+    border: 1px solid rgba(67, 56, 202, 0.4);
 }
 
 .r1 {
@@ -1002,7 +1026,7 @@ body {
 .r2 {
     width: 160px;
     height: 160px;
-    border: 1px dashed rgba(5, 150, 105, 0.6);
+    border: 1px dashed rgba(67, 56, 202, 0.6);
     animation: spin 15s linear infinite reverse;
 }
 
@@ -1033,7 +1057,7 @@ body {
     width: 200px;
     height: 200px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(5, 150, 105, 0.2) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(67, 56, 202, 0.2) 0%, transparent 70%);
     animation: pulseAura 4s ease-in-out infinite;
 }
 
@@ -1083,7 +1107,7 @@ body {
     width: 160px;
     height: 100px;
     transform: rotateX(60deg) rotateZ(45deg) translateZ(20px);
-    background: rgba(5, 150, 105, 0.1);
+    background: rgba(67, 56, 202, 0.1);
 }
 
 .pl3 {
@@ -1151,4 +1175,61 @@ body {
 
 .art-spacer {
     height: 50vh;
+}
+/* Voxel Menu */
+.voxel-menu-container {
+    position: relative;
+    width: 100%;
+    height: 350px;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#voxelMenuCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: auto;
+    z-index: 10;
+}
+
+.voxel-label {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: none;
+    z-index: 20;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform: translate(-50%, -50%) scale(0.8);
+    background: rgba(13, 17, 23, 0.85);
+    border: 1px solid rgba(126, 231, 135, 0.4);
+    padding: 10px 18px;
+    border-radius: 8px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    white-space: nowrap;
+}
+
+.voxel-label.visible {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.voxel-label .cmd-prompt {
+    color: #7ee787;
+    font-family: 'Fira Code', monospace;
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+
+.voxel-label .cmd-label {
+    color: #8b949e;
+    font-size: 0.85rem;
+    margin-top: 4px;
 }

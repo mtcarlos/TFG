@@ -961,8 +961,8 @@
                     this.glowRing.setAttribute('rotation', '-90 0 0');
                     this.glowRing.setAttribute('position', '0 -0.05 0');
                     this.glowRing.setAttribute('material', {
-                        color: '#059669',
-                        emissive: '#059669',
+                        color: '#4F46E5',
+                        emissive: '#4F46E5',
                         emissiveIntensity: 0.4,
                         opacity: 0,
                         transparent: true,
@@ -1017,8 +1017,8 @@
                     this.grabIndicator.setAttribute('rotation', '-90 0 0');
                     this.grabIndicator.setAttribute('position', '0 -0.1 0');
                     this.grabIndicator.setAttribute('material', {
-                        color: '#059669',
-                        emissive: '#059669',
+                        color: '#4F46E5',
+                        emissive: '#4F46E5',
                         emissiveIntensity: 0.5,
                         opacity: 0,
                         transparent: true,
@@ -1199,7 +1199,7 @@
                 if (intersections && intersections.length > 0) {
                     const pt = intersections[0].point;
                     const head = document.querySelector('#rig .head');
-                    const color = head ? head.getAttribute('material').color : '#059669';
+                    const color = head ? head.getAttribute('material').color : '#4338CA';
 
                     try {
                         NAF.connection.broadcastData('pointer-sync', {
