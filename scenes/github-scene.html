@@ -18,11 +18,45 @@
          conflict with superhands' grabbable component -->
     <script>delete AFRAME.components["grabbable"];</script>
 
-    <!-- Networking -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.min.js"></script>
-    <script src="/easyrtc/easyrtc.js"></script>
-    <script src="/js/networked-aframe.js"></script>
-    <script src="/js/easyrtc-patch.js"></script>
+    <!-- Networking — loaded conditionally only in online mode -->
+    <script>
+        (function() {
+            var params = new URLSearchParams(window.location.search);
+            var mode = params.get('mode') || sessionStorage.getItem('vrcity_mode') || 'offline';
+            window._vrcity_mode = mode;
+            if (mode === 'online') {
+                var scripts = [
+                    'https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.min.js',
+                    '/easyrtc/easyrtc.js',
+                    '/js/networked-aframe.js',
+                    '/js/easyrtc-patch.js'
+                ];
+                scripts.forEach(function(src) {
+                    document.write('<script src="' + src + '"><\/script>');
+                });
+                console.log('[VR Code City] Online mode — NAF scripts loaded');
+            } else {
+                // Provide a minimal NAF stub so components don't throw ReferenceErrors
+                window.NAF = {
+                    schemas: {
+                        getComponents: function() { return []; },
+                        getComponentsOriginal: function() { return []; },
+                        add: function() {},
+                        hasTemplate: function() { return false; }
+                    },
+                    utils: {
+                        vectorRequiresUpdate: function() { return function() { return false; }; }
+                    },
+                    connection: { disconnect: function() {} },
+                    adapters: { IS_CONNECTED: 'IS_CONNECTED', NOT_CONNECTED: 'NOT_CONNECTED' },
+                    clientId: '',
+                    log: { write: function() {}, warn: function() {}, error: function() {}, setDebug: function() {} },
+                    entities: { entities: {} }
+                };
+                console.log('[VR Code City] Offline mode — NAF disabled, stub provided');
+            }
+        })();
+    </script>
 
     <!-- BabiaXR -->
     <script src="https://unpkg.com/aframe-babia-components/dist/aframe-babia-components.min.js"></script>
@@ -880,8 +914,8 @@
 
 
         <!-- ==================== PLAYER RIG ==================== -->
-        <a-entity id="rig" networked="template:#avatar-template;attachTemplateToLocal:false;" position="0 0 5"
-            spawn-in-circle="radius:3" player-info pointer-sync>
+        <!-- networked attribute is applied dynamically by github-scene-logic.js in online mode -->
+        <a-entity id="rig" position="0 0 5">
 
             <a-entity id="player" class="player-cam" camera position="0 1.6 0" wasd-controls="fly: true"
                 look-controls="pointerLockEnabled: false">
@@ -956,6 +990,7 @@
     </a-scene>
 
     <!-- Scene Logic -->
+    <script src="/js/SceneDataLoader.js"></script>
     <script src="/js/code-city.js"></script>
     <script src="/js/vr-wrist-menu.js"></script>
     <script src="/js/vr-right-wrist-menu.js"></script>

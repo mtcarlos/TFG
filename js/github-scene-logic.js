@@ -14,63 +14,73 @@
     const SESSION_START = Date.now();
 
     // ─────────────────────────────────────────────
-    // URL PARAMS
+    // URL PARAMS & LAUNCH MODE
     // ─────────────────────────────────────────────
     const urlParams = new URLSearchParams(window.location.search);
     const roomId = urlParams.get('room');
     const username = urlParams.get('username') || 'Explorer';
+    const launchMode = window._vrcity_mode || urlParams.get('mode') || sessionStorage.getItem('vrcity_mode') || 'offline';
+    const dataSource = urlParams.get('source') || sessionStorage.getItem('vrcity_source') || 'demo';
+    const dataFile = urlParams.get('file') || sessionStorage.getItem('vrcity_file') || 'data/demos/tfg_codebase.json';
+
+    // Expose mode globally for other components (Oracle, etc.)
+    window._vrcity_mode = launchMode;
+
+    console.log(`[GitHubScene] Launch mode: ${launchMode}, source: ${dataSource}, file: ${dataFile}`);
 
     // ─────────────────────────────────────────────
-    // NAF SCHEMA REGISTRATION
+    // NAF SCHEMA REGISTRATION (ONLINE MODE ONLY)
     // ─────────────────────────────────────────────
-    NAF.schemas.getComponentsOriginal = NAF.schemas.getComponentsOriginal || NAF.schemas.getComponents;
-    NAF.schemas.getComponents = (template) => {
-        if (!NAF.schemas.hasTemplate('#avatar-template')) {
-            NAF.schemas.add({
-                template: '#avatar-template',
-                components: [
-                    {
-                        component: 'position',
-                        requiresNetworkUpdate: NAF.utils.vectorRequiresUpdate(0.001)
-                    },
-                    {
-                        component: 'rotation',
-                        requiresNetworkUpdate: NAF.utils.vectorRequiresUpdate(0.5)
-                    },
-                    {
-                        selector: '.player-cam',
-                        component: 'position',
-                        requiresNetworkUpdate: NAF.utils.vectorRequiresUpdate(0.001)
-                    },
-                    {
-                        selector: '.player-cam',
-                        component: 'rotation',
-                        requiresNetworkUpdate: NAF.utils.vectorRequiresUpdate(0.5)
-                    },
-                    {
-                        selector: '.head',
-                        component: 'material',
-                        property: 'color'
-                    },
-                    {
-                        selector: '.avatar-sphere',
-                        component: 'visible'
-                    },
-                    {
-                        selector: '.avatar-robot',
-                        component: 'visible'
-                    },
-                    {
-                        selector: '.nametag',
-                        component: 'text',
-                        property: 'value'
-                    }
-                ]
-            });
-        }
-        const components = NAF.schemas.getComponentsOriginal(template);
-        return components;
-    };
+    if (launchMode === 'online' && typeof NAF !== 'undefined' && NAF.schemas && NAF.schemas.getComponents) {
+        NAF.schemas.getComponentsOriginal = NAF.schemas.getComponentsOriginal || NAF.schemas.getComponents;
+        NAF.schemas.getComponents = (template) => {
+            if (!NAF.schemas.hasTemplate('#avatar-template')) {
+                NAF.schemas.add({
+                    template: '#avatar-template',
+                    components: [
+                        {
+                            component: 'position',
+                            requiresNetworkUpdate: NAF.utils.vectorRequiresUpdate(0.001)
+                        },
+                        {
+                            component: 'rotation',
+                            requiresNetworkUpdate: NAF.utils.vectorRequiresUpdate(0.5)
+                        },
+                        {
+                            selector: '.player-cam',
+                            component: 'position',
+                            requiresNetworkUpdate: NAF.utils.vectorRequiresUpdate(0.001)
+                        },
+                        {
+                            selector: '.player-cam',
+                            component: 'rotation',
+                            requiresNetworkUpdate: NAF.utils.vectorRequiresUpdate(0.5)
+                        },
+                        {
+                            selector: '.head',
+                            component: 'material',
+                            property: 'color'
+                        },
+                        {
+                            selector: '.avatar-sphere',
+                            component: 'visible'
+                        },
+                        {
+                            selector: '.avatar-robot',
+                            component: 'visible'
+                        },
+                        {
+                            selector: '.nametag',
+                            component: 'text',
+                            property: 'value'
+                        }
+                    ]
+                });
+            }
+            const components = NAF.schemas.getComponentsOriginal(template);
+            return components;
+        };
+    }
 
     // ─────────────────────────────────────────────
     // DOM REFERENCES
@@ -1315,26 +1325,114 @@
     }
 
     // ─────────────────────────────────────────────
+    // OFFLINE DATA LOADING
+    // ─────────────────────────────────────────────
+    async function loadOfflineData() {
+        console.log(`[GitHubScene] Loading offline data — source: ${dataSource}, file: ${dataFile}`);
+
+        try {
+            let layoutData;
+
+            if (dataSource === 'upload') {
+                // Retrieve uploaded JSON from sessionStorage
+                const storedJson = sessionStorage.getItem('vrcity_upload_data');
+                if (!storedJson) {
+                    throw new Error('No uploaded data found in session. Please go back and upload a file.');
+                }
+                const raw = JSON.parse(storedJson);
+                layoutData = window.SceneDataLoader._normalizeLayout(raw, 'user-upload');
+            } else {
+                // Demo mode — fetch static JSON
+                const demoPath = dataFile.startsWith('/') ? dataFile : '/' + dataFile;
+                layoutData = await window.SceneDataLoader.loadFromStaticDemo(demoPath);
+            }
+
+            // ── Update HUD with offline info ──
+            const hudRepoName = document.getElementById('hud-repo-name');
+            const hudDesc = document.getElementById('hud-desc');
+            const repoHud = document.getElementById('repo-hud');
+            const sceneTitle = document.getElementById('scene-repo-name');
+
+            const displayName = layoutData._source || dataFile.split('/').pop().replace('.json', '');
+            if (hudRepoName) hudRepoName.textContent = displayName;
+            if (hudDesc) hudDesc.textContent = 'Modo offline — datos estáticos';
+            if (repoHud) repoHud.classList.remove('hidden');
+            if (sceneTitle) sceneTitle.setAttribute('text', 'value', displayName);
+
+            // Update stat HUD with layout stats
+            const stats = layoutData.stats || {};
+            const hudStars = document.getElementById('hud-stars');
+            const hudForks = document.getElementById('hud-forks');
+            const hudIssues = document.getElementById('hud-issues');
+            const hudLang = document.getElementById('hud-lang');
+            if (hudStars) hudStars.textContent = '—';
+            if (hudForks) hudForks.textContent = '—';
+            if (hudIssues) hudIssues.textContent = formatNum(stats.totalFiles || 0);
+            if (hudLang) hudLang.textContent = stats.totalDirectories ? `${stats.totalDirectories} dirs` : '—';
+
+            // ── Enable Enter button ──
+            dataReady = true;
+            checkReadyState();
+
+            // ── Initialize Code City with data directly ──
+            if (window.CodeCity) {
+                CodeCity.initWithData(layoutData);
+            }
+
+            console.log('[GitHubScene] Offline data loaded successfully');
+
+        } catch (err) {
+            console.error('[GitHubScene] Failed to load offline data:', err);
+            if (loadingRepoName) {
+                loadingRepoName.textContent = 'Error: ' + err.message;
+            }
+            // Still enable entry so user isn't stuck
+            dataReady = true;
+            checkReadyState();
+        }
+    }
+
+    // ─────────────────────────────────────────────
     // SCENE INITIALIZATION
     // ─────────────────────────────────────────────
     const scene = document.getElementById('github-scene');
 
-    // Configure NAF with dynamic room name
-    const nafRoom = roomId ? `github-${roomId}` : 'github-default';
-    scene.setAttribute('networked-scene', {
-        room: nafRoom,
-        debug: true,
-        adapter: 'easyrtc',
-        audio: true,
-        serverURL: '/',
-    });
+    if (launchMode === 'online') {
+        // ── Online Mode: Configure NAF with dynamic room name ──
+        const nafRoom = roomId ? `github-${roomId}` : 'github-default';
+        scene.setAttribute('networked-scene', {
+            room: nafRoom,
+            debug: true,
+            adapter: 'easyrtc',
+            audio: true,
+            serverURL: '/',
+        });
+
+        // Apply networked attributes to rig (removed from static HTML)
+        const rig = document.getElementById('rig');
+        if (rig) {
+            rig.setAttribute('networked', 'template:#avatar-template;attachTemplateToLocal:false;');
+            rig.setAttribute('spawn-in-circle', 'radius:3');
+            rig.setAttribute('player-info', '');
+            rig.setAttribute('pointer-sync', '');
+        }
+
+        console.log('[GitHubScene] Online mode initialized — NAF room:', nafRoom);
+    } else {
+        // ── Offline Mode: No NAF, no networking ──
+        console.log('[GitHubScene] Offline mode initialized — no networking');
+    }
 
     // Back to lobby link
     document.getElementById('back-lobby').href = `../lobby.html?username=${encodeURIComponent(username)}`;
 
     // Set loading repo name
     if (loadingRepoName) {
-        loadingRepoName.textContent = roomId ? `Room: ${roomId}` : '';
+        if (launchMode === 'online') {
+            loadingRepoName.textContent = roomId ? `Room: ${roomId}` : '';
+        } else {
+            loadingRepoName.textContent = `Modo Offline — ${dataSource === 'upload' ? 'Archivo local' : dataFile.split('/').pop()}`;
+        }
     }
 
     scene.addEventListener('loaded', function () {
@@ -1359,11 +1457,14 @@
         // Generate grid
         generateGrid();
 
-        // Inject BabiaXR charts
-        injectBabiaCharts();
-
-        // Load repo data for HUD and metrics
-        setTimeout(loadRepoData, 1000);
+        if (launchMode === 'online') {
+            // ── Online: Inject BabiaXR charts + load repo data from backend ──
+            injectBabiaCharts();
+            setTimeout(loadRepoData, 1000);
+        } else {
+            // ── Offline: Load data from static file or sessionStorage ──
+            setTimeout(loadOfflineData, 500);
+        }
     });
 
     // ─── Audio Context resume on click ───────────

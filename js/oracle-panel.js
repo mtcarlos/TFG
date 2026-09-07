@@ -810,6 +810,17 @@ AFRAME.registerComponent('oracle-panel', {
     //  ASK THE ORACLE
     // ─────────────────────────────────────────────
     askOracle: async function (question) {
+        // ── Offline Mode Graceful Degradation ──
+        if (window._vrcity_mode === 'offline') {
+            this._setResponse(
+                'El Oráculo está en modo estático/offline.\n\n' +
+                'Las métricas de geometría y líneas de código están disponibles para inspección.\n\n' +
+                'Para refactorización AI en tiempo real se necesita un servidor backend activo o una API Key de OpenRouter.',
+                '#fbbf24'
+            );
+            return;
+        }
+
         if (!this.roomId) {
             this._setResponse('Error: No estás en una sala.', '#f87171');
             return;

@@ -112,6 +112,43 @@
         },
 
         /**
+         * Initialize the city directly with pre-loaded data (offline/demo mode).
+         * Bypasses server polling entirely.
+         * @param {Object} layoutData — layout object with {buildings, stats, districts}
+         */
+        async initWithData(layoutData) {
+            if (!layoutData) {
+                console.error('[CodeCity] initWithData called with no data');
+                return;
+            }
+
+            this.layout = layoutData;
+            this._createTooltip();
+            this._renderCity();
+            this._updateRaycasters();
+
+            // Apply active visual settings scales to the newly rendered city
+            if (typeof window.applyVisualSettings === 'function') {
+                window.applyVisualSettings();
+            }
+
+            if (typeof window.populateFileTypesDashboard === 'function' && layoutData.buildings) {
+                window.populateFileTypesDashboard(layoutData.buildings, layoutData.stats ? layoutData.stats.totalLOC : 0);
+            }
+
+            // Time Machine is not available in offline mode
+            const selectEl = document.getElementById('time-machine-select');
+            if (selectEl) {
+                selectEl.innerHTML = '<option value="">No disponible en modo offline</option>';
+            }
+            const goBtn = document.getElementById('time-machine-go');
+            if (goBtn) goBtn.disabled = true;
+
+            const stats = layoutData.stats || {};
+            console.log(`[CodeCity] City rendered (offline): ${stats.totalFiles || '?'} files, ${stats.totalLOC || '?'} LOC`);
+        },
+
+        /**
          * Initialize Time Machine: fetch commits and wire up UI
          */
         async _initTimeMachine(roomId) {

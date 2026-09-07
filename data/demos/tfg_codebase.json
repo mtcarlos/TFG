@@ -1,0 +1,404 @@
+[
+  {
+    "filename": "builder.html",
+    "folder": "root",
+    "loc": 716,
+    "ext": "html"
+  },
+  {
+    "filename": "babia.css",
+    "folder": "css",
+    "loc": 340,
+    "ext": "css"
+  },
+  {
+    "filename": "attendance.json",
+    "folder": "data",
+    "loc": 11,
+    "ext": "json"
+  },
+  {
+    "filename": "kpis.json",
+    "folder": "data",
+    "loc": 15,
+    "ext": "json"
+  },
+  {
+    "filename": "sales.json",
+    "folder": "data",
+    "loc": 23,
+    "ext": "json"
+  },
+  {
+    "filename": "360.html",
+    "folder": "other",
+    "loc": 91,
+    "ext": "html"
+  },
+  {
+    "filename": "adapter-test-receive.html",
+    "folder": "other",
+    "loc": 86,
+    "ext": "html"
+  },
+  {
+    "filename": "adapter-test-send.html",
+    "folder": "other",
+    "loc": 61,
+    "ext": "html"
+  },
+  {
+    "filename": "index.html",
+    "folder": "other",
+    "loc": 32,
+    "ext": "html"
+  },
+  {
+    "filename": "ar-index.html",
+    "folder": "other",
+    "loc": 108,
+    "ext": "html"
+  },
+  {
+    "filename": "basic-2.html",
+    "folder": "other",
+    "loc": 32,
+    "ext": "html"
+  },
+  {
+    "filename": "basic-4.html",
+    "folder": "other",
+    "loc": 44,
+    "ext": "html"
+  },
+  {
+    "filename": "basic-ar.html",
+    "folder": "other",
+    "loc": 94,
+    "ext": "html"
+  },
+  {
+    "filename": "basic-audio.html",
+    "folder": "other",
+    "loc": 118,
+    "ext": "html"
+  },
+  {
+    "filename": "basic-chat.html",
+    "folder": "other",
+    "loc": 257,
+    "ext": "html"
+  },
+  {
+    "filename": "basic-events.html",
+    "folder": "other",
+    "loc": 115,
+    "ext": "html"
+  },
+  {
+    "filename": "basic-multi-streams.html",
+    "folder": "other",
+    "loc": 162,
+    "ext": "html"
+  },
+  {
+    "filename": "basic-persistent.html",
+    "folder": "other",
+    "loc": 127,
+    "ext": "html"
+  },
+  {
+    "filename": "basic-video.html",
+    "folder": "other",
+    "loc": 121,
+    "ext": "html"
+  },
+  {
+    "filename": "basic.html",
+    "folder": "other",
+    "loc": 158,
+    "ext": "html"
+  },
+  {
+    "filename": "child-entities.html",
+    "folder": "other",
+    "loc": 107,
+    "ext": "html"
+  },
+  {
+    "filename": "style.css",
+    "folder": "other",
+    "loc": 31,
+    "ext": "css"
+  },
+  {
+    "filename": "disconnect.html",
+    "folder": "other",
+    "loc": 104,
+    "ext": "html"
+  },
+  {
+    "filename": "google-blocks.html",
+    "folder": "other",
+    "loc": 78,
+    "ext": "html"
+  },
+  {
+    "filename": "index.html",
+    "folder": "other",
+    "loc": 167,
+    "ext": "html"
+  },
+  {
+    "filename": "color-changer.component.js",
+    "folder": "other",
+    "loc": 14,
+    "ext": "js"
+  },
+  {
+    "filename": "forward.component.js",
+    "folder": "other",
+    "loc": 26,
+    "ext": "js"
+  },
+  {
+    "filename": "gun.component.js",
+    "folder": "other",
+    "loc": 63,
+    "ext": "js"
+  },
+  {
+    "filename": "move-in-circle.component.js",
+    "folder": "other",
+    "loc": 26,
+    "ext": "js"
+  },
+  {
+    "filename": "persistent-p2p.component.js",
+    "folder": "other",
+    "loc": 86,
+    "ext": "js"
+  },
+  {
+    "filename": "randomize-show-child.component.js",
+    "folder": "other",
+    "loc": 10,
+    "ext": "js"
+  },
+  {
+    "filename": "remove-in-seconds.component.js",
+    "folder": "other",
+    "loc": 15,
+    "ext": "js"
+  },
+  {
+    "filename": "show-child.component.js",
+    "folder": "other",
+    "loc": 27,
+    "ext": "js"
+  },
+  {
+    "filename": "spawn-grid.component.js",
+    "folder": "other",
+    "loc": 41,
+    "ext": "js"
+  },
+  {
+    "filename": "spawn-in-circle.component.js",
+    "folder": "other",
+    "loc": 31,
+    "ext": "js"
+  },
+  {
+    "filename": "spawner-persistent.component.js",
+    "folder": "other",
+    "loc": 26,
+    "ext": "js"
+  },
+  {
+    "filename": "spawner.component.js",
+    "folder": "other",
+    "loc": 22,
+    "ext": "js"
+  },
+  {
+    "filename": "show-child.component.test.js",
+    "folder": "other",
+    "loc": 103,
+    "ext": "js"
+  },
+  {
+    "filename": "toggle-ownership.component.js",
+    "folder": "other",
+    "loc": 88,
+    "ext": "js"
+  },
+  {
+    "filename": "my_example.html",
+    "folder": "other",
+    "loc": 65,
+    "ext": "html"
+  },
+  {
+    "filename": "nametag.html",
+    "folder": "other",
+    "loc": 175,
+    "ext": "html"
+  },
+  {
+    "filename": "ownership-transfer.html",
+    "folder": "other",
+    "loc": 131,
+    "ext": "html"
+  },
+  {
+    "filename": "persistent-peer-to-peer.html",
+    "folder": "other",
+    "loc": 127,
+    "ext": "html"
+  },
+  {
+    "filename": "shooter-2.html",
+    "folder": "other",
+    "loc": 32,
+    "ext": "html"
+  },
+  {
+    "filename": "shooter-ar.html",
+    "folder": "other",
+    "loc": 139,
+    "ext": "html"
+  },
+  {
+    "filename": "shooter.html",
+    "folder": "other",
+    "loc": 108,
+    "ext": "html"
+  },
+  {
+    "filename": "tracked-controllers.html",
+    "folder": "other",
+    "loc": 111,
+    "ext": "html"
+  },
+  {
+    "filename": "webrtc.html",
+    "folder": "other",
+    "loc": 114,
+    "ext": "html"
+  },
+  {
+    "filename": "index.css",
+    "folder": "root",
+    "loc": 1576,
+    "ext": "css"
+  },
+  {
+    "filename": "index.html",
+    "folder": "root",
+    "loc": 1210,
+    "ext": "html"
+  },
+  {
+    "filename": "builder-components.js",
+    "folder": "js",
+    "loc": 771,
+    "ext": "js"
+  },
+  {
+    "filename": "crafting-systems.js",
+    "folder": "js",
+    "loc": 154,
+    "ext": "js"
+  },
+  {
+    "filename": "easyrtc-patch.js",
+    "folder": "js",
+    "loc": 86,
+    "ext": "js"
+  },
+  {
+    "filename": "inventory-components.js",
+    "folder": "js",
+    "loc": 164,
+    "ext": "js"
+  },
+  {
+    "filename": "networked-aframe.js",
+    "folder": "js",
+    "loc": 288,
+    "ext": "js"
+  },
+  {
+    "filename": "registries.js",
+    "folder": "js",
+    "loc": 82,
+    "ext": "js"
+  },
+  {
+    "filename": "scene-logic.js",
+    "folder": "js",
+    "loc": 319,
+    "ext": "js"
+  },
+  {
+    "filename": "world-components.js",
+    "folder": "js",
+    "loc": 271,
+    "ext": "js"
+  },
+  {
+    "filename": "babia-scene.js",
+    "folder": "js",
+    "loc": 785,
+    "ext": "js"
+  },
+  {
+    "filename": "package.json",
+    "folder": "root",
+    "loc": 12,
+    "ext": "json"
+  },
+  {
+    "filename": "reserva.html",
+    "folder": "root",
+    "loc": 256,
+    "ext": "html"
+  },
+  {
+    "filename": "babia.html",
+    "folder": "scenes",
+    "loc": 322,
+    "ext": "html"
+  },
+  {
+    "filename": "scene.html",
+    "folder": "scenes",
+    "loc": 968,
+    "ext": "html"
+  },
+  {
+    "filename": "build-city.js",
+    "folder": "other",
+    "loc": 72,
+    "ext": "js"
+  },
+  {
+    "filename": ".prettierrc.json",
+    "folder": "server",
+    "loc": 6,
+    "ext": "json"
+  },
+  {
+    "filename": "easyrtc-server.js",
+    "folder": "server",
+    "loc": 136,
+    "ext": "js"
+  },
+  {
+    "filename": "socketio-server.js",
+    "folder": "server",
+    "loc": 142,
+    "ext": "js"
+  }
+]

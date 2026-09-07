@@ -29,26 +29,57 @@
     </nav>
 
     <!-- ═══════════════════════════════
-         STEP 1 — Choose Your Path
+         STEP 1 — Choose Your Mode
     ═══════════════════════════════ -->
     <div class="step step--active" id="step1">
         <p class="step1-eyebrow">GitHub Explorer</p>
-        <h1 class="step1-title">Analyze <em>together.</em></h1>
-        <p class="step1-sub">Create a new collaborative session or join an existing room<br>to explore repository
-            metrics in immersive 3D.</p>
+        <h1 class="step1-title">Explore <em>your way.</em></h1>
+        <p class="step1-sub">Choose how you want to explore repository metrics in immersive 3D.</p>
 
-        <div class="cmd-options">
-            <button class="cmd-option" id="chooseCreate">
-                <span class="cmd-prompt">> create</span>
-                <span class="cmd-label">Start a new session</span>
-            </button>
+        <div class="mode-toggle-container">
+            <div class="mode-toggle" id="step1ModeToggle">
+                <button class="mode-btn active" data-mode="online">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    Multiplayer
+                </button>
+                <button class="mode-btn" data-mode="offline">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    Solo
+                </button>
+                <div class="mode-slider"></div>
+            </div>
+        </div>
 
-            <span class="cmd-divider">or</span>
+        <div class="cmd-options-wrapper">
+            <!-- Online Options -->
+            <div class="cmd-options" id="onlineOptions">
+                <button class="cmd-option" id="chooseCreate">
+                    <span class="cmd-prompt">> create</span>
+                    <span class="cmd-label">New multiplayer session</span>
+                </button>
 
-            <button class="cmd-option" id="chooseJoin">
-                <span class="cmd-prompt">> join</span>
-                <span class="cmd-label">Enter an existing room</span>
-            </button>
+                <button class="cmd-option" id="chooseJoin">
+                    <span class="cmd-prompt">> join</span>
+                    <span class="cmd-label">Enter an existing room</span>
+                </button>
+            </div>
+
+            <!-- Offline Options -->
+            <div class="cmd-options hidden" id="offlineOptions">
+                <button class="cmd-option cmd-option--solo" id="chooseOffline">
+                    <span class="cmd-prompt">> solo</span>
+                    <span class="cmd-label">Offline / Dev mode</span>
+                </button>
+            </div>
         </div>
     </div>
 
@@ -94,7 +125,10 @@
                     <input type="text" class="tc-input" id="repoInput" placeholder="owner/repo or GitHub URL"
                         autocomplete="off" spellcheck="false">
                     <button class="tc-action icon-btn" id="setRepoBtn" aria-label="Run">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
                     </button>
                 </div>
             </div>
@@ -149,7 +183,12 @@
                     <input type="text" class="tc-input" id="joinRoomInput" placeholder="room code" autocomplete="off"
                         spellcheck="false" maxlength="12">
                     <button class="tc-action icon-btn" id="joinRoomBtn" aria-label="Connect">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                            <polyline points="10 17 15 12 10 7"></polyline>
+                            <line x1="15" y1="12" x2="3" y2="12"></line>
+                        </svg>
                     </button>
                 </div>
             </div>
@@ -172,6 +211,118 @@
                 <div class="rb-text">
                     <span class="rb-name" id="joinRepoName">Waiting for host...</span>
                     <span class="rb-status" id="joinRepoStatus">No repository selected yet</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════
+         STEP 2C — Offline Data Source
+    ═══════════════════════════════ -->
+    <div class="step step--hidden" id="step2offline">
+        <div class="step2-content step2-content--gateway">
+            <button class="step2-back" id="backFromOffline">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12" />
+                    <polyline points="12 19 5 12 12 5" />
+                </svg>
+                Back
+            </button>
+
+            <div class="gateway-wrapper">
+                <div class="gateway-header">
+                    <h2 class="gateway-title">Data Source</h2>
+                    <p class="gateway-subtitle">Select the repository data you wish to explore</p>
+                </div>
+
+                <!-- Source Selection -->
+                <div class="offline-source-options gateway-cards">
+                    <div class="source-card source-card--active" id="sourceDemo" data-source="demo">
+                        <div class="gc-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                            </svg>
+                        </div>
+                        <div class="gc-info">
+                            <h3>Sample Dataset</h3>
+                            <p>Pre-analyzed environment</p>
+                        </div>
+                    </div>
+
+                    <div class="source-card" id="sourceUpload" data-source="upload">
+                        <div class="gc-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                        </div>
+                        <div class="gc-info">
+                            <h3>Custom JSON</h3>
+                            <p>Upload your own data</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dynamic Panels -->
+                <div class="gateway-panels">
+                    <!-- Demo Area -->
+                    <div class="panel-animator" id="demoSelectArea">
+                        <div class="panel-animator-inner">
+                            <div class="gateway-demo-box">
+                                <label for="demoFileSelect" class="gateway-label">Available Environments</label>
+                                <div class="gateway-select-wrapper">
+                                    <select id="demoFileSelect" class="gateway-select">
+                                        <option value="data/demos/tfg_codebase.json">VR Code City Core Repository</option>
+                                    </select>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="select-caret">
+                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Upload Area -->
+                    <div class="panel-animator hidden" id="uploadArea">
+                        <div class="panel-animator-inner">
+                            <div class="gateway-upload-box">
+                                <div class="drop-zone" id="dropZone">
+                                    <div class="drop-glow"></div>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="drop-icon">
+                                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path>
+                                        <polyline points="17 8 12 3 7 8"></polyline>
+                                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                                    </svg>
+                                    <span class="drop-text">Drag & Drop JSON</span>
+                                    <span class="drop-hint">Click to browse your files</span>
+                                    <input type="file" id="jsonFileInput" accept=".json" class="drop-input">
+                                </div>
+                                <div class="upload-file-name hidden" id="uploadFileName">
+                                    <div class="uf-info">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                                        <span id="uploadFileLabel">—</span>
+                                    </div>
+                                    <button class="upload-clear" id="clearUpload">✕</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="status-msg" id="offlineStatus"></div>
+
+                <div class="gateway-actions">
+                    <button class="offline-launch-btn" id="offlineLaunchBtn">
+                        <span class="launch-text">Enter Environment</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="launch-icon">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </button>
                 </div>
             </div>
         </div>
@@ -460,6 +611,32 @@
         }
         function hideStatus(el) { el.className = 'status-msg'; }
 
+        // ─── Step 1 Mode Toggle ──────────────────────────────────
+        const step1ToggleBtn = document.querySelectorAll('.mode-btn');
+        const onlineOptions = document.getElementById('onlineOptions');
+        const offlineOptions = document.getElementById('offlineOptions');
+        const step1Toggle = document.getElementById('step1ModeToggle');
+
+        step1ToggleBtn.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Update buttons
+                step1ToggleBtn.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const mode = btn.dataset.mode;
+                step1Toggle.setAttribute('data-active', mode);
+
+                // Toggle visibility
+                if (mode === 'online') {
+                    onlineOptions.classList.remove('hidden');
+                    offlineOptions.classList.add('hidden');
+                } else {
+                    onlineOptions.classList.add('hidden');
+                    offlineOptions.classList.remove('hidden');
+                }
+            });
+        });
+
         // ─── Step 1: Choose Path ─────────────────────────────────
         document.getElementById('chooseCreate').addEventListener('click', async () => {
             goToStep('step1', 'step2create');
@@ -490,9 +667,134 @@
             setTimeout(() => document.getElementById('joinRoomInput').focus(), 500);
         });
 
+        document.getElementById('chooseOffline').addEventListener('click', () => {
+            goToStep('step1', 'step2offline');
+        });
+
         // ─── Back buttons ────────────────────────────────────────
         document.getElementById('backFromCreate').addEventListener('click', () => goBackToStep1('step2create'));
         document.getElementById('backFromJoin').addEventListener('click', () => goBackToStep1('step2join'));
+        document.getElementById('backFromOffline').addEventListener('click', () => goBackToStep1('step2offline'));
+
+        // ─── Offline Mode Logic ──────────────────────────────────
+        let offlineSource = 'demo'; // 'demo' or 'upload'
+        let offlineUploadedBlob = null; // Store the JSON blob if uploaded
+        let offlineUploadedName = '';
+
+        const sourceCards = document.querySelectorAll('.offline-source-options .source-card');
+        const demoSelectArea = document.getElementById('demoSelectArea');
+        const uploadArea = document.getElementById('uploadArea');
+        const offlineLaunchBtn = document.getElementById('offlineLaunchBtn');
+        const offlineStatus = document.getElementById('offlineStatus');
+
+        sourceCards.forEach(card => {
+            card.addEventListener('click', () => {
+                sourceCards.forEach(c => c.classList.remove('source-card--active'));
+                card.classList.add('source-card--active');
+                offlineSource = card.dataset.source;
+
+                if (offlineSource === 'demo') {
+                    demoSelectArea.classList.remove('hidden');
+                    uploadArea.classList.add('hidden');
+                    hideStatus(offlineStatus);
+                } else if (offlineSource === 'upload') {
+                    demoSelectArea.classList.add('hidden');
+                    uploadArea.classList.remove('hidden');
+                    if (!offlineUploadedBlob) {
+                        showStatus(offlineStatus, 'Please upload a JSON file to continue.', 'error');
+                    } else {
+                        hideStatus(offlineStatus);
+                    }
+                }
+            });
+        });
+
+        // File Drag & Drop logic
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('jsonFileInput');
+        const uploadFileName = document.getElementById('uploadFileName');
+        const uploadFileLabel = document.getElementById('uploadFileLabel');
+        const clearUpload = document.getElementById('clearUpload');
+
+        function handleFile(file) {
+            if (!file) return;
+            if (file.type !== 'application/json' && !file.name.endsWith('.json')) {
+                showStatus(offlineStatus, 'Invalid file type. Please upload a .json file.', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const json = JSON.parse(e.target.result);
+                    offlineUploadedBlob = e.target.result; // Store raw string in sessionStorage later
+                    offlineUploadedName = file.name;
+
+                    dropZone.classList.add('hidden');
+                    uploadFileName.classList.remove('hidden');
+                    uploadFileLabel.textContent = file.name;
+                    hideStatus(offlineStatus);
+                } catch (err) {
+                    showStatus(offlineStatus, 'Invalid JSON format in file.', 'error');
+                }
+            };
+            reader.onerror = () => showStatus(offlineStatus, 'Error reading file.', 'error');
+            reader.readAsText(file);
+        }
+
+        // Drop zone events
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+        ['dragleave', 'dragend'].forEach(type => {
+            dropZone.addEventListener(type, () => dropZone.classList.remove('dragover'));
+        });
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            if (e.dataTransfer.files.length) {
+                handleFile(e.dataTransfer.files[0]);
+            }
+        });
+        // Click to browse
+        dropZone.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        // Clear upload
+        clearUpload.addEventListener('click', () => {
+            offlineUploadedBlob = null;
+            offlineUploadedName = '';
+            fileInput.value = '';
+            uploadFileName.classList.add('hidden');
+            dropZone.classList.remove('hidden');
+            showStatus(offlineStatus, 'Please upload a JSON file to continue.', 'error');
+        });
+
+        // Launch Offline Scene
+        offlineLaunchBtn.addEventListener('click', () => {
+            if (offlineSource === 'upload' && !offlineUploadedBlob) {
+                showStatus(offlineStatus, 'Please upload a JSON file to continue.', 'error');
+                return;
+            }
+
+            // Set sessionStorage variables for SceneDataLoader
+            sessionStorage.setItem('vrcity_mode', 'offline');
+            sessionStorage.setItem('vrcity_source', offlineSource);
+
+            if (offlineSource === 'demo') {
+                const demoFile = document.getElementById('demoFileSelect').value;
+                sessionStorage.setItem('vrcity_file', demoFile);
+                location.href = `scenes/github-scene.html?mode=offline&source=demo&file=${encodeURIComponent(demoFile)}&username=${encodeURIComponent(username)}`;
+            } else if (offlineSource === 'upload') {
+                sessionStorage.setItem('vrcity_upload_data', offlineUploadedBlob);
+                location.href = `scenes/github-scene.html?mode=offline&source=upload&username=${encodeURIComponent(username)}`;
+            }
+        });
 
         // ─── Copy ────────────────────────────────────────────────
         document.getElementById('copyRoomId').addEventListener('click', () => {
@@ -705,7 +1007,11 @@
         document.getElementById('enterSceneBtn').addEventListener('click', () => {
             if (!currentRoomId) return;
             if (orbAnim) cancelAnimationFrame(orbAnim);
-            location.href = `scenes/github-scene.html?room=${encodeURIComponent(currentRoomId)}&username=${encodeURIComponent(username)}`;
+
+            // Set session storage to ensure online mode is preserved
+            sessionStorage.setItem('vrcity_mode', 'online');
+
+            location.href = `scenes/github-scene.html?mode=online&room=${encodeURIComponent(currentRoomId)}&username=${encodeURIComponent(username)}`;
         });
 
         // Enter key shortcut on step 3

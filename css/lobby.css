@@ -58,6 +58,11 @@ body {
     overflow: hidden;
 }
 
+/* ─── Utilities ────────────────────────────────────────────── */
+.hidden {
+    display: none !important;
+}
+
 /* ─── Subtle Background Canvas ────────────────────────────── */
 #lobbyCanvas {
     position: fixed;
@@ -205,6 +210,96 @@ body {
     animation: fadeUp 0.6s var(--ease) 0.3s both;
 }
 
+/* ─── Mode Toggle ───────────────────────────────────────────── */
+/* ─── Mode Toggle ───────────────────────────────────────────── */
+.mode-toggle-container {
+    margin-bottom: 48px;
+    animation: fadeUp 0.6s var(--ease) 0.35s both;
+    display: flex;
+    justify-content: center;
+}
+
+.mode-toggle {
+    position: relative;
+    display: inline-flex;
+    width: 320px;
+    /* Fixed width to ensure symmetrical buttons */
+    background: rgba(255, 255, 255, 0.05);
+    /* subtle glassmorphism */
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 100px;
+    padding: 8px;
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.15), 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.mode-btn {
+    position: relative;
+    z-index: 2;
+    background: transparent;
+    border: none;
+    width: 50%;
+    /* Each button takes exactly half */
+    padding: 14px 0;
+    /* Vertical padding only, horizontal controlled by width */
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-3);
+    cursor: pointer;
+    border-radius: 100px;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.mode-btn svg {
+    width: 18px;
+    height: 18px;
+    opacity: 0.7;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.mode-btn:hover {
+    color: var(--text-2);
+}
+
+.mode-btn.active {
+    color: #000;
+    /* Contrast against the bright accent background */
+    text-shadow: none;
+}
+
+.mode-btn.active svg {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.mode-slider {
+    position: absolute;
+    top: 8px;
+    bottom: 8px;
+    left: 8px;
+    width: calc(50% - 8px);
+    background: var(--accent);
+    border-radius: 100px;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.2);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.4s ease, box-shadow 0.4s ease;
+    z-index: 1;
+}
+
+.mode-toggle[data-active="offline"] .mode-slider {
+    transform: translateX(100%);
+    background: #3b82f6;
+    /* Blueish for offline mode */
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.2);
+}
+
+.cmd-options-wrapper {
+    animation: fadeUp 0.6s var(--ease) 0.4s both;
+}
+
 /* ─── Command Options ─────────────────────────────────────── */
 .cmd-options {
     display: flex;
@@ -283,6 +378,342 @@ body {
 
 .cmd-option:hover .cmd-label {
     color: var(--text-2);
+}
+
+.cmd-options--trio {
+    gap: 32px;
+}
+
+.cmd-option--solo {
+    border-style: dashed;
+}
+
+.cmd-option--solo .cmd-prompt {
+    color: #3b82f6;
+    /* Blueish accent to distinguish it */
+}
+
+/* ═══════════════════════════════════════════════════════════
+   STEP 2C — Offline Gateway
+   ═══════════════════════════════════════════════════════════ */
+.step2-content--gateway {
+    max-width: 800px;
+    width: 100%;
+}
+
+.gateway-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    animation: fadeUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.gateway-header {
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.gateway-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    color: var(--text-1);
+    margin-bottom: 8px;
+}
+
+.gateway-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-2);
+    font-weight: 300;
+}
+
+.gateway-cards {
+    display: flex;
+    gap: 24px;
+    width: 100%;
+}
+
+.source-card {
+    flex: 1;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-xl);
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.source-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-hover);
+}
+
+.gc-icon {
+    width: 48px;
+    height: 48px;
+    color: var(--text-3);
+    margin-bottom: 16px;
+    transition: all 0.5s ease;
+}
+
+.gc-info h3 {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--text-1);
+    margin-bottom: 4px;
+}
+
+.gc-info p {
+    font-size: 0.85rem;
+    color: var(--text-3);
+}
+
+.source-card--active {
+    border-color: var(--border-hover);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-4px);
+}
+
+.source-card--active .gc-icon {
+    color: var(--accent);
+    transform: scale(1.1);
+}
+
+/* Gateway Panels */
+.gateway-panels {
+    width: 100%;
+    margin-top: -8px;
+}
+
+.panel-animator {
+    display: grid;
+    grid-template-rows: 1fr;
+    transition: grid-template-rows 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease;
+    opacity: 1;
+}
+
+.panel-animator.hidden {
+    display: grid !important;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.panel-animator-inner {
+    min-height: 0;
+    overflow: hidden;
+}
+
+.gateway-demo-box, .gateway-upload-box {
+    background: rgba(0, 0, 0, 0.03);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    padding: 32px;
+}
+
+.gateway-label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-2);
+    margin-bottom: 12px;
+    font-weight: 500;
+}
+
+.gateway-select-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.gateway-select {
+    width: 100%;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    padding: 16px 20px;
+    color: var(--text-1);
+    font-size: 1.05rem;
+    font-weight: 400;
+    appearance: none;
+    outline: none;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+}
+
+.gateway-select:hover, .gateway-select:focus {
+    border-color: var(--accent-border);
+    box-shadow: var(--shadow-md);
+}
+
+.select-caret {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    color: var(--text-3);
+    pointer-events: none;
+}
+
+/* Drop Zone */
+.drop-zone {
+    width: 100%;
+    border: 1px dashed var(--border-hover);
+    border-radius: var(--r-md);
+    padding: 48px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    background: transparent;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.drop-glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, var(--accent-soft) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.drop-zone:hover, .drop-zone.dragover {
+    border-color: var(--accent);
+    background: rgba(255,255,255,0.5);
+}
+
+.drop-zone:hover .drop-glow, .drop-zone.dragover .drop-glow {
+    opacity: 1;
+}
+
+.drop-icon {
+    width: 40px;
+    height: 40px;
+    color: var(--text-3);
+    margin-bottom: 16px;
+    transition: all 0.4s ease;
+}
+
+.drop-zone:hover .drop-icon {
+    color: var(--accent);
+    transform: translateY(-4px);
+}
+
+.drop-text {
+    font-size: 1.1rem;
+    color: var(--text-1);
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.drop-hint {
+    font-size: 0.9rem;
+    color: var(--text-3);
+}
+
+.drop-input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.upload-file-name {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--bg-card);
+    border: 1px solid var(--accent-border);
+    border-radius: var(--r-md);
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+    animation: fadeUp 0.4s ease both;
+}
+
+.uf-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text-1);
+}
+
+.uf-info svg {
+    width: 24px;
+    height: 24px;
+    color: var(--accent);
+}
+
+.uf-info span {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.upload-clear {
+    background: none;
+    border: none;
+    color: var(--text-3);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 4px;
+    transition: all 0.3s ease;
+}
+
+.upload-clear:hover {
+    color: var(--error);
+    transform: scale(1.1);
+}
+
+/* Gateway Action Button */
+.gateway-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+}
+
+.offline-launch-btn {
+    background: var(--text-1);
+    color: #fff;
+    border: none;
+    border-radius: 100px;
+    padding: 18px 48px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    box-shadow: var(--shadow-md);
+    transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.offline-launch-btn:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: var(--shadow-lg);
+    background: #000;
+}
+
+.offline-launch-btn:active {
+    transform: scale(0.98);
+}
+
+.launch-icon {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.4s ease;
+}
+
+.offline-launch-btn:hover .launch-icon {
+    transform: translateX(6px);
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -527,7 +958,9 @@ body {
 }
 
 @keyframes spin {
-    100% { transform: rotate(360deg); }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .spinner {
@@ -1176,6 +1609,7 @@ body {
 .art-spacer {
     height: 50vh;
 }
+
 /* Voxel Menu */
 .voxel-menu-container {
     position: relative;
@@ -1212,7 +1646,7 @@ body {
     padding: 10px 18px;
     border-radius: 8px;
     backdrop-filter: blur(8px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
     white-space: nowrap;
 }
 
