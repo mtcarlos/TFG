@@ -458,6 +458,54 @@
 
         console.log('[GitHubScene] BabiaXR charts injected for room:', roomId);
     }
+    
+    // Inject charts for offline mode reading directly from JSON files
+    function injectOfflineBabiaCharts(basePath) {
+        // Remove leading slash for local relative paths if necessary or keep absolute pathing consistent
+        const localBasePath = basePath.startsWith('/') ? basePath : '/' + basePath;
+
+        // Languages data source
+        const langsData = document.getElementById('languages-data');
+        if (langsData) langsData.setAttribute('babia-queryjson', `url: ${localBasePath}_languages.json`);
+
+        // Contributors data source
+        const contribsData = document.getElementById('contributors-data');
+        if (contribsData) contribsData.setAttribute('babia-queryjson', `url: ${localBasePath}_contributors.json`);
+
+        // Summary data source
+        const summaryData = document.getElementById('summary-data');
+        if (summaryData) summaryData.setAttribute('babia-queryjson', `url: ${localBasePath}_summary.json`);
+
+        // Configure charts
+        const chartLangs = document.getElementById('chart-langs');
+        if (chartLangs) chartLangs.setAttribute('babia-bars', {
+            from: 'languages-data',
+            legend: true,
+            palette: 'blues',
+            x_axis: 'key',
+            height: 'value'
+        });
+
+        const chartContribs = document.getElementById('chart-contribs');
+        if (chartContribs) chartContribs.setAttribute('babia-pie', {
+            from: 'contributors-data',
+            legend: true,
+            palette: 'sunset',
+            key: 'key',
+            size: 'value'
+        });
+
+        const chartMetrics = document.getElementById('chart-metrics');
+        if (chartMetrics) chartMetrics.setAttribute('babia-bars', {
+            from: 'summary-data',
+            legend: true,
+            palette: 'blues',
+            x_axis: 'metric',
+            height: 'value'
+        });
+
+        console.log('[GitHubScene] Offline BabiaXR charts injected using base path:', localBasePath);
+    }
 
     // ─────────────────────────────────────────────
     // FETCH REPO DATA & UPDATE HUDs
@@ -1352,23 +1400,55 @@
             const hudDesc = document.getElementById('hud-desc');
             const repoHud = document.getElementById('repo-hud');
             const sceneTitle = document.getElementById('scene-repo-name');
-
-            const displayName = layoutData._source || dataFile.split('/').pop().replace('.json', '');
-            if (hudRepoName) hudRepoName.textContent = displayName;
-            if (hudDesc) hudDesc.textContent = 'Modo offline — datos estáticos';
-            if (repoHud) repoHud.classList.remove('hidden');
-            if (sceneTitle) sceneTitle.setAttribute('text', 'value', displayName);
-
-            // Update stat HUD with layout stats
-            const stats = layoutData.stats || {};
+            
             const hudStars = document.getElementById('hud-stars');
             const hudForks = document.getElementById('hud-forks');
             const hudIssues = document.getElementById('hud-issues');
             const hudLang = document.getElementById('hud-lang');
-            if (hudStars) hudStars.textContent = '—';
-            if (hudForks) hudForks.textContent = '—';
-            if (hudIssues) hudIssues.textContent = formatNum(stats.totalFiles || 0);
-            if (hudLang) hudLang.textContent = stats.totalDirectories ? `${stats.totalDirectories} dirs` : '—';
+            
+            const metricLangs = document.getElementById('metric-langs-value');
+            const metricContribs = document.getElementById('metric-contribs-value');
+            const metricStars = document.getElementById('metric-stars-value');
+
+            let displayName = layoutData._source || dataFile.split('/').pop().replace('.json', '');
+
+            // In demo mode, let's try to load the associated stats and babia files
+            if (dataSource !== 'upload' && dataFile.includes('tfg_codebase.json')) {
+                const basePath = dataFile.replace('.json', '');
+                try {
+                    const statsRes = await fetch(basePath + '_stats.json');
+                    if (statsRes.ok) {
+                        const statsData = await statsRes.json();
+                        displayName = statsData.fullName || displayName;
+                        if (hudDesc) hudDesc.textContent = (statsData.description || 'No description.').substring(0, 120);
+                        if (hudStars) hudStars.textContent = formatNum(statsData.stars || 0);
+                        if (hudForks) hudForks.textContent = formatNum(statsData.forks || 0);
+                        if (hudIssues) hudIssues.textContent = formatNum(statsData.openIssues || 0);
+                        if (hudLang) hudLang.textContent = statsData.mainLanguage || '—';
+                        
+                        if (metricLangs) metricLangs.setAttribute('text', 'value', String(statsData.languages ? statsData.languages.length : 0));
+                        if (metricContribs) metricContribs.setAttribute('text', 'value', String(statsData.contributors ? statsData.contributors.length : 0));
+                        if (metricStars) metricStars.setAttribute('text', 'value', formatNum(statsData.stars || 0));
+
+                        populateDashboard(statsData);
+                        
+                        // Inject offline charts using local demo files
+                        injectOfflineBabiaCharts(basePath);
+                    }
+                } catch (e) {
+                    console.warn('[GitHubScene] Could not load offline stats file:', e);
+                }
+            } else {
+                 if (hudDesc) hudDesc.textContent = 'Modo offline — datos estáticos';
+                 if (hudStars) hudStars.textContent = '—';
+                 if (hudForks) hudForks.textContent = '—';
+                 if (hudIssues) hudIssues.textContent = formatNum(layoutData.stats?.totalFiles || 0);
+                 if (hudLang) hudLang.textContent = layoutData.stats?.totalDirectories ? `${layoutData.stats.totalDirectories} dirs` : '—';
+            }
+
+            if (hudRepoName) hudRepoName.textContent = displayName;
+            if (repoHud) repoHud.classList.remove('hidden');
+            if (sceneTitle) sceneTitle.setAttribute('text', 'value', displayName);
 
             // ── Enable Enter button ──
             dataReady = true;
@@ -1463,6 +1543,7 @@
             setTimeout(loadRepoData, 1000);
         } else {
             // ── Offline: Load data from static file or sessionStorage ──
+            // Note: charts are injected inside loadOfflineData once we know the offline files path
             setTimeout(loadOfflineData, 500);
         }
     });

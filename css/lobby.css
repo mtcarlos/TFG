@@ -97,7 +97,8 @@ body {
 }
 
 /* Safe centering: centers content if there's room, allows normal scrolling without cutoff if it overflows */
-.step::before, .step::after {
+.step::before,
+.step::after {
     content: '';
     margin: auto;
     flex-shrink: 0;
@@ -105,11 +106,13 @@ body {
 }
 
 .step::before {
-    min-height: 120px; /* Safe margin for top nav */
+    min-height: 120px;
+    /* Safe margin for top nav */
 }
 
 .step::after {
-    min-height: 80px; /* Safe margin for bottom footer */
+    min-height: 80px;
+    /* Safe margin for bottom footer */
 }
 
 .step--hidden {
@@ -222,7 +225,7 @@ body {
 }
 
 .step1-title em {
-    font-family: 'DM Serif Display', Georgia, serif;
+    font-family: 'DM Serif Display', orgia, serif;
     font-style: italic;
     font-weight: 400;
     color: var(--accent);
@@ -546,7 +549,7 @@ body {
 
 .gateway-demo-box,
 .gateway-upload-box {
-    background: rgba(0, 0, 0, 0.03);
+    background: rgba(0, 0, 0, 0.412);
     border: 1px solid var(--border);
     border-radius: var(--r-lg);
     padding: 24px;
@@ -555,7 +558,7 @@ body {
 .gateway-label {
     display: block;
     font-size: 0.85rem;
-    color: var(--text-2);
+    color: var(--bg);
     margin-bottom: 12px;
     font-weight: 500;
 }

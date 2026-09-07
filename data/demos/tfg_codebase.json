@@ -1,404 +1,693 @@
-[
-  {
-    "filename": "builder.html",
-    "folder": "root",
-    "loc": 716,
-    "ext": "html"
-  },
-  {
-    "filename": "babia.css",
-    "folder": "css",
-    "loc": 340,
-    "ext": "css"
-  },
-  {
-    "filename": "attendance.json",
-    "folder": "data",
-    "loc": 11,
-    "ext": "json"
-  },
-  {
-    "filename": "kpis.json",
-    "folder": "data",
-    "loc": 15,
-    "ext": "json"
-  },
-  {
-    "filename": "sales.json",
-    "folder": "data",
-    "loc": 23,
-    "ext": "json"
-  },
-  {
-    "filename": "360.html",
-    "folder": "other",
-    "loc": 91,
-    "ext": "html"
-  },
-  {
-    "filename": "adapter-test-receive.html",
-    "folder": "other",
-    "loc": 86,
-    "ext": "html"
-  },
-  {
-    "filename": "adapter-test-send.html",
-    "folder": "other",
-    "loc": 61,
-    "ext": "html"
-  },
-  {
-    "filename": "index.html",
-    "folder": "other",
-    "loc": 32,
-    "ext": "html"
-  },
-  {
-    "filename": "ar-index.html",
-    "folder": "other",
-    "loc": 108,
-    "ext": "html"
-  },
-  {
-    "filename": "basic-2.html",
-    "folder": "other",
-    "loc": 32,
-    "ext": "html"
-  },
-  {
-    "filename": "basic-4.html",
-    "folder": "other",
-    "loc": 44,
-    "ext": "html"
-  },
-  {
-    "filename": "basic-ar.html",
-    "folder": "other",
-    "loc": 94,
-    "ext": "html"
-  },
-  {
-    "filename": "basic-audio.html",
-    "folder": "other",
-    "loc": 118,
-    "ext": "html"
-  },
-  {
-    "filename": "basic-chat.html",
-    "folder": "other",
-    "loc": 257,
-    "ext": "html"
-  },
-  {
-    "filename": "basic-events.html",
-    "folder": "other",
-    "loc": 115,
-    "ext": "html"
-  },
-  {
-    "filename": "basic-multi-streams.html",
-    "folder": "other",
-    "loc": 162,
-    "ext": "html"
-  },
-  {
-    "filename": "basic-persistent.html",
-    "folder": "other",
-    "loc": 127,
-    "ext": "html"
-  },
-  {
-    "filename": "basic-video.html",
-    "folder": "other",
-    "loc": 121,
-    "ext": "html"
-  },
-  {
-    "filename": "basic.html",
-    "folder": "other",
-    "loc": 158,
-    "ext": "html"
-  },
-  {
-    "filename": "child-entities.html",
-    "folder": "other",
-    "loc": 107,
-    "ext": "html"
-  },
-  {
-    "filename": "style.css",
-    "folder": "other",
-    "loc": 31,
-    "ext": "css"
-  },
-  {
-    "filename": "disconnect.html",
-    "folder": "other",
-    "loc": 104,
-    "ext": "html"
-  },
-  {
-    "filename": "google-blocks.html",
-    "folder": "other",
-    "loc": 78,
-    "ext": "html"
-  },
-  {
-    "filename": "index.html",
-    "folder": "other",
-    "loc": 167,
-    "ext": "html"
-  },
-  {
-    "filename": "color-changer.component.js",
-    "folder": "other",
-    "loc": 14,
-    "ext": "js"
-  },
-  {
-    "filename": "forward.component.js",
-    "folder": "other",
-    "loc": 26,
-    "ext": "js"
-  },
-  {
-    "filename": "gun.component.js",
-    "folder": "other",
-    "loc": 63,
-    "ext": "js"
-  },
-  {
-    "filename": "move-in-circle.component.js",
-    "folder": "other",
-    "loc": 26,
-    "ext": "js"
-  },
-  {
-    "filename": "persistent-p2p.component.js",
-    "folder": "other",
-    "loc": 86,
-    "ext": "js"
-  },
-  {
-    "filename": "randomize-show-child.component.js",
-    "folder": "other",
-    "loc": 10,
-    "ext": "js"
-  },
-  {
-    "filename": "remove-in-seconds.component.js",
-    "folder": "other",
-    "loc": 15,
-    "ext": "js"
-  },
-  {
-    "filename": "show-child.component.js",
-    "folder": "other",
-    "loc": 27,
-    "ext": "js"
-  },
-  {
-    "filename": "spawn-grid.component.js",
-    "folder": "other",
-    "loc": 41,
-    "ext": "js"
-  },
-  {
-    "filename": "spawn-in-circle.component.js",
-    "folder": "other",
-    "loc": 31,
-    "ext": "js"
-  },
-  {
-    "filename": "spawner-persistent.component.js",
-    "folder": "other",
-    "loc": 26,
-    "ext": "js"
-  },
-  {
-    "filename": "spawner.component.js",
-    "folder": "other",
-    "loc": 22,
-    "ext": "js"
-  },
-  {
-    "filename": "show-child.component.test.js",
-    "folder": "other",
-    "loc": 103,
-    "ext": "js"
-  },
-  {
-    "filename": "toggle-ownership.component.js",
-    "folder": "other",
-    "loc": 88,
-    "ext": "js"
-  },
-  {
-    "filename": "my_example.html",
-    "folder": "other",
-    "loc": 65,
-    "ext": "html"
-  },
-  {
-    "filename": "nametag.html",
-    "folder": "other",
-    "loc": 175,
-    "ext": "html"
-  },
-  {
-    "filename": "ownership-transfer.html",
-    "folder": "other",
-    "loc": 131,
-    "ext": "html"
-  },
-  {
-    "filename": "persistent-peer-to-peer.html",
-    "folder": "other",
-    "loc": 127,
-    "ext": "html"
-  },
-  {
-    "filename": "shooter-2.html",
-    "folder": "other",
-    "loc": 32,
-    "ext": "html"
-  },
-  {
-    "filename": "shooter-ar.html",
-    "folder": "other",
-    "loc": 139,
-    "ext": "html"
-  },
-  {
-    "filename": "shooter.html",
-    "folder": "other",
-    "loc": 108,
-    "ext": "html"
-  },
-  {
-    "filename": "tracked-controllers.html",
-    "folder": "other",
-    "loc": 111,
-    "ext": "html"
-  },
-  {
-    "filename": "webrtc.html",
-    "folder": "other",
-    "loc": 114,
-    "ext": "html"
-  },
-  {
-    "filename": "index.css",
-    "folder": "root",
-    "loc": 1576,
-    "ext": "css"
-  },
-  {
-    "filename": "index.html",
-    "folder": "root",
-    "loc": 1210,
-    "ext": "html"
-  },
-  {
-    "filename": "builder-components.js",
-    "folder": "js",
-    "loc": 771,
-    "ext": "js"
-  },
-  {
-    "filename": "crafting-systems.js",
-    "folder": "js",
-    "loc": 154,
-    "ext": "js"
-  },
-  {
-    "filename": "easyrtc-patch.js",
-    "folder": "js",
-    "loc": 86,
-    "ext": "js"
-  },
-  {
-    "filename": "inventory-components.js",
-    "folder": "js",
-    "loc": 164,
-    "ext": "js"
-  },
-  {
-    "filename": "networked-aframe.js",
-    "folder": "js",
-    "loc": 288,
-    "ext": "js"
-  },
-  {
-    "filename": "registries.js",
-    "folder": "js",
-    "loc": 82,
-    "ext": "js"
-  },
-  {
-    "filename": "scene-logic.js",
-    "folder": "js",
-    "loc": 319,
-    "ext": "js"
-  },
-  {
-    "filename": "world-components.js",
-    "folder": "js",
-    "loc": 271,
-    "ext": "js"
-  },
-  {
-    "filename": "babia-scene.js",
-    "folder": "js",
-    "loc": 785,
-    "ext": "js"
-  },
-  {
-    "filename": "package.json",
-    "folder": "root",
-    "loc": 12,
-    "ext": "json"
-  },
-  {
-    "filename": "reserva.html",
-    "folder": "root",
-    "loc": 256,
-    "ext": "html"
-  },
-  {
-    "filename": "babia.html",
-    "folder": "scenes",
-    "loc": 322,
-    "ext": "html"
-  },
-  {
-    "filename": "scene.html",
-    "folder": "scenes",
-    "loc": 968,
-    "ext": "html"
-  },
-  {
-    "filename": "build-city.js",
-    "folder": "other",
-    "loc": 72,
-    "ext": "js"
-  },
-  {
-    "filename": ".prettierrc.json",
-    "folder": "server",
-    "loc": 6,
-    "ext": "json"
-  },
-  {
-    "filename": "easyrtc-server.js",
-    "folder": "server",
-    "loc": 136,
-    "ext": "js"
-  },
-  {
-    "filename": "socketio-server.js",
-    "folder": "server",
-    "loc": 142,
-    "ext": "js"
+{
+  "buildings": [
+    {
+      "type": "building",
+      "fileName": "nave_mala.webp",
+      "filePath": "P3/nave_mala.webp",
+      "directory": "P3",
+      "extension": ".webp",
+      "loc": 12647,
+      "x": 17.794743850304858,
+      "y": 4,
+      "z": 15.938347705146034,
+      "width": 2,
+      "depth": 2,
+      "height": 8,
+      "color": "#64748b",
+      "lastModified": 1743496885000
+    },
+    {
+      "type": "building",
+      "fileName": "style.css",
+      "filePath": "P3/style.css",
+      "directory": "P3",
+      "extension": ".css",
+      "loc": 584,
+      "x": 37.19474385030486,
+      "y": 0.9773197533137572,
+      "z": 6.122561689152458,
+      "width": 2,
+      "depth": 2,
+      "height": 1.9546395066275144,
+      "color": "#563d7c",
+      "lastModified": 1744100931000
+    },
+    {
+      "type": "building",
+      "fileName": "game.js",
+      "filePath": "P3/game.js",
+      "directory": "P3",
+      "extension": ".js",
+      "loc": 575,
+      "x": 37.19474385030486,
+      "y": 0.9709201060461323,
+      "z": 17.082577096220437,
+      "width": 2,
+      "depth": 2,
+      "height": 1.9418402120922647,
+      "color": "#f1e05a",
+      "lastModified": 1743662606000
+    },
+    {
+      "type": "building",
+      "fileName": "corazon.webp",
+      "filePath": "P3/corazon.webp",
+      "directory": "P3",
+      "extension": ".webp",
+      "loc": 152,
+      "x": 37.19474385030486,
+      "y": 0.572074159396994,
+      "z": 23.957409883915364,
+      "width": 2,
+      "depth": 2,
+      "height": 1.144148318793988,
+      "color": "#64748b",
+      "lastModified": 1743066224000
+    },
+    {
+      "type": "building",
+      "fileName": "reglas.html",
+      "filePath": "P3/reglas.html",
+      "directory": "P3",
+      "extension": ".html",
+      "loc": 111,
+      "x": 36.16070029685929,
+      "y": 0.5106853140697051,
+      "z": 27.371185174641454,
+      "width": 2,
+      "depth": 2,
+      "height": 1.0213706281394102,
+      "color": "#e34c26",
+      "lastModified": 1744100931000
+    },
+    {
+      "type": "building",
+      "fileName": "naves.html",
+      "filePath": "P3/naves.html",
+      "directory": "P3",
+      "extension": ".html",
+      "loc": 98,
+      "x": 38.365956446554435,
+      "y": 0.4889065855905166,
+      "z": 27.371185174641454,
+      "width": 1.918087106891138,
+      "depth": 2,
+      "height": 0.9778131711810332,
+      "color": "#e34c26",
+      "lastModified": 1744100931000
+    },
+    {
+      "type": "building",
+      "fileName": "juego.html",
+      "filePath": "P3/juego.html",
+      "directory": "P3",
+      "extension": ".html",
+      "loc": 66,
+      "x": 36.41641815041247,
+      "y": 0.4281243017498607,
+      "z": 30.3121384029401,
+      "width": 2,
+      "depth": 1.7791140147039228,
+      "height": 0.8562486034997214,
+      "color": "#e34c26",
+      "lastModified": 1743496885000
+    },
+    {
+      "type": "building",
+      "fileName": "index.html",
+      "filePath": "P3/index.html",
+      "directory": "P3",
+      "extension": ".html",
+      "loc": 36,
+      "x": 38.621674300107614,
+      "y": 0.3554084098798571,
+      "z": 30.31213840294013,
+      "width": 1.4066513997847792,
+      "depth": 1.7791140147039748,
+      "height": 0.7108168197597142,
+      "color": "#e34c26",
+      "lastModified": 1743606530000
+    },
+    {
+      "type": "building",
+      "fileName": "2c-template.css",
+      "filePath": "P1/2c-template.css",
+      "directory": "P1",
+      "extension": ".css",
+      "loc": 610,
+      "x": 3.6944014629957747,
+      "y": 0.9955355807303529,
+      "z": 35.63834770514603,
+      "width": 2,
+      "depth": 2,
+      "height": 1.9910711614607057,
+      "color": "#563d7c",
+      "lastModified": 1740044574000
+    },
+    {
+      "type": "building",
+      "fileName": "escena.webp",
+      "filePath": "P1/recursos/escena.webp",
+      "directory": "P1/recursos",
+      "extension": ".webp",
+      "loc": 210,
+      "x": 8.422439194735912,
+      "y": 0.646108442400785,
+      "z": 34.59712234993046,
+      "width": 2,
+      "depth": 2,
+      "height": 1.29221688480157,
+      "color": "#64748b",
+      "lastModified": 1739877299000
+    },
+    {
+      "type": "building",
+      "fileName": "carl.webp",
+      "filePath": "P1/recursos/carl.webp",
+      "directory": "P1/recursos",
+      "extension": ".webp",
+      "loc": 113,
+      "x": 11.292932496985681,
+      "y": 0.5139202246974743,
+      "z": 33.30689476640421,
+      "width": 2,
+      "depth": 2,
+      "height": 1.0278404493949487,
+      "color": "#64748b",
+      "lastModified": 1739872186000
+    },
+    {
+      "type": "building",
+      "fileName": "Dug.webp",
+      "filePath": "P1/recursos/Dug.webp",
+      "directory": "P1/recursos",
+      "extension": ".webp",
+      "loc": 81,
+      "x": 10.721078717076692,
+      "y": 0.4581126148197857,
+      "z": 35.7273217060426,
+      "width": 1.7800065071928373,
+      "depth": 2,
+      "height": 0.9162252296395714,
+      "color": "#64748b",
+      "lastModified": 1740044574000
+    },
+    {
+      "type": "building",
+      "fileName": "kevin-up.webp",
+      "filePath": "P1/recursos/kevin-up.webp",
+      "directory": "P1/recursos",
+      "extension": ".webp",
+      "loc": 48,
+      "x": 12.2579357505821,
+      "y": 0.38718520147589697,
+      "z": 35.7273217060426,
+      "width": 0.9937075598179778,
+      "depth": 2,
+      "height": 0.7743704029517939,
+      "color": "#64748b",
+      "lastModified": 1740044574000
+    },
+    {
+      "type": "building",
+      "fileName": "about.html",
+      "filePath": "P1/about.html",
+      "directory": "P1",
+      "extension": ".html",
+      "loc": 64,
+      "x": 7.961702182315165,
+      "y": 0.4238778798398095,
+      "z": 38.358774644784425,
+      "width": 2,
+      "depth": 1.9324507104311546,
+      "height": 0.847755759679619,
+      "color": "#e34c26",
+      "lastModified": 1740471264000
+    },
+    {
+      "type": "building",
+      "fileName": "index.html",
+      "filePath": "P1/index.html",
+      "directory": "P1",
+      "extension": ".html",
+      "loc": 48,
+      "x": 10.014275880881488,
+      "y": 0.38718520147589697,
+      "z": 38.358774644784425,
+      "width": 1.6093488844854222,
+      "depth": 1.9324507104311546,
+      "height": 0.7743704029517939,
+      "color": "#e34c26",
+      "lastModified": 1739896535000
+    },
+    {
+      "type": "building",
+      "fileName": "insignias.html",
+      "filePath": "P1/insignias.html",
+      "directory": "P1",
+      "extension": ".html",
+      "loc": 35,
+      "x": 11.535379603926177,
+      "y": 0.3525354234948104,
+      "z": 38.358774644784425,
+      "width": 1.132858561603954,
+      "depth": 1.9324507104311546,
+      "height": 0.7050708469896207,
+      "color": "#e34c26",
+      "lastModified": 1740044574000
+    },
+    {
+      "type": "building",
+      "fileName": "contacto.html",
+      "filePath": "P1/contacto.html",
+      "directory": "P1",
+      "extension": ".html",
+      "loc": 26,
+      "x": 12.65329920760962,
+      "y": 0.3245635817055761,
+      "z": 38.35877464478443,
+      "width": 0.8029806457629328,
+      "depth": 1.9324507104311635,
+      "height": 0.6491271634111522,
+      "color": "#e34c26",
+      "lastModified": 1739896535000
+    },
+    {
+      "type": "building",
+      "fileName": "styles.css",
+      "filePath": "P2/styles.css",
+      "directory": "P2",
+      "extension": ".css",
+      "loc": 386,
+      "x": 17.076362655153794,
+      "y": 0.8226058225674182,
+      "z": 33.99331025841689,
+      "width": 2,
+      "depth": 2,
+      "height": 1.6452116451348364,
+      "color": "#563d7c",
+      "lastModified": 1741856848000
+    },
+    {
+      "type": "building",
+      "fileName": "script.js",
+      "filePath": "P2/script.js",
+      "directory": "P2",
+      "extension": ".js",
+      "loc": 127,
+      "x": 15.1465054865983,
+      "y": 0.5358058696442409,
+      "z": 37.754962553270865,
+      "width": 2,
+      "depth": 2,
+      "height": 1.0716117392884819,
+      "color": "#f1e05a",
+      "lastModified": 1741856848000
+    },
+    {
+      "type": "building",
+      "fileName": "juego.html",
+      "filePath": "P2/juego.html",
+      "directory": "P2",
+      "extension": ".html",
+      "loc": 61,
+      "x": 17.89069544882172,
+      "y": 0.4173818277821092,
+      "z": 36.95317959604154,
+      "width": 2,
+      "depth": 1.5365089789996222,
+      "height": 0.8347636555642184,
+      "color": "#e34c26",
+      "lastModified": 1741856848000
+    },
+    {
+      "type": "building",
+      "fileName": "index.html",
+      "filePath": "P2/index.html",
+      "directory": "P2",
+      "extension": ".html",
+      "loc": 58,
+      "x": 17.89069544882172,
+      "y": 0.4107239739468811,
+      "z": 38.59821704277067,
+      "width": 2,
+      "depth": 1.453565914458657,
+      "height": 0.8214479478937622,
+      "color": "#e34c26",
+      "lastModified": 1741857411000
+    },
+    {
+      "type": "building",
+      "fileName": "crono.js",
+      "filePath": "P2/crono.js",
+      "directory": "P2",
+      "extension": ".js",
+      "loc": 54,
+      "x": 19.820552617377217,
+      "y": 0.40157289654105643,
+      "z": 37.754962553270865,
+      "width": 1.054766324878575,
+      "depth": 2,
+      "height": 0.8031457930821129,
+      "color": "#f1e05a",
+      "lastModified": 1743066224000
+    },
+    {
+      "type": "building",
+      "fileName": "pruebas.css",
+      "filePath": "pruebas.css",
+      "directory": "",
+      "extension": ".css",
+      "loc": 610,
+      "x": 23.965515380464097,
+      "y": 0.9955355807303529,
+      "z": 35.63834770514603,
+      "width": 2,
+      "depth": 2,
+      "height": 1.9910711614607057,
+      "color": "#563d7c",
+      "lastModified": 1740474207000
+    },
+    {
+      "type": "building",
+      "fileName": "app.js",
+      "filePath": "P5/app.js",
+      "directory": "P5",
+      "extension": ".js",
+      "loc": 284,
+      "x": 29.802158661629772,
+      "y": 0.7269340087725582,
+      "z": 34.06585371303495,
+      "width": 2,
+      "depth": 2,
+      "height": 1.4538680175451164,
+      "color": "#f1e05a",
+      "lastModified": 1745482786000
+    },
+    {
+      "type": "building",
+      "fileName": "style.css",
+      "filePath": "P5/style.css",
+      "directory": "P5",
+      "extension": ".css",
+      "loc": 156,
+      "x": 29.26237897209611,
+      "y": 0.5775917028513019,
+      "z": 37.827506007888914,
+      "width": 2,
+      "depth": 2,
+      "height": 1.1551834057026038,
+      "color": "#563d7c",
+      "lastModified": 1745482786000
+    },
+    {
+      "type": "building",
+      "fileName": "index.html",
+      "filePath": "P5/index.html",
+      "directory": "P5",
+      "extension": ".html",
+      "loc": 48,
+      "x": 31.556442652614184,
+      "y": 0.38718520147589697,
+      "z": 37.82750600788892,
+      "width": 0.9295593790673297,
+      "depth": 2,
+      "height": 0.7743704029517939,
+      "color": "#e34c26",
+      "lastModified": 1745482786000
+    },
+    {
+      "type": "building",
+      "fileName": "styles.css",
+      "filePath": "P4/styles.css",
+      "directory": "P4",
+      "extension": ".css",
+      "loc": 241,
+      "x": 34.579218164458304,
+      "y": 0.6814660065093143,
+      "z": 34.113011035462875,
+      "width": 2,
+      "depth": 2,
+      "height": 1.3629320130186287,
+      "color": "#563d7c",
+      "lastModified": 1745306150000
+    },
+    {
+      "type": "building",
+      "fileName": "game.js",
+      "filePath": "P4/game.js",
+      "directory": "P4",
+      "extension": ".js",
+      "loc": 158,
+      "x": 37.931106993384375,
+      "y": 0.5803239460053025,
+      "z": 33.75615215910583,
+      "width": 2,
+      "depth": 2,
+      "height": 1.160647892010605,
+      "color": "#f1e05a",
+      "lastModified": 1745306150000
+    },
+    {
+      "type": "building",
+      "fileName": "index.html",
+      "filePath": "P4/index.html",
+      "directory": "P4",
+      "extension": ".html",
+      "loc": 30,
+      "x": 37.931106993384375,
+      "y": 0.3375113659874413,
+      "z": 35.99246778427665,
+      "width": 2,
+      "depth": 0.5637177527140883,
+      "height": 0.6750227319748826,
+      "color": "#e34c26",
+      "lastModified": 1744885341000
+    },
+    {
+      "type": "building",
+      "fileName": "2c-template.css",
+      "filePath": "2c-template.css",
+      "directory": "",
+      "extension": ".css",
+      "loc": 102,
+      "x": 33.839992344281406,
+      "y": 0.49575387499378654,
+      "z": 38.17466333031685,
+      "width": 2,
+      "depth": 2,
+      "height": 0.9915077499875731,
+      "color": "#563d7c",
+      "lastModified": 1740474207000
+    },
+    {
+      "type": "building",
+      "fileName": "index.html",
+      "filePath": "index.html",
+      "directory": "",
+      "extension": ".html",
+      "loc": 57,
+      "x": 36.09057499466606,
+      "y": 0.4084665810341923,
+      "z": 38.17466333031685,
+      "width": 1.463625296502207,
+      "depth": 2,
+      "height": 0.8169331620683846,
+      "color": "#e34c26",
+      "lastModified": 1745306801000
+    },
+    {
+      "type": "building",
+      "fileName": "prueba.html",
+      "filePath": "prueba.html",
+      "directory": "",
+      "extension": ".html",
+      "loc": 51,
+      "x": 38.298693821458585,
+      "y": 0.39448490962963234,
+      "z": 37.43510615713712,
+      "width": 2,
+      "depth": 1.4215589930068566,
+      "height": 0.7889698192592647,
+      "color": "#e34c26",
+      "lastModified": 1740474207000
+    },
+    {
+      "type": "building",
+      "fileName": "holamundo.html",
+      "filePath": "P0/Sesion1/holamundo.html",
+      "directory": "P0/Sesion1",
+      "extension": ".html",
+      "loc": 19,
+      "x": 37.62540467192312,
+      "y": 0.2992257501366131,
+      "z": 38.96044282682027,
+      "width": 0.10603405801191038,
+      "depth": 0.1291143463594552,
+      "height": 0.5984515002732262,
+      "color": "#e34c26",
+      "lastModified": 1738830545000
+    },
+    {
+      "type": "building",
+      "fileName": "holamundo2.html",
+      "filePath": "P0/Sesion2/holamundo2.html",
+      "directory": "P0/Sesion2",
+      "extension": ".html",
+      "loc": 19,
+      "x": 38.48143872993503,
+      "y": 0.2992257501366131,
+      "z": 38.96044282682027,
+      "width": 0.10603405801191038,
+      "depth": 0.1291143463594552,
+      "height": 0.5984515002732262,
+      "color": "#e34c26",
+      "lastModified": 1738831479000
+    },
+    {
+      "type": "building",
+      "fileName": "README.md",
+      "filePath": "P0/README.md",
+      "directory": "P0",
+      "extension": ".md",
+      "loc": 6,
+      "x": 39.0671462433116,
+      "y": 0.23385763218035213,
+      "z": 38.89764894493745,
+      "width": 0.16538096874123012,
+      "depth": 0.6035265825938188,
+      "height": 0.46771526436070426,
+      "color": "#083fa1",
+      "lastModified": 1738228182000
+    },
+    {
+      "type": "building",
+      "fileName": "texto.txt",
+      "filePath": "P0/texto.txt",
+      "directory": "P0",
+      "extension": ".txt",
+      "loc": 1,
+      "x": 39.0671462433116,
+      "y": 0.18423473497997617,
+      "z": 39.349412236234365,
+      "width": 0.1653809687412303,
+      "depth": 0.05,
+      "height": 0.36846946995995233,
+      "color": "#64748b",
+      "lastModified": 1738229307000
+    },
+    {
+      "type": "building",
+      "fileName": "README.md",
+      "filePath": "README.md",
+      "directory": "",
+      "extension": ".md",
+      "loc": 3,
+      "x": 39.612418363841115,
+      "y": 0.20929630036897423,
+      "z": 38.960442826819786,
+      "width": 0.05,
+      "depth": 1.329114346358483,
+      "height": 0.41859260073794846,
+      "color": "#083fa1",
+      "lastModified": 1738228052000
+    }
+  ],
+  "districts": [
+    {
+      "type": "district",
+      "name": "root",
+      "x": 20,
+      "z": 20,
+      "width": 40,
+      "depth": 40,
+      "color": "rgba(30, 30, 46, 0.35)"
+    },
+    {
+      "type": "district",
+      "name": "P3",
+      "x": 20,
+      "z": 15.938347705146034,
+      "width": 39.4,
+      "depth": 31.276695410292067,
+      "color": "rgba(30, 30, 46, 0.35)"
+    },
+    {
+      "type": "district",
+      "name": "P1",
+      "x": 6.864894765245544,
+      "z": 35.63834770514603,
+      "width": 13.129789530491088,
+      "depth": 8.123304589707931,
+      "color": "rgba(30, 30, 46, 0.35)"
+    },
+    {
+      "type": "district",
+      "name": "recursos",
+      "x": 9.95929622824132,
+      "z": 34.59712234993046,
+      "width": 6.340986604499538,
+      "depth": 5.440853879276777,
+      "color": "rgba(30, 30, 46, 0.35)"
+    },
+    {
+      "type": "district",
+      "name": "P2",
+      "x": 17.076362655153794,
+      "z": 35.63834770514603,
+      "width": 7.293146249325414,
+      "depth": 8.123304589707931,
+      "color": "rgba(30, 30, 46, 0.35)"
+    },
+    {
+      "type": "district",
+      "name": "P5",
+      "x": 29.802158661629772,
+      "z": 35.63834770514603,
+      "width": 5.1881273610361545,
+      "depth": 8.123304589707931,
+      "color": "rgba(30, 30, 46, 0.35)"
+    },
+    {
+      "type": "district",
+      "name": "P4",
+      "x": 36.04811117107393,
+      "z": 34.113011035462875,
+      "width": 7.303777657852149,
+      "depth": 5.07263125034162,
+      "color": "rgba(30, 30, 46, 0.35)"
+    },
+    {
+      "type": "district",
+      "name": "P0",
+      "x": 38.21111218529969,
+      "z": 38.96044282682027,
+      "width": 2.627449084765051,
+      "depth": 1.4791143463594552,
+      "color": "rgba(30, 30, 46, 0.35)"
+    },
+    {
+      "type": "district",
+      "name": "Sesion1",
+      "x": 37.62540467192312,
+      "z": 38.96044282682027,
+      "width": 0.8560340580119103,
+      "depth": 0.8791143463594552,
+      "color": "rgba(30, 30, 46, 0.35)"
+    },
+    {
+      "type": "district",
+      "name": "Sesion2",
+      "x": 38.48143872993503,
+      "z": 38.96044282682027,
+      "width": 0.8560340580119103,
+      "depth": 0.8791143463594552,
+      "color": "rgba(30, 30, 46, 0.35)"
+    }
+  ],
+  "stats": {
+    "totalFiles": 37,
+    "totalLOC": 17975,
+    "totalDirs": 12
   }
-]
+}

@@ -1,0 +1,251 @@
+/* Variables de tema */
+:root {
+  --bg-dark: #121212;
+  --bg-gradient-start: #121212;
+  --bg-gradient-end: #000;
+  --main-red: #e50000;
+  --text-light: #f7f7f7;
+  --text-dark: #333;
+}
+
+/* Reset de estilos */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Fondo dinámico con degradado animado */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: radial-gradient(circle at 50% 50%, var(--bg-gradient-start), var(--bg-gradient-end) 80%);
+  color: var(--text-dark);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  animation: bgShift 20s infinite alternate;
+}
+@keyframes bgShift {
+  to { background-position: 100% 100%; }
+}
+
+/* Encabezado con diseño neón animado */
+header {
+  background-color: var(--bg-dark);
+  color: var(--text-light);
+  width: 100%; padding: 20px 0;
+  margin-bottom: 30px;
+  text-align: center;
+  border-radius: 0 0 20px 20px;
+  box-shadow: 0 4px 10px rgba(218, 0, 0, 0.8);
+}
+header h1 {
+  font-size: 2.5em;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-shadow: 0 0 8px var(--main-red), 0 0 16px var(--text-light);
+  animation: neonPulse 3s ease-in-out infinite;
+}
+@keyframes neonPulse {
+  0%, 100% { text-shadow: 0 0 4px var(--main-red), 0 0 8px var(--text-light); }
+  50%      { text-shadow: 0 0 12px var(--main-red), 0 0 24px var(--text-light); }
+}
+
+/* Controles y estadísticas con estilo retro-futurista */
+.controls {
+  margin-bottom: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: center;
+  justify-content: center;
+}
+.controls select,
+.controls button {
+  padding: 10px 15px;
+  font-size: 16px;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  background-color: var(--bg-dark);
+  color: var(--text-light);
+  box-shadow: 0 0 10px var(--main-red);
+  transition: all 0.3s ease;
+}
+.controls button:hover,
+.controls select:hover {
+  color:#121212;
+  background: linear-gradient(45deg, var(--main-red), #ff4d4d);
+  transform: scale(1.1);
+  box-shadow: 0 0 15px var(--text-light);
+}
+.stats span {
+  background: rgba(255, 0, 0, 0.6);
+  margin: 5px;
+  padding: 8px 12px;
+  border-radius: 50px;
+  font-family: 'Courier New', monospace;
+  color: var(--text-light);
+  font-size: 18px;
+  font-weight: bold;
+  box-shadow: 0 0 6px var(--main-red);
+}
+
+/* Tablero de juego */
+.game-board {
+  width: 90vw;
+  max-width: 600px;
+  margin: auto;
+  display: grid;
+  gap: 15px;
+  justify-content: center;
+}
+
+/* Tarjetas con efecto flip y entrada animada */
+.card {
+  width: 140px;
+  height: 200px;
+  perspective: 1000px;
+  border-radius: 30px;
+  opacity: 0;
+  transform: translateY(-50px) rotate(-10deg);
+  animation: deal 0.6s forwards;
+}
+.card:hover {
+  cursor: pointer;
+  border-radius: 15px;
+  transform: scale(1.05) rotate3d(1, 1, 1, 10deg);
+}
+.card:nth-child(4n+1) { animation-delay: 0.1s; }
+.card:nth-child(4n+2) { animation-delay: 0.2s; }
+.card:nth-child(4n+3) { animation-delay: 0.3s; }
+.card:nth-child(4n+4) { animation-delay: 0.4s; }
+@keyframes deal {
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(0);
+  }
+}
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  border-radius: 25px;
+}
+.card.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+.card-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border: 2px solid var(--main-red);
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(182, 0, 0, 0.575);
+}
+.card-face.card-back {
+  background: #ff000071 url('corazon.png') no-repeat center center;
+  background-size: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 25px;
+}
+.card-face.card-front {
+  transform: rotateY(180deg);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  box-shadow:
+    0 8px 16px rgba(0,0,0,0.5),
+    inset 0 2px 4px rgba(255,255,255,0.2);
+}
+
+/* Animación shake para errores */
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}
+.card.error .card-inner {
+  animation: shake 0.4s;
+}
+
+/* Estilos personalizados para el modal de victoria */
+.modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  
+}
+.modal.show {
+  opacity: 1;
+  pointer-events: all;
+}
+.modal-content {
+  background: #6e0101;
+  color: #f7f7f7;
+  padding: 40px;
+  border-radius: 50px;
+  text-align: center;
+  transform: scale(0.8);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8);
+}
+.modal.show .modal-content {
+  transform: scale(1);
+  opacity: 1;
+}
+.modal-content h2 {
+  font-size: 2.5em;
+  margin-bottom: 10px;
+  color: var(--main-red);
+  text-shadow: 0 0 4px var(--main-red);
+}
+.modal-content p {
+  font-size: 1.2em;
+  margin: 20px 0;
+  color: #f7f7f7;
+}
+.modal-content button {
+  background: linear-gradient(45deg, var(--main-red), #ff4d4d);
+  color: var(--text-light);
+  padding: 12px 24px;
+  font-size: 1em;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease;
+}
+.modal-content button:hover {
+  transform: scale(1.05);
+}
+
+/* Responsividad para móviles */
+@media (max-width: 600px) {
+  .card {
+    width: 90px;
+    height: 130px;
+  }
+  .controls select,
+  .controls button {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+  .stats span {
+    font-size: 16px;
+  }
+}

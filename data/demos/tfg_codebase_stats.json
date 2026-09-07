@@ -1,0 +1,40 @@
+{
+  "owner": "cmalagon2021",
+  "repo": "-2024_2025_CSAAI_Practicas",
+  "fullName": "cmalagon2021/-2024_2025_CSAAI_Practicas",
+  "description": "Repositorio para subir las prácticas de CSAAI 24/25",
+  "htmlUrl": "https://github.com/cmalagon2021/-2024_2025_CSAAI_Practicas",
+  "stars": 2,
+  "forks": 0,
+  "openIssues": 0,
+  "mainLanguage": "CSS",
+  "createdAt": "2025-01-30T08:35:11Z",
+  "updatedAt": "2025-04-24T08:19:50Z",
+  "license": "No license",
+  "defaultBranch": "main",
+  "size": 110357,
+  "languages": [
+    {
+      "name": "CSS",
+      "bytes": 64761,
+      "percentage": 46.2
+    },
+    {
+      "name": "JavaScript",
+      "bytes": 39283,
+      "percentage": 28
+    },
+    {
+      "name": "HTML",
+      "bytes": 36038,
+      "percentage": 25.7
+    }
+  ],
+  "contributors": [
+    {
+      "login": "cmalagon2021",
+      "contributions": 82,
+      "avatarUrl": "https://avatars.githubusercontent.com/u/90865636?v=4"
+    }
+  ]
+}

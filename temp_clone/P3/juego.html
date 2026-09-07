@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Invasión Alienígena</title>
+  <!-- Importamos la fuente Orbitron -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>INVASIÓN ALIENÍGENA</h1>
+  </header>
+  <div class="game-container">
+    <canvas id="gameCanvas" width="600" height="600"></canvas>
+    <!-- Aquí van los overlays de pausa y fin de partida -->
+    <div id="pauseScreen" class="hidden overlay">
+      <div class="overlay-content">
+        <h2>PAUSA</h2>
+        <div class="overlay-buttons">
+          <button id="continueButton">Continuar</button>
+          <button id="restartButton">Reiniciar</button>
+          <button id="homeButton">Inicio</button>
+        </div>
+      </div>
+    </div>
+    <div id="endScreen" class="hidden overlay">
+      <div class="overlay-content">
+        <h2 id="endMessage"></h2>
+        <div class="overlay-buttons">
+          <button id="endRestartButton">Volver a Jugar</button>
+          <button id="endHomeButton">Volver a Inicio</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Controles táctiles para dispositivos móviles -->
+  <div id="touchControls" class="touch-controls">
+    <button id="touchLeft">◀</button>
+    <button id="touchFire">●</button>
+    <button id="touchRight">▶</button>
+  </div>
+  <!-- Aquí sí cargamos game.js, ya que en esta página existe el canvas -->
+  <script src="game.js"></script>
+  <script>
+    // Configurar botones de los overlays (pausa y fin de partida)
+    document.getElementById("continueButton").addEventListener("click", function() {
+      document.getElementById("pauseScreen").classList.add("hidden");
+      window.paused = false;
+    });
+    document.getElementById("restartButton").addEventListener("click", function() {
+      window.location.reload();
+    });
+    document.getElementById("homeButton").addEventListener("click", function() {
+      window.location.href = "index.html";
+    });
+    document.getElementById("endRestartButton").addEventListener("click", function() {
+      window.location.reload();
+    });
+    document.getElementById("endHomeButton").addEventListener("click", function() {
+      window.location.href = "index.html";
+    });
+  </script>
+</body>
+</html>
