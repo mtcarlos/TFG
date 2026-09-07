@@ -71,6 +71,17 @@ body {
     z-index: 0;
 }
 
+.canvas-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    /* Sits above canvas, below UI (which is z-index: 1+) */
+    background: radial-gradient(circle at center, rgba(245, 245, 247, 0.2) 0%, rgba(245, 245, 247, 0.85) 100%);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
 /* ─── Steps System ────────────────────────────────────────── */
 .step {
     position: fixed;
@@ -78,9 +89,27 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     z-index: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0 24px;
     transition: opacity 0.5s var(--ease), transform 0.5s var(--ease), filter 0.5s var(--ease);
+}
+
+/* Safe centering: centers content if there's room, allows normal scrolling without cutoff if it overflows */
+.step::before, .step::after {
+    content: '';
+    margin: auto;
+    flex-shrink: 0;
+    width: 100%;
+}
+
+.step::before {
+    min-height: 120px; /* Safe margin for top nav */
+}
+
+.step::after {
+    min-height: 80px; /* Safe margin for bottom footer */
 }
 
 .step--hidden {
@@ -222,15 +251,19 @@ body {
 .mode-toggle {
     position: relative;
     display: inline-flex;
-    width: 320px;
-    /* Fixed width to ensure symmetrical buttons */
-    background: rgba(255, 255, 255, 0.05);
-    /* subtle glassmorphism */
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 340px;
+    /* Slightly wider for elegance */
+    background: rgba(240, 240, 245, 0.65);
+    /* Frosted glass container */
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.8);
     border-radius: 100px;
-    padding: 8px;
-    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.15), 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 6px;
+    box-shadow:
+        0 4px 20px rgba(0, 0, 0, 0.04),
+        inset 0 2px 4px rgba(0, 0, 0, 0.02),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.4);
 }
 
 .mode-btn {
@@ -241,59 +274,59 @@ body {
     width: 50%;
     /* Each button takes exactly half */
     padding: 14px 0;
-    /* Vertical padding only, horizontal controlled by width */
     font-size: 0.95rem;
-    font-weight: 600;
-    color: var(--text-3);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--text-2);
     cursor: pointer;
     border-radius: 100px;
-    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: color 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 8px;
 }
 
 .mode-btn svg {
     width: 18px;
     height: 18px;
     opacity: 0.7;
-    transition: opacity 0.4s ease, transform 0.4s ease;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
 }
 
 .mode-btn:hover {
-    color: var(--text-2);
+    color: var(--text-1);
 }
 
 .mode-btn.active {
-    color: #000;
-    /* Contrast against the bright accent background */
-    text-shadow: none;
+    color: #FFFFFF;
+    font-weight: 500;
 }
 
 .mode-btn.active svg {
     opacity: 1;
-    transform: scale(1.1);
+    transform: scale(1.05);
 }
 
 .mode-slider {
     position: absolute;
-    top: 8px;
-    bottom: 8px;
-    left: 8px;
-    width: calc(50% - 8px);
-    background: var(--accent);
+    top: 6px;
+    bottom: 6px;
+    left: 6px;
+    width: calc(50% - 6px);
+    background: var(--text-1);
+    /* Premium dark slider */
     border-radius: 100px;
-    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.2);
-    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.4s ease, box-shadow 0.4s ease;
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.12),
+        0 2px 6px rgba(0, 0, 0, 0.08),
+        inset 0 1px 1px rgba(255, 255, 255, 0.15);
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
     z-index: 1;
 }
 
 .mode-toggle[data-active="offline"] .mode-slider {
     transform: translateX(100%);
-    background: #3b82f6;
-    /* Blueish for offline mode */
-    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.2);
 }
 
 .cmd-options-wrapper {
@@ -389,7 +422,7 @@ body {
 }
 
 .cmd-option--solo .cmd-prompt {
-    color: #3b82f6;
+    color: var(--accent);
     /* Blueish accent to distinguish it */
 }
 
@@ -404,7 +437,7 @@ body {
 .gateway-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 32px;
+    gap: 24px;
     animation: fadeUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
@@ -511,11 +544,12 @@ body {
     overflow: hidden;
 }
 
-.gateway-demo-box, .gateway-upload-box {
+.gateway-demo-box,
+.gateway-upload-box {
     background: rgba(0, 0, 0, 0.03);
     border: 1px solid var(--border);
     border-radius: var(--r-lg);
-    padding: 32px;
+    padding: 24px;
 }
 
 .gateway-label {
@@ -547,7 +581,8 @@ body {
     transition: all 0.3s ease;
 }
 
-.gateway-select:hover, .gateway-select:focus {
+.gateway-select:hover,
+.gateway-select:focus {
     border-color: var(--accent-border);
     box-shadow: var(--shadow-md);
 }
@@ -568,7 +603,7 @@ body {
     width: 100%;
     border: 1px dashed var(--border-hover);
     border-radius: var(--r-md);
-    padding: 48px 24px;
+    padding: 36px 24px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -587,12 +622,14 @@ body {
     transition: opacity 0.4s ease;
 }
 
-.drop-zone:hover, .drop-zone.dragover {
+.drop-zone:hover,
+.drop-zone.dragover {
     border-color: var(--accent);
-    background: rgba(255,255,255,0.5);
+    background: rgba(255, 255, 255, 0.5);
 }
 
-.drop-zone:hover .drop-glow, .drop-zone.dragover .drop-glow {
+.drop-zone:hover .drop-glow,
+.drop-zone.dragover .drop-glow {
     opacity: 1;
 }
 
