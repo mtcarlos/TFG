@@ -193,7 +193,7 @@ AFRAME.registerComponent('oracle-panel', {
         title.setAttribute('position', `${-W / 2 + 0.12} ${H / 2 - 0.09} 0.005`);
         title.setAttribute('align', 'left');
         title.setAttribute('color', '#ffffff');
-        title.setAttribute('font', '/assets/fonts/custom-msdf.json');
+        title.setAttribute('font', '../assets/fonts/custom-msdf.json');
         title.setAttribute('negate', false);
         title.setAttribute('scale', '0.35 0.35 0.35');
         this.container.appendChild(title);
@@ -272,7 +272,7 @@ AFRAME.registerComponent('oracle-panel', {
         this.contextLabel.setAttribute('align', 'center');
         this.contextLabel.setAttribute('color', '#d4d4d8');
         this.contextLabel.setAttribute('scale', '0.18 0.18 0.18');
-        this.contextLabel.setAttribute('font', '/assets/fonts/custom-msdf.json');
+        this.contextLabel.setAttribute('font', '../assets/fonts/custom-msdf.json');
         this.contextLabel.setAttribute('negate', false);
         this.container.appendChild(this.contextLabel);
 
@@ -295,7 +295,7 @@ AFRAME.registerComponent('oracle-panel', {
         this.responseArea.setAttribute('wrap-count', 72);
         this.responseArea.setAttribute('baseline', 'top');
         this.responseArea.setAttribute('anchor', 'left');
-        this.responseArea.setAttribute('font', '/assets/fonts/custom-msdf.json');
+        this.responseArea.setAttribute('font', '../assets/fonts/custom-msdf.json');
         this.responseArea.setAttribute('negate', false);
         this.container.appendChild(this.responseArea);
 
@@ -466,7 +466,7 @@ AFRAME.registerComponent('oracle-panel', {
             text.setAttribute('color', textColor);
             text.setAttribute('scale', '0.15 0.15 0.15');
             text.setAttribute('position', '0 0 0.003');
-            text.setAttribute('font', '/assets/fonts/custom-msdf.json');
+            text.setAttribute('font', '../assets/fonts/custom-msdf.json');
             text.setAttribute('negate', false);
             btn.appendChild(text);
 
@@ -523,7 +523,7 @@ AFRAME.registerComponent('oracle-panel', {
             this._micLabel.setAttribute('color', '#f8fafc');
             this._micLabel.setAttribute('scale', '0.15 0.15 0.15');
             this._micLabel.setAttribute('position', '0 0 0.003');
-            this._micLabel.setAttribute('font', '/assets/fonts/custom-msdf.json');
+            this._micLabel.setAttribute('font', '../assets/fonts/custom-msdf.json');
             this._micLabel.setAttribute('negate', false);
             this._micBtn.appendChild(this._micLabel);
 

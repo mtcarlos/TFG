@@ -1391,7 +1391,7 @@
                 layoutData = window.SceneDataLoader._normalizeLayout(raw, 'user-upload');
             } else {
                 // Demo mode — fetch static JSON
-                const demoPath = dataFile.startsWith('/') ? dataFile : '/' + dataFile;
+                const demoPath = dataFile.startsWith('/') ? dataFile : '../' + dataFile;
                 layoutData = await window.SceneDataLoader.loadFromStaticDemo(demoPath);
             }
 

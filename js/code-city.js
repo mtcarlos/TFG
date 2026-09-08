@@ -300,7 +300,7 @@
             nameText.setAttribute('align', 'center');
             nameText.setAttribute('color', '#8b6914');
             nameText.setAttribute('width', '3.2');
-            nameText.setAttribute('font', '/assets/fonts/custom-msdf.json');
+            nameText.setAttribute('font', '../assets/fonts/custom-msdf.json');
             nameText.setAttribute('negate', false);
             this.tooltip.appendChild(nameText);
 
@@ -313,7 +313,7 @@
             detailText.setAttribute('color', '#5a6b5c');
             detailText.setAttribute('width', '2.8');
             detailText.setAttribute('wrap-count', '40');
-            detailText.setAttribute('font', '/assets/fonts/custom-msdf.json');
+            detailText.setAttribute('font', '../assets/fonts/custom-msdf.json');
             detailText.setAttribute('negate', false);
             this.tooltip.appendChild(detailText);
 
@@ -391,7 +391,7 @@
                         label.setAttribute('align', 'center');
                         label.setAttribute('color', '#3a2e1a');
                         label.setAttribute('width', Math.min(d.width * 1.8, 5));
-                        label.setAttribute('font', '/assets/fonts/custom-msdf.json');
+                        label.setAttribute('font', '../assets/fonts/custom-msdf.json');
                         label.setAttribute('negate', false);
                         label.setAttribute('side', 'double');
                         labelGroup.appendChild(label);
