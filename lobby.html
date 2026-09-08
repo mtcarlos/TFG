@@ -489,8 +489,8 @@
             // Setup Scene, Camera, Renderer
             const scene = new THREE.Scene();
             // Match the CSS background color var(--bg) approx #F5F5F7
-            scene.background = new THREE.Color('#F5F5F7');
-            scene.fog = new THREE.Fog('#F5F5F7', 15, 60);
+            scene.background = new THREE.Color('#F7F6F5');
+            scene.fog = new THREE.Fog('#F7F6F5', 18, 70);
 
             const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
             camera.position.set(0, 5, 15);
@@ -499,13 +499,17 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-            // Lighting
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.65);
+            // Lighting (Cinematic Sunset)
+            const ambientLight = new THREE.AmbientLight(0xffeedd, 0.6); // Luz natural cálida base
             scene.add(ambientLight);
 
-            const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-            dirLight.position.set(10, 20, 10);
+            const dirLight = new THREE.DirectionalLight(0xff5500, 2.0); // Luz directa naranja (Atardecer)
+            dirLight.position.set(15, 3, 15);
             scene.add(dirLight);
+
+            const fillLight = new THREE.DirectionalLight(0x404080, 1.0); // Luz de relleno azul/morada (Contraste)
+            fillLight.position.set(-15, 10, -15);
+            scene.add(fillLight);
 
             // Voxel Materials
             const boxGeo = new THREE.BoxGeometry(1, 1, 1);

@@ -8,7 +8,7 @@
 
 :root {
     --bg: #F5F5F7;
-    --bg-card: #FFFFFF;
+    --bg-card: rgba(255, 255, 255, 0.55); /* Glassmorphism background */
     --text-1: #1D1D1F;
     --text-2: #6E6E73;
     --text-3: #A1A1A6;
@@ -373,13 +373,15 @@ body {
 
 .cmd-option {
     background: var(--bg-card);
-    border: 1px solid var(--border);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.8);
     border-radius: var(--r-xl);
     cursor: pointer;
     text-align: center;
     padding: 28px 44px;
     transition: all 0.35s var(--ease);
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
 }
 
 .cmd-option:hover {
@@ -473,7 +475,9 @@ body {
 .source-card {
     flex: 1;
     background: var(--bg-card);
-    border: 1px solid var(--border);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.8);
     border-radius: var(--r-xl);
     padding: 32px 24px;
     display: flex;
@@ -481,7 +485,7 @@ body {
     align-items: center;
     text-align: center;
     cursor: pointer;
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
     transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
@@ -571,7 +575,9 @@ body {
 .gateway-select {
     width: 100%;
     background: var(--bg-card);
-    border: 1px solid var(--border);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.8);
     border-radius: var(--r-md);
     padding: 16px 20px;
     color: var(--text-1);
@@ -580,7 +586,7 @@ body {
     appearance: none;
     outline: none;
     cursor: pointer;
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
     transition: all 0.3s ease;
 }
 
