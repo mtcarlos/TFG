@@ -27,9 +27,9 @@
             if (mode === 'online') {
                 var scripts = [
                     'https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.min.js',
-                    '/easyrtc/easyrtc.js',
-                    '/js/networked-aframe.js',
-                    '/js/easyrtc-patch.js'
+                    '../easyrtc/easyrtc.js',
+                    '../js/networked-aframe.js',
+                    '../js/easyrtc-patch.js'
                 ];
                 scripts.forEach(function(src) {
                     document.write('<script src="' + src + '"><\/script>');
@@ -71,8 +71,8 @@
     <script src="https://unpkg.com/super-hands@^3.0.6/dist/super-hands.min.js"></script>
 
     <!-- VR Systems (must load before a-scene to register components) -->
-    <script src="/js/vr-haptics.js"></script>
-    <script src="/js/vr-mode-manager.js"></script>
+    <script src="../js/vr-haptics.js"></script>
+    <script src="../js/vr-mode-manager.js"></script>
 
     <link rel="stylesheet" href="../css/github-scene.css">
 </head>
@@ -627,7 +627,7 @@
 
             <!-- Floating Labels -->
             <a-text value="Repository Languages" position="0 1.6 8.8" rotation="-15 0 0" align="center" color="#2d3a2e"
-                width="8" font="/assets/fonts/custom-msdf.json" negate="false" opacity="0.9"></a-text>
+                width="8" font="../assets/fonts/custom-msdf.json" negate="false" opacity="0.9"></a-text>
             <a-text value="Distribution by Percentage" position="0 1.2 8.8" rotation="-15 0 0" align="center"
                 color="#5a6b5c" width="6" opacity="0.8"></a-text>
 
@@ -654,7 +654,7 @@
                 <a-text value="Total Languages" position="0 0.16 0.01" align="center" color="#5a6b5c"
                     width="2.8"></a-text>
                 <a-text id="metric-langs-value" value="—" position="0 -0.12 0.01" align="center" color="#8b6914"
-                    width="4" font="/assets/fonts/custom-msdf.json" negate="false"></a-text>
+                    width="4" font="../assets/fonts/custom-msdf.json" negate="false"></a-text>
             </a-entity>
 
             <!-- 3D Info Panel Toggle -->
@@ -669,7 +669,7 @@
                     material="color: #d4a853; opacity: 0.3; transparent: true; side: double"
                     animation="property: material.opacity; from: 0.2; to: 0.5; dir: alternate; dur: 2000; easing: easeInOutSine; loop: true"></a-ring>
                 <a-text value="i" position="0 0.02 0.04" rotation="0 0 0" align="center" color="#8b6914" width="2.5"
-                    font="/assets/fonts/custom-msdf.json" negate="false" side="double"></a-text>
+                    font="../assets/fonts/custom-msdf.json" negate="false" side="double"></a-text>
             </a-entity>
 
             <!-- 3D Info Panel (hidden by default) -->
@@ -681,7 +681,7 @@
                 <a-plane width="0.04" height="1.8" position="-2.1 0 0.003"
                     material="color: #d4a853; opacity: 0.6; transparent: true; side: double"></a-plane>
                 <a-text value="Languages Chart" position="0 0.7 0.01" align="center" color="#8b6914" width="4"
-                    font="/assets/fonts/custom-msdf.json" negate="false"></a-text>
+                    font="../assets/fonts/custom-msdf.json" negate="false"></a-text>
                 <a-text
                     value="Shows the distribution of programming\nlanguages in this repository by bytes\nof source code. Each bar represents a\nlanguage; height is proportional to\nthe amount of code written in it."
                     position="0 0 0.01" align="center" color="#5a6b5c" width="3.6" baseline="center"
@@ -705,7 +705,7 @@
 
             <!-- Floating Labels -->
             <a-text value="Top Contributors" position="0 1.6 7.8" rotation="-15 0 0" align="center" color="#2d3a2e"
-                width="8" font="/assets/fonts/custom-msdf.json" negate="false" opacity="0.9"></a-text>
+                width="8" font="../assets/fonts/custom-msdf.json" negate="false" opacity="0.9"></a-text>
             <a-text value="Commit Distribution" position="0 1.2 7.8" rotation="-15 0 0" align="center" color="#5a6b5c"
                 width="6" opacity="0.8"></a-text>
 
@@ -731,7 +731,7 @@
                     material="color: #d4a853; opacity: 0.15; transparent: true"></a-plane>
                 <a-text value="Contributors" position="0 0.16 0.01" align="center" color="#5a6b5c" width="2.8"></a-text>
                 <a-text id="metric-contribs-value" value="—" position="0 -0.12 0.01" align="center" color="#8b6914"
-                    width="4" font="/assets/fonts/custom-msdf.json" negate="false"></a-text>
+                    width="4" font="../assets/fonts/custom-msdf.json" negate="false"></a-text>
             </a-entity>
 
             <!-- 3D Info Panel Toggle -->
@@ -746,7 +746,7 @@
                     material="color: #d4a853; opacity: 0.3; transparent: true; side: double"
                     animation="property: material.opacity; from: 0.2; to: 0.5; dir: alternate; dur: 2000; easing: easeInOutSine; loop: true"></a-ring>
                 <a-text value="i" position="0 0.02 0.04" rotation="0 0 0" align="center" color="#8b6914" width="2.5"
-                    font="/assets/fonts/custom-msdf.json" negate="false" side="double"></a-text>
+                    font="../assets/fonts/custom-msdf.json" negate="false" side="double"></a-text>
             </a-entity>
 
             <!-- 3D Info Panel (hidden by default) -->
@@ -758,7 +758,7 @@
                 <a-plane width="0.04" height="1.8" position="-2.1 0 0.003"
                     material="color: #d4a853; opacity: 0.6; transparent: true; side: double"></a-plane>
                 <a-text value="Contributors Chart" position="0 0.7 0.01" align="center" color="#8b6914" width="4"
-                    font="/assets/fonts/custom-msdf.json" negate="false"></a-text>
+                    font="../assets/fonts/custom-msdf.json" negate="false"></a-text>
                 <a-text
                     value="Displays the top contributors ranked\nby number of commits. The pie chart\nshows each contributor's share of\ntotal commits. Point at slices in\nVR for individual statistics."
                     position="0 0 0.01" align="center" color="#5a6b5c" width="3.6" baseline="center"
@@ -782,7 +782,7 @@
 
             <!-- Floating Labels -->
             <a-text value="Repository Metrics" position="0 1.6 7.8" rotation="-15 0 0" align="center" color="#2d3a2e"
-                width="8" font="/assets/fonts/custom-msdf.json" negate="false" opacity="0.9"></a-text>
+                width="8" font="../assets/fonts/custom-msdf.json" negate="false" opacity="0.9"></a-text>
             <a-text value="Overview Stats" position="0 1.2 7.8" rotation="-15 0 0" align="center" color="#5a6b5c"
                 width="6" opacity="0.8"></a-text>
 
@@ -808,7 +808,7 @@
                     material="color: #d4a853; opacity: 0.15; transparent: true"></a-plane>
                 <a-text value="Total Stars" position="0 0.16 0.01" align="center" color="#5a6b5c" width="2.8"></a-text>
                 <a-text id="metric-stars-value" value="—" position="0 -0.12 0.01" align="center" color="#8b6914"
-                    width="4" font="/assets/fonts/custom-msdf.json" negate="false"></a-text>
+                    width="4" font="../assets/fonts/custom-msdf.json" negate="false"></a-text>
             </a-entity>
 
             <!-- 3D Info Panel Toggle -->
@@ -823,7 +823,7 @@
                     material="color: #d4a853; opacity: 0.3; transparent: true; side: double"
                     animation="property: material.opacity; from: 0.2; to: 0.5; dir: alternate; dur: 2000; easing: easeInOutSine; loop: true"></a-ring>
                 <a-text value="i" position="0 0.02 0.04" rotation="0 0 0" align="center" color="#8b6914" width="2.5"
-                    font="/assets/fonts/custom-msdf.json" negate="false" side="double"></a-text>
+                    font="../assets/fonts/custom-msdf.json" negate="false" side="double"></a-text>
             </a-entity>
 
             <!-- 3D Info Panel (hidden by default) -->
@@ -835,7 +835,7 @@
                 <a-plane width="0.04" height="1.8" position="-2.1 0 0.003"
                     material="color: #d4a853; opacity: 0.6; transparent: true; side: double"></a-plane>
                 <a-text value="Metrics Chart" position="0 0.7 0.01" align="center" color="#8b6914" width="4"
-                    font="/assets/fonts/custom-msdf.json" negate="false"></a-text>
+                    font="../assets/fonts/custom-msdf.json" negate="false"></a-text>
                 <a-text
                     value="Key health indicators: stars (community\ninterest), forks (derivative projects),\nopen issues (pending work), contributors,\nrepository size, and language count.\nBars allow quick visual comparison."
                     position="0 0 0.01" align="center" color="#5a6b5c" width="3.6" baseline="center"
@@ -848,9 +848,9 @@
         <!-- ==================== 3D WELCOME & REPO TITLE ==================== -->
         <a-entity id="scene-title" position="0 6 -10">
             <a-text value="GitHub Explorer" position="0 0.9 0" align="center" color="#4a8b3f" width="14"
-                font="/assets/fonts/custom-msdf.json" negate="false" opacity="0.9"></a-text>
+                font="../assets/fonts/custom-msdf.json" negate="false" opacity="0.9"></a-text>
             <a-text id="scene-repo-name" value="" position="0 0.1 0" align="center" color="#2d3a2e" width="10"
-                font="/assets/fonts/custom-msdf.json" negate="false" opacity="0.9"></a-text>
+                font="../assets/fonts/custom-msdf.json" negate="false" opacity="0.9"></a-text>
             <a-text id="scene-clock-time" value="--:--" position="0 -0.5 0" align="center" color="#d4a853" width="6"
                 opacity="0.7"></a-text>
         </a-entity>
@@ -902,7 +902,7 @@
             <a-plane position="0 2.7 -0.002" width="3.04" height="0.84"
                 material="color: #8B6914; opacity: 0.3; transparent: true; side: double"></a-plane>
             <a-text value="Pueblo de Código" position="0 2.85 0.01" align="center" color="#4a3510" width="3.5"
-                font="/assets/fonts/custom-msdf.json" negate="false" side="double"></a-text>
+                font="../assets/fonts/custom-msdf.json" negate="false" side="double"></a-text>
             <a-text value="Explora los ficheros del repositorio" position="0 2.65 0.01" align="center" color="#7d6b4f"
                 width="2.8" side="double"></a-text>
         </a-entity>
@@ -990,13 +990,13 @@
     </a-scene>
 
     <!-- Scene Logic -->
-    <script src="/js/SceneDataLoader.js"></script>
-    <script src="/js/code-city.js"></script>
-    <script src="/js/vr-wrist-menu.js"></script>
-    <script src="/js/vr-right-wrist-menu.js"></script>
-    <script src="/js/oracle-panel.js"></script>
-    <script src="/js/vr-dashboard-panel.js"></script>
-    <script src="/js/github-scene-logic.js"></script>
+    <script src="../js/SceneDataLoader.js"></script>
+    <script src="../js/code-city.js"></script>
+    <script src="../js/vr-wrist-menu.js"></script>
+    <script src="../js/vr-right-wrist-menu.js"></script>
+    <script src="../js/oracle-panel.js"></script>
+    <script src="../js/vr-dashboard-panel.js"></script>
+    <script src="../js/github-scene-logic.js"></script>
 
 </body>
 
