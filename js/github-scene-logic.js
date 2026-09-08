@@ -458,7 +458,7 @@
 
         console.log('[GitHubScene] BabiaXR charts injected for room:', roomId);
     }
-    
+
     // Inject charts for offline mode reading directly from JSON files
     function injectOfflineBabiaCharts(basePath) {
         // Remove leading slash for local relative paths if necessary or keep absolute pathing consistent
@@ -1400,12 +1400,12 @@
             const hudDesc = document.getElementById('hud-desc');
             const repoHud = document.getElementById('repo-hud');
             const sceneTitle = document.getElementById('scene-repo-name');
-            
+
             const hudStars = document.getElementById('hud-stars');
             const hudForks = document.getElementById('hud-forks');
             const hudIssues = document.getElementById('hud-issues');
             const hudLang = document.getElementById('hud-lang');
-            
+
             const metricLangs = document.getElementById('metric-langs-value');
             const metricContribs = document.getElementById('metric-contribs-value');
             const metricStars = document.getElementById('metric-stars-value');
@@ -1414,7 +1414,8 @@
 
             // In demo mode, let's try to load the associated stats and babia files
             if (dataSource !== 'upload' && dataFile.includes('tfg_codebase.json')) {
-                const basePath = dataFile.replace('.json', '');
+                const activePath = dataFile.startsWith('/') ? dataFile : '../' + dataFile;
+                const basePath = activePath.replace('.json', '');
                 try {
                     const statsRes = await fetch(basePath + '_stats.json');
                     if (statsRes.ok) {
@@ -1425,13 +1426,13 @@
                         if (hudForks) hudForks.textContent = formatNum(statsData.forks || 0);
                         if (hudIssues) hudIssues.textContent = formatNum(statsData.openIssues || 0);
                         if (hudLang) hudLang.textContent = statsData.mainLanguage || '—';
-                        
+
                         if (metricLangs) metricLangs.setAttribute('text', 'value', String(statsData.languages ? statsData.languages.length : 0));
                         if (metricContribs) metricContribs.setAttribute('text', 'value', String(statsData.contributors ? statsData.contributors.length : 0));
                         if (metricStars) metricStars.setAttribute('text', 'value', formatNum(statsData.stars || 0));
 
                         populateDashboard(statsData);
-                        
+
                         // Inject offline charts using local demo files
                         injectOfflineBabiaCharts(basePath);
                     }
@@ -1439,11 +1440,11 @@
                     console.warn('[GitHubScene] Could not load offline stats file:', e);
                 }
             } else {
-                 if (hudDesc) hudDesc.textContent = 'Modo offline — datos estáticos';
-                 if (hudStars) hudStars.textContent = '—';
-                 if (hudForks) hudForks.textContent = '—';
-                 if (hudIssues) hudIssues.textContent = formatNum(layoutData.stats?.totalFiles || 0);
-                 if (hudLang) hudLang.textContent = layoutData.stats?.totalDirectories ? `${layoutData.stats.totalDirectories} dirs` : '—';
+                if (hudDesc) hudDesc.textContent = 'Modo offline — datos estáticos';
+                if (hudStars) hudStars.textContent = '—';
+                if (hudForks) hudForks.textContent = '—';
+                if (hudIssues) hudIssues.textContent = formatNum(layoutData.stats?.totalFiles || 0);
+                if (hudLang) hudLang.textContent = layoutData.stats?.totalDirectories ? `${layoutData.stats.totalDirectories} dirs` : '—';
             }
 
             if (hudRepoName) hudRepoName.textContent = displayName;
