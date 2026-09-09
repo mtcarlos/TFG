@@ -131,3 +131,19 @@ Follow these steps to run the environment locally:
 ## Future Roadmap
 
 The project is under active development. Future iterations aim to integrate deeper static analysis tools, support for larger monolithic repositories with optimized rendering techniques, and richer collaborative AI features for software development teams.
+
+## Links
+
+<p align="center">
+  <a href="https://mtcarlos.github.io/MyPortfolio/">
+    <img src="assets/images/MiLogo.png" alt="Portfolio" height="50">
+  </a>
+  &nbsp;&nbsp;&nbsp;
+  <a href="https://www.linkedin.com/in/carlos-malagon-tenorio">
+    <img src="assets/images/linkedin_icon.png" alt="LinkedIn" height="50">
+  </a>
+  <br><br>
+  <a href="https://mtcarlos.github.io/WEB-TFG/">
+    <img src="assets/images/QR_web.png" alt="Web TFG QR Code" height="150">
+  </a>
+</p>
