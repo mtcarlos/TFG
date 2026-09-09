@@ -674,7 +674,7 @@ AFRAME.registerComponent('oracle-panel', {
         cam3D.getWorldDirection(dir);
 
         // Position 1.5m in front of the headset
-        const panelPos = pos.clone().add(dir.multiplyScalar(1.5));
+        const panelPos = pos.clone().add(dir.multiplyScalar(-1.5));
         panelPos.y -= 0.1; // Slightly below eye level
 
         // Convert world position to local space of the rig
@@ -721,7 +721,7 @@ AFRAME.registerComponent('oracle-panel', {
                 cam3D.getWorldDirection(dir);
 
                 // Place 1.5m in front of the camera
-                const panelPos = pos.clone().add(dir.multiplyScalar(1.5));
+                const panelPos = pos.clone().add(dir.multiplyScalar(-1.5));
                 panelPos.y -= 0.1; // Slightly below eye level
 
                 // Convert world position to local space of the rig

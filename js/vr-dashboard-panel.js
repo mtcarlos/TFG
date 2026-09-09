@@ -747,7 +747,7 @@ AFRAME.registerComponent('vr-dashboard-panel', {
                 cam3D.getWorldDirection(dir);
 
                 // Spawn the panel 1.5m in front of the user
-                var panelPos = pos.clone().add(dir.multiplyScalar(1.5));
+                var panelPos = pos.clone().add(dir.multiplyScalar(-1.5));
                 panelPos.y += 0.2;
 
                 // Convert world position to local space of the rig
