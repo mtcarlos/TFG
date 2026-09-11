@@ -103,8 +103,8 @@ Follow these steps to run the environment locally:
 5. **Access the application:**
    Open a Chromium-based browser and navigate to `http://localhost:8080`.
 
-   > [!NOTE]
-   > To enter WebXR using headsets like Meta Quest, a secure HTTPS tunnel (like NGROK) is required, or you must configure a local SSL certificate.
+> [!NOTE]
+> To enter WebXR using headsets like Meta Quest, a secure HTTPS tunnel (like NGROK) is required, or you must configure a local SSL certificate.
 
 ---
 

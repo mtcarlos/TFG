@@ -696,7 +696,7 @@ body {
 #loading-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(245, 245, 247, 0.95);
+    background: rgba(10, 10, 15, 0.95);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     display: flex;
@@ -715,8 +715,8 @@ body {
 .loading-spinner {
     width: 40px;
     height: 40px;
-    border: 3px solid rgba(0, 0, 0, 0.1);
-    border-top-color: #4338CA;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-top-color: #e0e0e0;
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
     margin-bottom: 16px;
@@ -730,20 +730,20 @@ body {
 
 .loading-text {
     font-size: 0.85rem;
-    color: #6E6E73;
+    color: #9ca3af;
     font-weight: 500;
 }
 
 .loading-repo {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.75rem;
-    color: #4338CA;
+    color: #e0e0e0;
     margin-top: 6px;
     font-weight: 500;
 }
 
 /* =============================================
-   GLASSMORPHISM 3D CAROUSEL (Avatar Selection)
+   TRADING CARD 3D CAROUSEL (Avatar Selection)
    ============================================= */
 .glass-carousel-container {
     margin-top: 32px;
@@ -760,7 +760,6 @@ body {
         opacity: 0;
         transform: translateY(30px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);
@@ -775,14 +774,14 @@ body {
     font-family: 'Inter', sans-serif;
     font-size: 2rem;
     font-weight: 600;
-    color: #1D1D1F;
+    color: #f3f4f6;
     letter-spacing: -0.02em;
     margin: 0 0 8px 0;
 }
 
 .carousel-subtitle {
     font-size: 0.95rem;
-    color: #6E6E73;
+    color: #9ca3af;
     font-weight: 400;
     margin: 0;
 }
@@ -790,9 +789,9 @@ body {
 /* SCENE */
 .carousel-scene {
     width: 100%;
-    max-width: 700px;
-    height: 340px;
-    perspective: 1200px;
+    max-width: 800px;
+    height: 400px;
+    perspective: 1400px;
     margin-bottom: 40px;
     display: flex;
     justify-content: center;
@@ -808,163 +807,228 @@ body {
     align-items: center;
     transform-style: preserve-3d;
     pointer-events: none;
-    /* Prevents Z=0 plane from blocking clicks to Z=-150px elements */
 }
 
 /* CARDS */
 .carousel-card {
     position: absolute;
-    width: 240px;
-    height: 320px;
+    width: 260px;
+    height: 380px;
     background: transparent;
     border: none;
     outline: none;
     padding: 0;
     cursor: pointer;
     pointer-events: auto;
-    /* Re-enable clicks for children */
-    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.8s, filter 0.8s;
+    transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.6s, filter 0.6s;
+    transform-style: preserve-3d;
 }
 
-/* Unselected State */
+/* Unselected State (Side by Side) */
 #avatar-opt-sphere {
-    transform: translateX(-160px) translateZ(-150px) rotateY(20deg);
-    opacity: 0.4;
+    transform: translateX(-180px) translateZ(-50px) rotateY(15deg) scale(0.85);
+    opacity: 0.5;
     z-index: 1;
-    filter: blur(6px);
 }
 
 #avatar-opt-robot {
-    transform: translateX(160px) translateZ(-150px) rotateY(-20deg);
-    opacity: 0.4;
+    transform: translateX(180px) translateZ(-50px) rotateY(-15deg) scale(0.85);
+    opacity: 0.5;
     z-index: 1;
-    filter: blur(6px);
 }
 
 /* Hovering over an unselected card */
 .carousel-card:not(.selected):hover {
-    opacity: 0.8;
-    filter: blur(2px);
+    opacity: 0.9;
 }
 
 #avatar-opt-sphere:not(.selected):hover {
-    transform: translateX(-150px) translateZ(-100px) rotateY(15deg);
+    transform: translateX(-170px) translateZ(-30px) rotateY(10deg) scale(0.88);
 }
 
 #avatar-opt-robot:not(.selected):hover {
-    transform: translateX(150px) translateZ(-100px) rotateY(-15deg);
+    transform: translateX(170px) translateZ(-30px) rotateY(-10deg) scale(0.88);
 }
 
 /* Selected State */
 .carousel-card.selected {
-    transform: translateX(0) translateZ(80px) rotateY(0deg) !important;
+    transform: translateX(0) translateZ(40px) rotateY(0deg) scale(1) !important;
     opacity: 1 !important;
     z-index: 10 !important;
-    filter: blur(0px) !important;
 }
 
-/* Glass Material */
-.card-glass {
+/* Trading Card Inner structure */
+.tc-card-inner {
     width: 100%;
     height: 100%;
-    border-radius: 32px;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.1) 100%);
-    box-shadow:
-        inset 0 0 0 1px rgba(255, 255, 255, 0.5),
-        0 20px 40px rgba(0, 0, 0, 0.08);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    border-radius: 16px;
+    background: linear-gradient(145deg, #2a2a35, #1e1e26);
+    box-shadow: 
+        inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+        0 15px 35px rgba(0, 0, 0, 0.4);
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 40px 20px;
+    padding: 16px;
+    position: relative;
+    overflow: hidden;
     transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    color: #e2e8f0;
+    text-align: left;
+}
+
+.carousel-card.selected .tc-card-inner {
+    background: linear-gradient(145deg, #32323f, #23232c);
+    box-shadow: 
+        inset 0 0 0 2px rgba(255, 255, 255, 0.2),
+        0 25px 50px rgba(0, 0, 0, 0.6);
+}
+
+/* Holo Overlay (subtle shine, no neon) */
+.tc-holo-overlay {
+    position: absolute;
+    top: 0; left: -150%;
+    width: 100%; height: 100%;
+    background: linear-gradient(115deg, transparent 20%, rgba(255,255,255,0.05) 30%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0.05) 70%, transparent 80%);
+    pointer-events: none;
+    z-index: 5;
+    transition: left 0.8s ease-out;
+}
+
+.carousel-card:hover .tc-holo-overlay {
+    left: 150%;
+}
+
+/* Card Header */
+.tc-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.tc-type-badge {
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #d1d5db;
+}
+
+.tc-hp {
+    color: #9ca3af;
+}
+
+/* Image Box */
+.tc-image-box {
+    background: linear-gradient(to bottom, #111827, #1f2937);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 160px;
+    margin-bottom: 16px;
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
     position: relative;
     overflow: hidden;
 }
 
-.carousel-card.selected .card-glass {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.3) 100%);
-    box-shadow:
-        inset 0 0 0 2px rgba(255, 255, 255, 0.9),
-        0 30px 60px rgba(0, 0, 0, 0.15);
-}
-
-/* Avatar Image */
-.card-img {
-    width: 130px;
-    height: 130px;
+.tc-img {
+    width: 110px;
+    height: 110px;
     object-fit: contain;
-    margin-bottom: 24px;
-    transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-    filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.08));
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.3));
 }
 
-.carousel-card.selected .card-img {
-    transform: scale(1.15) translateY(-5px);
-    filter: drop-shadow(0 15px 20px rgba(0, 0, 0, 0.15));
+.carousel-card.selected .tc-img {
+    transform: scale(1.1) translateY(-4px);
 }
 
-.carousel-card.selected:hover .card-img {
-    transform: scale(1.3) translateY(-15px);
-    filter: drop-shadow(0 25px 30px rgba(0, 0, 0, 0.25));
+.carousel-card.selected:hover .tc-img {
+    transform: scale(1.15) translateY(-8px);
 }
 
-/* Info Section */
-.card-info {
-    width: 100%;
+/* Card Body */
+.tc-card-body {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: center;
+}
+
+.tc-name {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin: 0 0 6px 0;
+    color: #f3f4f6;
+    letter-spacing: 0.02em;
+}
+
+.tc-desc {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    color: #9ca3af;
+    line-height: 1.4;
+    margin: 0 0 16px 0;
+    font-style: italic;
+}
+
+/* Stats */
+.tc-stats {
+    display: flex;
+    flex-direction: column;
     gap: 8px;
+    margin-top: auto;
 }
 
-.card-name {
-    font-size: 1.25rem;
+.tc-stat {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 4px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.tc-stat-lbl {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
     font-weight: 600;
-    color: #1D1D1F;
-    margin: 0;
+    color: #d1d5db;
 }
 
-.card-check {
+.tc-stat-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #f3f4f6;
+}
+
+/* Checkbox overlay */
+.tc-card-check {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
     width: 28px;
     height: 28px;
     border-radius: 50%;
-    background: #000;
-    color: white;
+    background: #e2e8f0;
+    color: #1e1e26;
     display: flex;
     align-items: center;
     justify-content: center;
     opacity: 0;
     transform: scale(0.5);
     transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-    margin-top: 8px;
 }
 
-.carousel-card.selected .card-check {
+.carousel-card.selected .tc-card-check {
     opacity: 1;
     transform: scale(1);
-}
-
-/* Glass Shimmer Sweep */
-.card-glow {
-    position: absolute;
-    top: 0; left: -150%;
-    width: 60%; height: 100%;
-    background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
-    transform: skewX(-25deg);
-    pointer-events: none;
-    transition: none;
-}
-
-.carousel-card:hover .card-glow {
-    animation: glass-shimmer 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-}
-
-@keyframes glass-shimmer {
-    0% { left: -150%; }
-    100% { left: 200%; }
 }
 
 /* ENTER BUTTON */
