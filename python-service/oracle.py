@@ -20,6 +20,33 @@ from config import MAX_FILE_CHARS, MAX_LLM_TOKENS, LLM_MODEL
 MAX_RETRIES: int = 3
 BASE_DELAY_SECONDS: float = 2.0  # 2s, 4s, 8s con backoff exponencial
 
+# Nombres de README comunes, en orden de prioridad
+_README_NAMES: list[str] = [
+    "README.md", "readme.md", "Readme.md",
+    "README.rst", "README.txt", "README",
+]
+
+
+def _read_readme(clone_path: str) -> str | None:
+    """
+    Busca y lee el README del repositorio clonado.
+
+    Prueba varios nombres comunes (README.md, readme.md, etc.)
+    y devuelve el contenido del primero que encuentre, o None.
+    """
+    for name in _README_NAMES:
+        readme_path = os.path.join(clone_path, name)
+        if os.path.isfile(readme_path):
+            try:
+                with open(readme_path, "r", encoding="utf-8", errors="ignore") as f:
+                    content = f.read()
+                print(f"[oracle] README encontrado: {name}")
+                return content
+            except OSError as e:
+                print(f"[oracle] Error leyendo {name}: {e}")
+    print("[oracle] No se encontró README en el repositorio")
+    return None
+
 
 async def ask_oracle(
     question: str,
@@ -55,8 +82,23 @@ async def ask_oracle(
     )
     user_prompt = question
 
+    # ── "Resumen del proyecto": leer README.md como contexto ──
+    if not file_path and question.strip().lower() == "resumen del proyecto":
+        readme_content = _read_readme(clone_path)
+        if readme_content:
+            # Truncar si es muy largo
+            if len(readme_content) > MAX_FILE_CHARS:
+                readme_content = readme_content[:MAX_FILE_CHARS] + "\n... (README truncado)"
+
+            user_prompt = (
+                f"A continuación tienes el README.md del proyecto:\n\n"
+                f"```\n{readme_content}\n```\n\n"
+                f"Pregunta: Resume el proyecto de forma clara y concisa basándote en el README."
+            )
+            print(f"[oracle] README.md adjuntado ({len(readme_content)} chars)")
+
     # Si se especifica un archivo, adjuntar su contenido como contexto
-    if file_path:
+    elif file_path:
         try:
             absolute_file_path = os.path.join(clone_path, file_path)
             with open(absolute_file_path, "r", encoding="utf-8", errors="ignore") as f:
