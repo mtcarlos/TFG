@@ -737,24 +737,29 @@ AFRAME.registerComponent('vr-dashboard-panel', {
         if (window.VRHaptics) VRHaptics.click('both');
 
         if (this.isVisible) {
-            var cameraEl = document.querySelector('#player');
-            if (cameraEl && AFRAME && AFRAME.THREE) {
-                var cam3D = cameraEl.object3D;
-                var pos = new AFRAME.THREE.Vector3();
-                var dir = new AFRAME.THREE.Vector3();
+            var scene = this.el.sceneEl;
+            if (scene && scene.camera && AFRAME && AFRAME.THREE) {
+                var cam = scene.camera;
+                var worldPos = new AFRAME.THREE.Vector3();
+                var worldDir = new AFRAME.THREE.Vector3();
 
-                cam3D.getWorldPosition(pos);
-                cam3D.getWorldDirection(dir);
+                cam.getWorldPosition(worldPos);
+                cam.getWorldDirection(worldDir);
 
                 // Spawn the panel 1.5m in front of the user
-                var panelPos = pos.clone().add(dir.multiplyScalar(1.5));
-                panelPos.y += 0.2;
+                var panelWorldPos = worldPos.clone().add(worldDir.multiplyScalar(1.5));
+                panelWorldPos.y += 0.2;
 
-                // Convert world position to local space of the rig
-                this.el.parentEl.object3D.worldToLocal(panelPos);
+                // Convert world positions to rig-local space
+                var rigObj = this.el.parentEl.object3D;
+                var panelLocalPos = panelWorldPos.clone();
+                rigObj.worldToLocal(panelLocalPos);
 
-                this.el.setAttribute('position', panelPos);
-                this.el.object3D.lookAt(pos);
+                var lookLocalPos = worldPos.clone();
+                rigObj.worldToLocal(lookLocalPos);
+
+                this.el.setAttribute('position', panelLocalPos);
+                this.el.object3D.lookAt(lookLocalPos);
             }
 
             // Refresh repo data when opening

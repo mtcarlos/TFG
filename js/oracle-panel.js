@@ -662,30 +662,35 @@ AFRAME.registerComponent('oracle-panel', {
     tick: function () {
         if (!this.isVisible || !this.isFollowing) return;
 
-        const cameraEl = document.querySelector('#player');
-        if (!cameraEl || !AFRAME || !AFRAME.THREE) return;
+        const scene = this.el.sceneEl;
+        if (!scene || !scene.camera || !AFRAME || !AFRAME.THREE) return;
 
         const THREE = AFRAME.THREE;
-        const cam3D = cameraEl.object3D;
-        const pos = new THREE.Vector3();
-        const dir = new THREE.Vector3();
+        const cam = scene.camera;
+        const worldPos = new THREE.Vector3();
+        const worldDir = new THREE.Vector3();
 
-        cam3D.getWorldPosition(pos);
-        cam3D.getWorldDirection(dir);
+        cam.getWorldPosition(worldPos);
+        cam.getWorldDirection(worldDir);
 
         // Position 1.5m in front of the headset
-        const panelPos = pos.clone().add(dir.multiplyScalar(1.5));
-        panelPos.y -= 0.1; // Slightly below eye level
+        const panelWorldPos = worldPos.clone().add(worldDir.multiplyScalar(1.5));
+        panelWorldPos.y -= 0.1; // Slightly below eye level
 
-        // Convert world position to local space of the rig
-        this.el.parentEl.object3D.worldToLocal(panelPos);
+        // Convert world positions to rig-local space
+        const rigObj = this.el.parentEl.object3D;
+        const panelLocalPos = panelWorldPos.clone();
+        rigObj.worldToLocal(panelLocalPos);
+
+        const lookLocalPos = worldPos.clone();
+        rigObj.worldToLocal(lookLocalPos);
 
         // Smooth lerp toward target position
         const current = this.el.object3D.position;
-        current.lerp(panelPos, 0.08);
+        current.lerp(panelLocalPos, 0.08);
 
-        // Face the user
-        this.el.object3D.lookAt(pos);
+        // Face the user (in rig-local space)
+        this.el.object3D.lookAt(lookLocalPos);
     },
 
     // ─────────────────────────────────────────────
@@ -710,25 +715,30 @@ AFRAME.registerComponent('oracle-panel', {
 
         if (this.isVisible) {
             // Position panel in front of the user using correct world transforms
-            const cameraEl = document.querySelector('#player');
-            if (cameraEl && AFRAME && AFRAME.THREE) {
+            const scene = this.el.sceneEl;
+            if (scene && scene.camera && AFRAME && AFRAME.THREE) {
                 const THREE = AFRAME.THREE;
-                const cam3D = cameraEl.object3D;
-                const pos = new THREE.Vector3();
-                const dir = new THREE.Vector3();
+                const cam = scene.camera;
+                const worldPos = new THREE.Vector3();
+                const worldDir = new THREE.Vector3();
 
-                cam3D.getWorldPosition(pos);
-                cam3D.getWorldDirection(dir);
+                cam.getWorldPosition(worldPos);
+                cam.getWorldDirection(worldDir);
 
                 // Place 1.5m in front of the camera
-                const panelPos = pos.clone().add(dir.multiplyScalar(1.5));
-                panelPos.y -= 0.1; // Slightly below eye level
+                const panelWorldPos = worldPos.clone().add(worldDir.multiplyScalar(1.5));
+                panelWorldPos.y -= 0.1; // Slightly below eye level
 
-                // Convert world position to local space of the rig
-                this.el.parentEl.object3D.worldToLocal(panelPos);
+                // Convert world positions to rig-local space
+                const rigObj = this.el.parentEl.object3D;
+                const panelLocalPos = panelWorldPos.clone();
+                rigObj.worldToLocal(panelLocalPos);
 
-                this.el.setAttribute('position', panelPos);
-                this.el.object3D.lookAt(pos);
+                const lookLocalPos = worldPos.clone();
+                rigObj.worldToLocal(lookLocalPos);
+
+                this.el.setAttribute('position', panelLocalPos);
+                this.el.object3D.lookAt(lookLocalPos);
             }
 
             this.el.setAttribute('animation__pop', {
