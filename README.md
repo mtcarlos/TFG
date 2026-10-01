@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/images/VR_Character.png" alt="VR Code City Logo" width="300">
+  <img src="assets/images/VR_Code_City_logo.png" alt="VR Code City Logo" width="300">
 </p>
 
 # VR Code City: Immersive Code Analysis Environment
